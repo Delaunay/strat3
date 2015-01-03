@@ -1,0 +1,29 @@
+# Compiled Object files
+*.slo
+*.lo
+*.o
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+
+moc*.cpp
+*.obj
+
+Makefile*
+*.exe
+
+*.user
+
+*.*ebug
+*.*lease
+
+/strat3-build/
+/strat3-linux/
+/strat3-doc/
+/gen/

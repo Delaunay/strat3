@@ -1,0 +1,32 @@
+body{
+   margin:2cm;
+}
+h4, .h4 {
+   font-size: 18px;
+}
+
+.bs-callout h4 {
+   margin-top: 0px;
+   margin-bottom: 5px;
+}
+
+.bs-callout-warning h4 {
+   color: #F0AD4E;
+}
+
+.bs-callout {
+   margin: 20px 0px;
+   padding: 20px;
+   border-left: 3px solid #EEE;
+}
+
+.bs-callout-warning {
+   background-color: #FCF8F2;
+   border-color: #F0AD4E;
+}
+
+.bs-callout p:last-child {
+   margin-bottom: 0px;
+}
+
+
