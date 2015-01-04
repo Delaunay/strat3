@@ -156,3 +156,145 @@ Key DataAnalyser::getFieldAsString(int i)
         return "SDNegative";
     }
 }
+
+double negative_unary(double x)
+{
+    return -x;
+}
+
+
+void DataAnalyser::gpTimeSecData()
+{
+    //==================================
+    //      Configuration
+    //==================================
+
+    Eigen::IOFormat gpformat(4, Eigen::DontAlignCols, ",", "\n", "", "", "", "");
+    std::fstream file;
+
+    int m      = _Data->getLog(0)->securityNumber();   // number of securities
+    bool dates = _Data->usingDates();
+    int n      = _Data->size();                        // number of strategies
+    int end    = _Data->max_period();                  // number of day passed
+    int offset = 1;                                    // Number of column added
+                                                       // to make place for the date
+    Key header("#time,");                              // Header
+    Matrix date;
+
+    // set date related variable
+    if (dates)
+    {
+        offset = 3; // add month and days
+        header = "#year,month,days,";
+        date = _Data->dates();
+    }
+    else
+        date = _PathAnalysis[0].block(0, Time, end, 1);
+
+    Matrix temp = Matrix::Zero(end, m + offset);
+
+    // set dates
+    if (!dates)
+        temp.leftCols(offset) = date.bottomRows(end);
+    else
+        temp.leftCols(offset) = date.block(_Data->stratWindow(), 0, end, offset);
+
+    // generate the header
+    for (int i = 0; i < m; i++)
+    {
+        if (i < security_size() - 1)
+            header += "Sec" + std::to_string(i) + ",";
+        else
+            header += "Sec" + std::to_string(i) + "\n";
+    }
+
+    //==================================
+    //      Holding Evol
+    //==================================
+
+    for(int k  = 0; k < n; k++)
+    {
+        temp.block(0, offset, end, m) = _HoldingsEvolution[k];
+
+        // OUT
+        file.open("../gen/data/" + _Data->getStrategy(k)->title() + "_holding_evol.dat", std::ios::out);
+
+        file << header;
+
+        file << temp.format(gpformat);
+
+        file.close();
+    }
+
+    //==================================
+    //      Holding Variations
+    //==================================
+
+    for(int i = 0; i < m; i ++)
+        temp(0, i + offset) = 0;
+
+    for(int k  = 0; k < n; k++)
+    {
+        temp.block(1, offset, end - 1, m) = _HoldingsVariation[k];
+
+        // OUT
+        file.open("../gen/data/" + _Data->getStrategy(k)->title() + "_holding_var.dat", std::ios::out);
+
+        file << header;
+
+        file << temp.format(gpformat);
+
+        file.close();
+    }
+
+    //==================================
+    //      Target Weights
+    //==================================
+
+    for(int k  = 0; k < n; k++)
+    {
+        temp.block(0, offset, end, m) = _Data->getLog(k)->weightMatrix().rightCols(m);
+
+        // OUT
+        file.open("../gen/data/" + _Data->getStrategy(k)->title() + "_weight_target.dat", std::ios::out);
+
+        file << header;
+
+        file << temp.format(gpformat);
+
+        file.close();
+    }
+
+    //==================================
+    //      Portfolio Values
+    //==================================
+
+    temp = Matrix::Zero(end, 2 + offset);
+
+    if (dates)
+    {
+        header = "#year,month,days,liabilities,equity\n";
+        temp.leftCols(offset) = date.block(_Data->stratWindow(), 0, end, offset);
+    }
+    else
+    {
+        header = "#time,liabilities,equity\n";
+        temp.leftCols(offset) = date.bottomRows(end);
+    }
+
+    for(int k  = 0; k < n; k++)
+    {
+        temp.col(offset)     = _Data->getLog(k)->portfolioValues().col(DataLog::Liabilities);
+        temp.col(offset + 1) = temp.col(offset) + _Data->getLog(k)->portfolioValues().col(DataLog::Equity);
+
+        // OUT
+        file.open("../gen/data/" + _Data->getStrategy(k)->title() + "_values.dat", std::ios::out);
+
+        file << header;
+
+        file << temp.format(gpformat);
+
+        file.close();
+    }
+}
+

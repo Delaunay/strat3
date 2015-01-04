@@ -26,10 +26,8 @@ Matrix sort(Matrix x)
     return temp;
 }
 
-
 // compute the frequency
 // bucket have the same size
-
 Matrix frequency(Matrix x, int bucket, bool percentage)
 {
     double min = x.minCoeff();
@@ -39,6 +37,7 @@ Matrix frequency(Matrix x, int bucket, bool percentage)
     Matrix freq = Matrix::Zero(bucket, x.cols() + 2);
 
     // first we sort the matrix
+
     Matrix temp = sort(x);
 
     // cols
@@ -55,7 +54,7 @@ Matrix frequency(Matrix x, int bucket, bool percentage)
             else
             {
                 // we want to go until max is reached
-                if (j != bucket + 1)
+                if (j != bucket)
                     j++;
                 else
                     break;

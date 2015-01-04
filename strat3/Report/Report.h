@@ -65,6 +65,8 @@ public:
         // initialization
         _EquityPath = Matrix::Zero(end, n);
         _PathAnalysis = std::vector<Matrix>(n);
+        _NegativeRet  = std::vector<std::vector<double> >(n);
+        _PositiveRet  = std::vector<std::vector<double> >(n);
 
         //  Get portfolio values
         for(int i = 0; i < n; i++)
@@ -79,6 +81,7 @@ public:
             _PathAnalysis[i].col(RawValue)   = _EquityPath.col(i);
             _PathAnalysis[i].col(Cumulative) = (_EquityPath.col(i)/cash).unaryExpr(std::ptr_fun(log_double));
         }
+
 
 
         // compute periodic return
@@ -135,8 +138,8 @@ public:
         _MovingSDStat.row(SD          ) = msdstat.usual.getAllSD();
         _MovingSDStat.row(Positive    ) = get_matrix(msdstat.positive.element).cast<double>();
 
-        _NegativeRet = std::vector<std::vector<double> >(n); //= Matrix::Zero(md.negative.element);
-        _PositiveRet = std::vector<std::vector<double> >(n); //= Matrix::Zero();
+//        _NegativeRet = std::vector<std::vector<double> >(n); //= Matrix::Zero(md.negative.element);
+//        _PositiveRet = std::vector<std::vector<double> >(n); //= Matrix::Zero();
 
         for (int i = 0; i < n; i++)
         {
@@ -156,22 +159,20 @@ public:
 
         for(int i = 0; i < n; i++)
         {
-            for (int l = 0; l < _PathAnalysis[i].rows(); l++)
+            for (int l = 0; l < end; l++)
             {
                 if (_PathAnalysis[i](l, Periodically) < 0)
-                {
                     _NegativeRet[i].push_back(_PathAnalysis[i](l, Periodically));
-                }
+
                 else if (_PathAnalysis[i](l, Periodically) > 0)
-                {
                     _PositiveRet[i].push_back(_PathAnalysis[i](l, Periodically));
-                }
             }
 
             _NegativeFreq.push_back(frequency(Eigen::Map<Matrix>(&_NegativeRet[i][0], _NegativeRet[i].size(), 1),
-                                    sqrt(_NegativeRet[i].size()), true ));
+                                    sqrt(_NegativeRet[i].size()), true));
+
             _PositiveFreq.push_back(frequency(Eigen::Map<Matrix>(&_PositiveRet[i][0], _PositiveRet[i].size(), 1),
-                                    sqrt(_PositiveRet[i].size()), true ));
+                                    sqrt(_PositiveRet[i].size()), true));
         }
 
         for(int i = 0; i < n; i++)
@@ -296,7 +297,7 @@ public:
     }
 
     /*!
-     * \brief generate data which start at t + 1 and has strat title as column
+     * \brief generate data which has strat title as column
      */
     void gpTimeStratData()
     {
@@ -309,13 +310,11 @@ public:
 
         bool dates = _Data->usingDates();
         int n      = _Data->size();                        // number of strategies
-        int m      = _Data->getLog(0)->securityNumber();   // number of securities
         int end    = _Data->max_period();                  // number of day passed
         int offset = 1;                                    // Number of column added
                                                            // to make place for the date
         Key header("#time,");                              // Header
         Matrix date;
-
 
         // set date related variable
         if (dates)
@@ -370,7 +369,7 @@ public:
         temp = Matrix::Zero(_MovingSD.rows(), n + offset);
 
         if (!dates)
-            temp.leftCols(offset) = date.bottomRows(end - 1);
+            temp.leftCols(offset) = date.bottomRows(end);
         else
             temp.leftCols(offset) = date.block(_Data->stratWindow(), 0, end, offset);
 
@@ -402,330 +401,27 @@ public:
 
         file.close();
 
+        //==================================
+        //      Drawdown
+        //==================================
 
+        for (int i =0; i < n; i++)
+            temp.col(i + offset) = _PathAnalysis[i].col(Drawdown);
+
+        // OUT
+        file.open("../gen/data/drawdown_ret.dat", std::ios::out);
+
+        file << header;
+
+        file << temp.format(gpformat);
+
+        file.close();
     }
 
-
-
-    void generate_gnuplot_data()
-    {
-//        bool dates = _Data->usingDates();
-//        Matrix dat = _Data->dates();
-
-//        int offset = 1; // Number of column added to make place for the date
-
-//        if (dates)
-//            offset = 3; // add month and days
-
-//        Eigen::IOFormat gpformat(4, Eigen::DontAlignCols, ",", "\n", "", "", "", "");
-//        std::fstream file;
-
-//        file.open("../gen/data/daily_ret.dat", std::ios::out);
-
-
-//        Matrix temp = Matrix::Zero(_EquityRet.rows(), _EquityRet.cols() + offset);
-
-//        if (dates)
-//        {
-//            file << "#years,month,days,";
-//            temp.leftCols(offset) = dat.block(_Data->stratWindow(), 0, _EquityRet.rows(), offset);
-//        }
-//        else
-//        {
-//            file << "#time,";
-//            temp.col(0) =_PathAnalysis[0].block(0, Time, _EquityRet.rows(), 1);
-//        }
-
-//        temp.rightCols(_EquityRet.cols()) = _EquityRet;
-
-//        for (int i =0; i < _Data->size(); i++)
-//            if (i < _Data->size() - 1)
-//                file << _Data->getStrategy(i)->title() << ",";
-//            else
-//                file << _Data->getStrategy(i)->title() << "\n";
-
-//        file << temp.format(gpformat);
-//        file.close();
-
-//        file.open("../gen/data/hpr_ret.dat", std::ios::out);
-
-//        temp = Matrix::Zero(_EquityPath.rows(), _EquityPath.cols() + offset);
-//        if (dates)
-//        {
-//            file << "#years,month,days,";
-//            temp.leftCols(offset) = dat.block(_Data->stratWindow(), 0, _EquityRet.rows(), offset);
-//        }
-//        else
-//        {
-//            file << "#time,";
-//            temp.col(0) =_PathAnalysis[0].block(0, Time, _EquityRet.rows(), 1);
-//        }
-
-//        for (int i =0; i < _Data->size(); i++)
-//        {
-//            temp.col(i + 1) = _PathAnalysis[i].col(Cumulative);
-
-//            if (i < _Data->size() - 1)
-//                file << _Data->getStrategy(i)->title() << ",";
-//            else
-//                file << _Data->getStrategy(i)->title() << "\n";
-//        }
-
-//        file << temp.format(gpformat);
-//        file.close();
-
-//        // data
-//        file.open("../gen/data/drawdown_ret.dat", std::ios::out);
-
-//        temp = Matrix::Zero(_EquityPath.rows(), _EquityPath.cols() + offset);
-//        if (dates)
-//        {
-//            file << "#years,month,days,";
-//            temp.leftCols(offset) = dat.block(_Data->stratWindow(), 0, _EquityRet.rows(), offset);
-//        }
-//        else
-//        {
-//            file << "#time,";
-//            temp.col(0) =_PathAnalysis[0].block(0, Time, _EquityRet.rows(), 1);
-//        }
-
-//        for (int i =0; i < _Data->size(); i++)
-//        {
-//            temp.col(i + 1) = _PathAnalysis[i].col(Drawdown);
-
-//            if (i < _Data->size() - 1)
-//                file << _Data->getStrategy(i)->title() << ",";
-//            else
-//                file << _Data->getStrategy(i)->title() << "\n";
-//        }
-
-//        file << temp.format(gpformat);
-//        file.close();
-
-//        // volatility
-//        file.open("../gen/data/volatility_ret.dat", std::ios::out);
-
-//        temp = Matrix::Zero(_EquityPath.rows(), _EquityPath.cols() + offset);
-//        if (dates)
-//        {
-//            file << "#years,month,days,";
-//            temp.leftCols(offset) = dat.block(_Data->stratWindow(), 0, _EquityRet.rows(), offset);
-//        }
-//        else
-//        {
-//            file << "#time,";
-//            temp.col(0) =_PathAnalysis[0].block(0, Time, _EquityRet.rows(), 1);
-//        }
-
-//        for (int i = 0; i < _Data->size(); i++)
-//        {
-//            temp.col(i + 1) = _MovingSD.col(i) * sqrt(250.0);
-
-//            if (i < _Data->size() - 1)
-//                file << _Data->getStrategy(i)->title() << ",";
-//            else
-//                file << _Data->getStrategy(i)->title() << "\n";
-//        }
-
-//        file << temp.format(gpformat);
-//        file.close();
-
-//        // distribution
-//        file.open("../gen/data/distri_ret.dat", std::ios::out);
-//        file << "#ret,";
-
-//        temp = Matrix::Zero(_ReturnFrequency.rows(), _EquityPath.cols() + 1);
-
-//        temp.col(0) =(_ReturnFrequency.col(0) + _ReturnFrequency.col(1))/2.0;
-
-//        for (int i = 0; i < _Data->size(); i++)
-//        {
-//            temp.col(i + 1) = _ReturnFrequency.col(i + 2);
-
-//            if (i < _Data->size() - 1)
-//                file << _Data->getStrategy(i)->title() << ",";
-//            else
-//                file << _Data->getStrategy(i)->title() << "\n";
-//        }
-
-//        file << temp.format(gpformat);
-//        file.close();
-
-//        // LOSS
-//        file.open("../gen/data/loss_distri_ret.dat", std::ios::out);
-//        file << "#";
-
-//        int max = 0;
-//        for (int i = 0; i < _Data->size(); i++)
-//            max = std::max(max, _NegativeFreq[i].rows());
-
-//        temp = Matrix::Zero(max, _EquityPath.cols() * 2);
-
-//        for (int i = 0; i < _Data->size(); i++)
-//        {
-//            temp.block(0, 2 * i, _NegativeFreq[i].rows(), 1) =(_NegativeFreq[i].col(0) + _NegativeFreq[i].col(1))/2.0;
-//            temp.block(0, 2 * i + 1, _NegativeFreq[i].rows(), 1) =_NegativeFreq[i].col(2);
-
-//            if (i < _Data->size() - 1)
-//                file << "bin, " << _Data->getStrategy(i)->title() << ",";
-//            else
-//                file << "bin, " << _Data->getStrategy(i)->title() << "\n";
-//        }
-
-//        file << temp.format(gpformat);
-//        file.close();
-
-//        // GAIN
-//        file.open("../gen/data/gain_distri_ret.dat", std::ios::out);
-//        file << "#";
-
-//        max = 0;
-//        for (int i = 0; i < _Data->size(); i++)
-//            max = std::max(max, _PositiveFreq[i].rows());
-
-//        temp = Matrix::Zero(max, _EquityPath.cols() * 2);
-
-//        for (int i = 0; i < _Data->size(); i++)
-//        {
-//            temp.block(0, 2 * i, _PositiveFreq[i].rows(), 1) =(_PositiveFreq[i].col(0) + _PositiveFreq[i].col(1))/2.0;
-//            temp.block(0, 2 * i + 1, _PositiveFreq[i].rows(), 1) =_PositiveFreq[i].col(2);
-
-//            if (i < _Data->size() - 1)
-//                file << "bin, " << _Data->getStrategy(i)->title() << ",";
-//            else
-//                file << "bin, " << _Data->getStrategy(i)->title() << "\n";
-//        }
-
-//        file << temp.format(gpformat);
-//        file.close();
-
-//        // Holding Evolution
-//        temp = Matrix::Zero(_EquityPath.rows(), _EquityPath.cols() + offset);
-//        if (dates)
-//        {
-//            file << "#years,month,days,";
-//            temp.leftCols(offset) = dat.block(_Data->stratWindow(), 0, _EquityRet.rows(), offset);
-//        }
-//        else
-//        {
-//            file << "#time,";
-//            temp.col(0) =_PathAnalysis[0].block(0, Time, _EquityRet.rows(), 1);
-//        }
-
-
-//        //temp = Matrix::Zero(rows_time(), 1 + security_size());
-
-//        for(int k = 0; k < size(); k++)
-//        {
-//            file.open("../gen/data/" + _Data->getStrategy(k)->title() + "_holding_evol.dat", std::ios::out);
-
-//            file << "#time,";
-
-//            temp.col(0) = time_mat();
-//            temp.block(0, 1, rows_time(), security_size()) = _HoldingsEvolution[k];
-
-//            for (int i = 0; i < security_size(); i++)
-//            {
-//                if (i < security_size() - 1)
-//                    file << "Sec" << std::to_string(i) << ",";
-//                else
-//                    file << "Sec" << std::to_string(i) << "\n";
-//            }
-
-//            file << temp.format(gpformat);
-//            file.close();
-//        }
-//        // Holding variance
-//        temp = Matrix::Zero(rows_time() - 1, security_size() + 1);
-
-//        for(int k = 0; k < size(); k++)
-//        {
-//            file.open("../gen/data/" + _Data->getStrategy(k)->title() + "_holding_var.dat", std::ios::out);
-
-//            file << "#time,";
-
-//            temp.col(0) = time_mat().bottomRows(rows_time() - 1);
-//            temp.block(0, 1, rows_time() - 1, security_size()) = _HoldingsVariation[k];
-
-//            for (int i = 0; i < security_size(); i++)
-//            {
-//                if (i < security_size() - 1)
-//                    file << "Sec" << std::to_string(i) << ",";
-//                else
-//                    file << "Sec" << std::to_string(i) << "\n";
-//            }
-
-//            file << temp.format(gpformat);
-//            file.close();
-//        }
-
-//        // Weight Target
-////        temp = Matrix::Zero(rows_time(), 1 + security_size());
-
-//        temp = Matrix::Zero(rows_time(), 1 + security_size());
-//        temp.col(0) = time_mat();
-
-//        for(int k = 0; k < size(); k++)
-//        {
-//            file.open("../gen/data/" + _Data->getStrategy(k)->title() + "_weight_target.dat", std::ios::out);
-
-//            Matrix tp = _Data->getLog(k)->weightMatrix();
-////            temp.col(1) = tp.col(2);
-
-//            file << "#time,Sec0,";
-
-//            temp.col(1) = tp.col(2);
-
-//            for(int i = 1; i < security_size(); i++)
-//            {
-//                temp.col(i + 1) = tp.col(i + 2);
-//                //temp.col(i + 1) = temp.col(i) + tp.col(i + 2);
-
-//                if (i < security_size() - 1)
-//                    file << "Sec" << std::to_string(i) << ",";
-//                else
-//                    file << "Sec" << std::to_string(i) << "\n";
-//            }
-
-//            // file << temp.format(gpformat);
-
-
-//            file << temp.format(gpformat);
-//            file.close();
-//        }
-
-//        //  Portfolio values
-//        // 0 - TIME
-//        // 1 - Equity
-//        // 2 - Liabilities
-//        temp = Matrix::Zero(rows_time(), 3);
-//        temp.col(0) = time_mat();
-
-//        for(int k = 0; k < size(); k++)
-//        {
-//            file.open("../gen/data/" + _Data->getStrategy(k)->title() + "_values.dat", std::ios::out);
-
-//            file << "#time,liabilities,equity\n";
-
-//            temp.col(1) = _Data->getLog(k)->portfolioValues().col(DataLog::Liabilities);
-//            temp.col(2) = temp.col(1)  + _Data->getLog(k)->portfolioValues().col(DataLog::Equity);
-
-//            file << temp.format(gpformat);
-//            file.close();
-//        }
-
-////        std::vector<std::string> strat(_Data->size());
-////        std::vector<std::string> sec(_Data->getLog(0)->securityNumber());
-////        for(int i = 0, n = _Data->size(); i < n; i++)
-////        {
-////            strat[i] = _Data->getStrategy(i)->title();
-////        }
-////        for(int i = 0, n = _Data->getLog(0)->securityNumber(); i < n; i++)
-////        {
-////            sec[i] = Key("Sec") + std::to_string(i);
-////        }
-////        generate_gp_script(strat, sec);
-    }
+    /*!
+     * \brief generate data which has Sec title as column
+     */
+    void gpTimeSecData();
 
     void generate_gp(bool tex)
     {
@@ -742,7 +438,7 @@ public:
             sec[i] = Key("Sec") + std::to_string(i);
         }
 
-        generate_gp_script(strat, sec, tex);
+        generate_gp_script(strat, sec, tex, _Data->usingDates());
     }
 
     int security_size() {   return _Data->getLog(0)->securityNumber();  }

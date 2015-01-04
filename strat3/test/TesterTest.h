@@ -138,10 +138,11 @@ TEST(Tester, Gnuplot_data)
 {
     Matrix date = load_date_matrix("../data/date_test.csv", true);
     test.setDates(date);
+
     // export the data into gnuplot friendly format
-    mt.generate_gnuplot_data();
     mt.gpTimeStratData();
     mt.gpDistributionData();
+    mt.gpTimeSecData();
 }
 
 TEST(Tester, Gnuplot_svg_graph)
