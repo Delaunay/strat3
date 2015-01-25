@@ -28,7 +28,7 @@ class Portfolio
 
         const
         Column* state      ()           {   return &_PortfolioState; }
-        double  liability  ();
+        double  liability  (Row* prices);
         double  invested   (Row* prices);
         double  asset      (Row* prices);
         double  equity     (Row* prices);

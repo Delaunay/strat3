@@ -18,10 +18,15 @@ Portfolio::~Portfolio()
         delete _Log;
 }
 
-double Portfolio::invested  (Row* prices)   {  return (*prices * _PortfolioState)(0, 0);                    }
-double Portfolio::asset     (Row* prices)   {  return (*prices * _PortfolioState)(0, 0) + _Cash;    }
-double Portfolio::liability ()              {  return std::min(_Cash, 0.0);                        }
-double Portfolio::equity    (Row* prices)   {  return asset(prices) - liability();                 }
+double Portfolio::invested  (Row* prices)   {  return (*prices * _PortfolioState)(0, 0);           }
+double Portfolio::asset     (Row* prices)   {  return (*prices * _PortfolioState)(0, 0) + _Cash;   }
+double Portfolio::liability (Row* prices)
+{
+    // Shorted sec is liability
+    return std::min(_Cash, 0.0) + (*prices *(_PortfolioState.array() * (_PortfolioState.array() < 0).cast<double>()).matrix()).sum();
+}
+
+double Portfolio::equity    (Row* prices)   {  return asset(prices) - liability(prices);                 }
 
 /*!
  * \brief processTransactionWeight process Weight sent by Strategy and send orders to the
@@ -79,7 +84,7 @@ void Portfolio::processTransactionWeight(Index time, Row *price, TransactionWeig
 
     _Log->logPortfolioState(time, &_PortfolioState);
     _Log->logPortfolioValues(time, invested(price), _Cash,
-                             asset(price), liability(), equity(price));
+                             asset(price), liability(price), equity(price));
 }
 
 void Portfolio::clearOrders()
@@ -154,5 +159,5 @@ void Portfolio::order(WeightType a, Row* price, Matrix* target, Column* holding,
 void Portfolio::logPortfolioFull(Index time, Row* price)
 {
     _Log->logPortfolioState (time, &_PortfolioState);
-    _Log->logPortfolioValues(time, invested(price), _Cash, asset(price), liability(), equity(price));
+    _Log->logPortfolioValues(time, invested(price), _Cash, asset(price), liability(price), equity(price));
 }

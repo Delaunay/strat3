@@ -57,6 +57,30 @@ public:
     int                 size;
 };
 
+struct SkewKurtosis
+{
+    SkewKurtosis(Matrix mean, Matrix std):
+        mean(mean), std(std), skew(Matrix::Zero(1, mean.cols())), kurtosis(Matrix::Zero(1, mean.cols())), n(0)
+    {}
+
+    void init(const double& x, Index i, Index j)
+    {
+        return this->operator ()(x, i, j);
+    }
+
+    void operator() (const double& x, Index i, Index j);
+
+    Matrix getSkew() { return skew/n; }
+    Matrix getKurtosis() { return kurtosis /n; }
+
+    Matrix mean;
+    Matrix std;
+    Matrix skew;
+    Matrix kurtosis;
+    unsigned int n;
+
+};
+
 struct StatisticPoint
 {
     StatisticPoint(int size)

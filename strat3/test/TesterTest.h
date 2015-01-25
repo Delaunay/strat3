@@ -67,6 +67,8 @@ class SingleSec2 : public Strategy
         bool _Set;
 };
 
+#include "../Strategy/MaximumDiversification.h"
+
 // initialization
 Tester        test;
 DataManager   data;
@@ -78,13 +80,18 @@ SingleSec   strat2("price", "price", 2);
 Portfolio   portfolio2(2, 10000.0, "../gen/Equity", 0);
 SingleSec2  strat3("price", "price", 2);
 Portfolio   portfolio3(2, 10000.0, "../gen/Debt", 0);
+
 VarianceMin vm("price", "price", 2);
-Portfolio   vmp(2, 10000.0, "../gen/Debt", 0);
+Portfolio   vmp(2, 10000.0, "../gen/vm", 0);
+
+MaximumDiversification md("price", "price", 2);
+Portfolio   mdp(2, 10000.0, "../gen/md", 0);
 
 NodeTuple myStrat;
 NodeTuple myStrat2;
 NodeTuple myStrat3;
 NodeTuple vm_nt;
+NodeTuple md_nt;
 
 TEST(Tester, setup)
 {
@@ -113,10 +120,16 @@ TEST(Tester, setup)
     vm_nt.log         = 0;
     vm_nt.market      = 0;
 
+    md_nt.strat       = &md;
+    md_nt.portfolio   = &mdp;
+    md_nt.log         = 0;
+    md_nt.market      = 0;
+
     test.addStrategy(&myStrat2);
     test.addStrategy(&myStrat);
     test.addStrategy(&myStrat3);
     test.addStrategy(&vm_nt);
+    test.addStrategy(&md_nt);
 }
 
 TEST(Tester, run)

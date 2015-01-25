@@ -19,13 +19,23 @@ void generate_gp_script(const std::vector<std::string>& strat,
     std::string term_s("svg size 600,300 dynamic mouse");
     std::string ext("svg");
 
+    bool color = true;
 
     if (tex)
     {
+        if (color)
+        {
         //cairolatex eps size 8 cm,6.8 cm
-        term_l = "epslatex size 16.59 cm,6.8 cm";
-        term_s = "epslatex size 8.5 cm,6.8 cm";
-        ext = "tex";
+            term_l = "cairolatex eps size 16.59 cm,6.8 cm";
+            term_s = "cairolatex eps size 8.5 cm,6.8 cm";
+            ext = "tex";
+        }
+        else
+        {
+            term_l = "epslatex size 16.59 cm,6.8 cm";
+            term_s = "epslatex size 8.5 cm,6.8 cm";
+            ext = "tex";
+        }
     }
 
     // main config
@@ -202,7 +212,8 @@ void generate_gp_script(const std::vector<std::string>& strat,
         "\nset output \"../gen/graph/" << strat[i] << "_values."<< ext <<"\" \n"
         "plot \"../gen/data/"<< strat[i] << "_values.dat\" using 1:"
              << offset <<" title \"Liabilities\", '' using 1:"
-             << offset + 1<<" title \"Equity\" \n";
+             << offset + 1<<" title \"Equity\", '' using 1:"
+             << offset + 2<<" title \"Asset\" \n";
     }
 
     // Periodict Ret
@@ -288,4 +299,15 @@ void generate_gp_script(const std::vector<std::string>& strat,
     // TODO add a log
     if (a == - 1)
         fprintf(stderr, "error starting gnuplot, is gnuplot or gnuplot.exe in your path?\n");
+}
+
+std::string format_double(double x, int pre, int nb)
+{
+    // %[flags][width][.precision][length]
+    std::string a("                ");
+    std::string format = "% #" + std::to_string(nb) + "." + std::to_string(pre) + "f";
+
+    sprintf(&a.at(0), format.c_str(), x);
+
+    return a;
 }

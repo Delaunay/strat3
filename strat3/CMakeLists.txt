@@ -23,7 +23,10 @@ SET(STRAT3_VERSION_PATCH 0)
 SET(STRA3_VERSION
     ${CERES_VERSION_MAJOR}.${CERES_VERSION_MINOR}.${CERES_VERSION_PATCH})
 
+
 ENABLE_TESTING()
+
+OPTION(BUILD_TESTING "Enable tests" ON)
 
 #===============================================================================
 #       Path to third party source
@@ -125,4 +128,5 @@ link_directories(${PROJECT_BINARY_DIR})
 
 # executable and linking
 add_executable(tests "${PROJECT_SOURCE_DIR}/test/main_test.cpp" ${SRC_LIST})
+#target_link_libraries(tests -isystem libgtest.a libStrat3.a -pthread)
 target_link_libraries(tests -isystem libgtest.a -pthread)

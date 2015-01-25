@@ -1,5 +1,8 @@
 #include "Statistics.h"
 
+#include <algorithm>
+
+
 Matrix sort(Matrix x)
 {
     Matrix temp = x;
@@ -109,10 +112,17 @@ SecondMoment::~SecondMoment()
 
 void SecondMoment::init(const double& x, Index i, Index j)
 {
-    e0[j] = x;
-    sum_mean[j] =  x - e0[j];
-    sum_std [j] = (x - e0[j]) * (x - e0[j]);
-    element [j] = 1;
+    if (i == 0)
+    {
+        e0[j] = x;
+        sum_mean[j] =  x - e0[j];
+        sum_std [j] = (x - e0[j]) * (x - e0[j]);
+        element [j] = 1;
+    }
+    else
+    {
+        return this->operator ()(x, i, j);
+    }
 }
 
 void SecondMoment::operator() (const double& x, Index i, Index j)
@@ -217,6 +227,14 @@ const char* get_week(int x)
     default:
         return "Mon";
     }
+}
+
+
+void SkewKurtosis::operator() (const double& x, Index i, Index j)
+{
+    skew    (0, j) += pow((x - mean(0, j) ) / std(0, j), 3.0);
+    kurtosis(0, j) += pow((x - mean(0, j) ) / std(0, j), 4.0);
+    n = std::max(i + 1, n);
 }
 
 

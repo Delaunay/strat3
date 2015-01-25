@@ -1,5 +1,8 @@
 #include "TEXReport.h"
 
+typedef std::unordered_map<std::string, double> MapStringKey;
+typedef MapStringKey::iterator Iterator;
+
 void TEXReport::overview()
 {
 
@@ -7,91 +10,138 @@ void TEXReport::overview()
 
     _file <<
     "\\chapter{Overview}\n"
-        "\\section{Holding Period Return}\n"
-        "\\input{../gen/graph/holding_ret.tex}\n"
-        "\\section{Statistics}\n";
+        "\\section{Holding Period Return}\n";
+    addFigure("../gen/graph/holding_ret.tex", "Holding Period Return");
+        //"\\input{../gen/graph/holding_ret.tex}\n"
+        _file << "\\section{Statistics}\n";
 
     _file <<
     "\\begin{center}\n"
-    "\\begin{tabular}{|r|";
-    for (int i = 0; i < m; i++)
-        _file <<"r";
+    "\\begin{tabular}{|r|rrrrrrr|}\n";
 
-    _file << "|}\n \\hline \n";
-
-    // line 1
-    _file << "n = " << _Data->obs() << " & ";
+    _file << "\\hline \n"
+             "Strategies & Mean & St. Dev. & Sharp & Skew & Kurtosis & Positive & Negative \\\\ \n"
+             "\\hline \n";
 
     for (int i = 0; i < m; i++)
-        if (i < m - 1)
-            _file << _Data->strategyName(i) << " & " ;
-        else
-            _file << _Data->strategyName(i) << "\\\\ \n";
+    {
+        _file << _Data->strategyName(i) << " & "
+                << format_double(_Data->_StatisticPoint(DataAnalyser::Mean, i) * 250.0 * 100.0, 2)       << " & "
+                << format_double(_Data->_StatisticPoint(DataAnalyser::SD, i)   * sqrt(250.0) * 100.0, 2) << " & "
+                << format_double(_Data->_StatisticPoint(DataAnalyser::Mean, i) * 250.0 /
+                                (_Data->_StatisticPoint(DataAnalyser::SD, i)   * sqrt(250.0)), 4)        << " & "
 
-    _file << "\\hline \n";
+                << format_double(_Data->_StatisticPoint(DataAnalyser::Skew, i), 4)                      << " & "
+                << format_double(_Data->_StatisticPoint(DataAnalyser::Kurtosis, i), 2)                  << " & "
+                << _Data->_StatisticPoint(DataAnalyser::Positive, i)                                    << " & "
+                << _Data->_StatisticPoint(DataAnalyser::Negative, i)                                    << " \\\\ \n "
+                 ;
+    }
 
-    // line 2
-    _file << "Mean & ";
+//    "\\begin{tabular}{|r|";
+//    for (int i = 0; i < m; i++)
+//        _file <<"r";
 
-    for (int i = 0; i < m; i++)
-        if (i < m - 1)
-            _file << trunc(_Data->_StatisticPoint(DataAnalyser::Mean, i) * 100.0 * 250.0, 2) << " & ";
-        else
-            _file <<  trunc(_Data->_StatisticPoint(DataAnalyser::Mean, i) * 100.0 * 250.0, 2) << "\\\\ \n";
+//    _file << "|}\n \\hline \n";
 
-    // line 3
-    _file << "St. Dev & ";
+//    // line 1
+//    _file << "n = " << _Data->obs() << " & ";
 
-    for (int i = 0; i < m; i++)
-        if (i < m - 1)
-            _file <<  trunc(_Data->_StatisticPoint(DataAnalyser::SD, i) * sqrt(250.0) * 100.0, 2) << " & ";
-        else
-            _file <<  trunc(_Data->_StatisticPoint(DataAnalyser::SD, i) * sqrt(250.0) * 100.0, 2) << "\\\\ \n";
+//    for (int i = 0; i < m; i++)
+//        if (i < m - 1)
+//            _file << _Data->strategyName(i) << " & " ;
+//        else
+//            _file << _Data->strategyName(i) << "\\\\ \n";
 
-    // line 4
-    _file << "Sharp & ";
+//    _file << "\\hline \n";
 
-    for (int i = 0; i < m; i++)
-        if (i < m - 1)
-            _file << trunc(_Data->_StatisticPoint(DataAnalyser::Mean, i) * 250.0 / (_Data->_StatisticPoint(DataAnalyser::SD, i) * sqrt(250.0)), 4) << " & ";
-        else
-            _file << trunc(_Data->_StatisticPoint(DataAnalyser::Mean, i) * 250.0 / (_Data->_StatisticPoint(DataAnalyser::SD, i) * sqrt(250.0)), 4) << "\\\\ \n";
+////    std::vector<std::string> tvec(7);
+////    std::vector<     double> dvec(7);
+////    std::vector<        int> pvec(7);
 
-    // line 5
-    _file << "Skew & ";
 
-    for (int i = 0; i < m; i++)
-        if (i < m - 1)
-            _file << "NA" << " & ";
-        else
-            _file << "NA"  << "\\\\ \n";
+////    tvec[0] = "Mean";       dvec[0] = 250.0 * 100.0;        pvec[0] = 2;
+////    tvec[1] = "St. Dev";    dvec[1] = sqrt(250.0) * 100.0;  pvec[1] = 2;
+////    tvec[2] = "Sharp";      dvec[2] = 250.0/sqrt(250.0);    pvec[2] = 2;
+////    tvec[3] = "Skew";       dvec[3] = 1;                    pvec[3] = 4;
+////    tvec[4] = "Kurtosis";   dvec[4] = 1;                    pvec[4] = 2;
+////    tvec[5] = "Positive";   dvec[5] = 1;                    pvec[5] = 0;
+////    tvec[6] = "Negative";   dvec[6] = 1;                    pvec[6] = 0;
 
-    // line 6
-    _file << "Kurtosis & ";
+//    // line 2
+//    _file << "Mean & ";
 
-    for (int i = 0; i < m; i++)
-        if (i < m - 1)
-            _file << "NA" << " & ";
-        else
-            _file << "NA"  << "\\\\ \n";
+//    for (int i = 0; i < m; i++)
+//        if (i < m - 1)
+//            _file <<  format_double(
+//                          _Data->_StatisticPoint(DataAnalyser::Mean, i) * 250.0 * 100.0,
+//                          2) << " & ";
+//        else
+//            _file <<  format_double(
+//                          _Data->_StatisticPoint(DataAnalyser::Mean, i) * 250.0 * 100.0,
+//                          2) << "\\\\ \n";
 
-    // line 7
-    _file << "Positive & ";
+//    // line 3
+//    _file << "St. Dev & ";
 
-    for (int i = 0; i < m; i++)
-        if (i < m - 1)
-            _file << _Data->_StatisticPoint(DataAnalyser::Positive, i) << " & ";
-        else
-            _file << _Data->_StatisticPoint(DataAnalyser::Positive, i) << "\\\\ \n";
+//    for (int i = 0; i < m; i++)
+//        if (i < m - 1)
+//            _file <<  format_double(
+//                          _Data->_StatisticPoint(DataAnalyser::SD, i) * sqrt(250.0) * 100.0,
+//                          2) << " & ";
+//        else
+//            _file <<  format_double(
+//                          _Data->_StatisticPoint(DataAnalyser::SD, i) * sqrt(250.0) * 100.0,
+//                          2) << "\\\\ \n";
 
-    // line 8
-    _file << "Negative & ";
+//    // line 4
+//    _file << "Sharp & ";
 
-    for (int i = 0; i < m; i++)
-        if (i < m - 1)
-            _file << _Data->_StatisticPoint(DataAnalyser::Negative, i) << " & ";
-        else
-            _file << _Data->_StatisticPoint(DataAnalyser::Negative, i) << "\\\\ \n";
+//    for (int i = 0; i < m; i++)
+//        if (i < m - 1)
+//            _file << format_double(
+//                         _Data->_StatisticPoint(DataAnalyser::Mean, i) * 250.0 / (_Data->_StatisticPoint(DataAnalyser::SD, i) * sqrt(250.0)),
+//                         4) << " & ";
+//        else
+//            _file << format_double(
+//                         _Data->_StatisticPoint(DataAnalyser::Mean, i) * 250.0 / (_Data->_StatisticPoint(DataAnalyser::SD, i) * sqrt(250.0)),
+//                         4) << "\\\\ \n";
+
+//    // line 5
+//    _file << "Skew & ";
+
+//    for (int i = 0; i < m; i++)
+//        if (i < m - 1)
+//            _file << format_double(_Data->_StatisticPoint(DataAnalyser::Skew, i), 4) << " & ";
+//        else
+//            _file << format_double(_Data->_StatisticPoint(DataAnalyser::Skew, i), 4) << "\\\\ \n";
+
+//    // line 6
+//    _file << "Kurtosis & ";
+
+//    for (int i = 0; i < m; i++)
+//        if (i < m - 1)
+//            _file << format_double(_Data->_StatisticPoint(DataAnalyser::Kurtosis, i), 2) << " & ";
+//        else
+//            _file << format_double(_Data->_StatisticPoint(DataAnalyser::Kurtosis, i), 2) << "\\\\ \n";
+
+//    // line 7
+//    _file << "Positive & ";
+
+//    for (int i = 0; i < m; i++)
+//        if (i < m - 1)
+//            _file << _Data->_StatisticPoint(DataAnalyser::Positive, i) << " & ";
+//        else
+//            _file << _Data->_StatisticPoint(DataAnalyser::Positive, i) << "\\\\ \n";
+
+//    // line 8
+//    _file << "Negative & ";
+
+//    for (int i = 0; i < m; i++)
+//        if (i < m - 1)
+//            _file << _Data->_StatisticPoint(DataAnalyser::Negative, i) << " & ";
+//        else
+//            _file << _Data->_StatisticPoint(DataAnalyser::Negative, i) << "\\\\ \n";
 
     _file << "\\hline \n";
     _file << "\\end{tabular} \n"
@@ -102,6 +152,7 @@ void TEXReport::disclaimer()
 {
     _file <<
     "\\chapter{Disclaimer}\n"
+    "\\section{Strat3 Disclaimer}\n"
          "THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\" "
          "AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE "
          "IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE "
@@ -112,7 +163,8 @@ void TEXReport::disclaimer()
          "INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN "
          "CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) "
          "ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE "
-         "POSSIBILITY OF SUCH DAMAGE."
+         "POSSIBILITY OF SUCH DAMAGE.\\n"
+    "\\section{Report Disclaimer}\n"
     ;
 }
 
@@ -132,16 +184,16 @@ void TEXReport::generate()
     _file.close();
 
     // the DVI will be in the binary folder
-    int a = system("latex ../gen/strat3_report.tex ");
+    int a = system("latex -interaction=batchmode ../gen/strat3_report.tex ");
 
     if (a == - 1)
         fprintf(stderr, "error compiling latex \n");
     else
     {
-        a = system("latex ../gen/strat3_report.tex ");
+        a = system("latex -interaction=batchmode ../gen/strat3_report.tex ");
 
         // compile into PS
-        a = system("dvips strat3_report.dvi");
+        a = system("dvips -q strat3_report.dvi");
 
         // compile into pdf
         if (a != -1)
@@ -160,12 +212,17 @@ void TEXReport::risk()
     int n = _Data->obs();
     _file <<
     "\\chapter{Risk}\n"
-        "\\section{Periodict Return}\n"
-            "\\input{../gen/graph/daily_ret.tex}\n"
+        "\\section{Periodict Return}\n";
 
-        "\\section{Volatility Evolution}\n"
-            "\\input{../gen/graph/volatility_ret.tex}\n\n"
+            addFigure("../gen/graph/daily_ret.tex", "Periodic Return") <<
+            //"\\input{../gen/graph/daily_ret.tex}\n"
 
+        "\\section{Volatility Evolution}\n";
+
+            addFigure("../gen/graph/volatility_ret.tex", "Volatility") <<
+            //"\\input{../gen/graph/volatility_ret.tex}\n\n"
+
+            "\n"
             "\\begin{center}\n"
             "\\begin{tabular}{|r|rrr|}\n"
 
@@ -175,25 +232,28 @@ void TEXReport::risk()
 
                 for(int i = 0; i < _Data->size(); i++)
                     _file << _Data->strategyName(i) << " & " <<
-                             trunc(_Data->_MovingSDStat(DataAnalyser::Mean, i) * 100.0 * sqrt(250.0), 2)  << " & " <<
-                             trunc(_Data->_MovingSDStat(DataAnalyser::SD, i) * 100.0 * sqrt(250.0), 2)  << " & " <<
+                             format_double(_Data->_MovingSDStat(DataAnalyser::Mean, i) * 100.0 * sqrt(250.0), 2)  << " & " <<
+                             format_double(_Data->_MovingSDStat(DataAnalyser::SD, i) * 100.0 * sqrt(250.0), 2)  << " & " <<
                              _Data->_MovingSDStat(DataAnalyser::Positive, i)  << " \\\\ \n ";
 
        _file << "\\hline \n"
             "\\end{tabular}\n"
             "\\end{center}\n"
 
-        "\\section{Drawdown}\n"
-             "\\input{../gen/graph/drawdown_ret.tex}\n"
+        "\\section{Drawdown}\n";
+             addFigure("../gen/graph/drawdown_ret.tex", "Drawdown") <<
+             //"\\input{../gen/graph/drawdown_ret.tex}\n"
 
-        "\\section{Density}\n"
-             "\\input{../gen/graph/distri_ret.tex}\n\n"
+        "\\section{Density}\n";
+             addFigure("../gen/graph/distri_ret.tex", "Return Distribution") <<
+             //"\\input{../gen/graph/distri_ret.tex}\n\n"
 
         "\\begin{center}\n"
         "\\begin{tabular}{rr}\n"
 
+             //addFigure("../gen/graph/loss_distri_ret.tex") << " & ";
+             //addFigure("../gen/graph/gain_distri_ret.tex") << " \\\\ \n ";
              "\\input{../gen/graph/loss_distri_ret.tex} & \\input{../gen/graph/gain_distri_ret.tex} \\\\ \n"
-
 
              "\\begin{tabular}{|r|rrr|}\n"
 
@@ -203,9 +263,9 @@ void TEXReport::risk()
 
                 for(int i = 0; i < _Data->size(); i++)
                     _file << _Data->strategyName(i) << " & " <<
-                             trunc(_Data->_StatisticPoint(DataAnalyser::MeanNegative, i) * 100.0 * 250.0, 2)  << " & " <<
-                             trunc(_Data->_StatisticPoint(DataAnalyser::SDNegative, i) * 100.0 * sqrt(250.0), 2)  << " & " <<
-                             trunc(double(_Data->_StatisticPoint(DataAnalyser::Negative, i) * 100.0) / n, 2)  << " \\\\ \n ";
+                             format_double(_Data->_StatisticPoint(DataAnalyser::MeanNegative, i) * 100.0 * 250.0, 2)  << " & " <<
+                             format_double(_Data->_StatisticPoint(DataAnalyser::SDNegative, i) * 100.0 * sqrt(250.0), 2)  << " & " <<
+                             format_double(double(_Data->_StatisticPoint(DataAnalyser::Negative, i) * 100.0) / n, 2)  << " \\\\ \n ";
 
        _file << "\\hline \n"
              "\\end{tabular}\n"
@@ -220,9 +280,9 @@ void TEXReport::risk()
 
                    for(int i = 0; i < _Data->size(); i++)
                        _file << _Data->strategyName(i) << " & " <<
-                                trunc(_Data->_StatisticPoint(DataAnalyser::MeanPositive, i) * 100.0 * 250.0, 2)  << " & " <<
-                                trunc(_Data->_StatisticPoint(DataAnalyser::SDPositive, i) * 100.0 * sqrt(250.0), 2)  << " & " <<
-                                trunc(double(_Data->_StatisticPoint(DataAnalyser::Positive, i) * 100.0) / n, 2)  << " \\\\ \n ";
+                                format_double(_Data->_StatisticPoint(DataAnalyser::MeanPositive, i) * 100.0 * 250.0, 2)  << " & " <<
+                                format_double(_Data->_StatisticPoint(DataAnalyser::SDPositive, i) * 100.0 * sqrt(250.0), 2)  << " & " <<
+                                format_double(double(_Data->_StatisticPoint(DataAnalyser::Positive, i) * 100.0) / n, 2)  << " \\\\ \n ";
 
        _file << "\\hline \n"
              "\\end{tabular}\n"
@@ -235,7 +295,8 @@ void TEXReport::risk()
 void TEXReport::strategies()
 {
     _file <<
-    "\\chapter{Strategies}\n";
+    "\\chapter{Strategies}\n"
+    "\\begin{multicols}{2}\n";
 
     for(int i = 0, n = _Data->size(); i < n; i++)
     {
@@ -255,6 +316,7 @@ void TEXReport::strategies()
                  ;
     }
 
+    _file << "\\end{multicols}";
 }
 
 
@@ -268,21 +330,28 @@ void TEXReport::data()
         "\\section{Portfolio Values}\n";
 
         for (int i = 0; i < _Data->size(); i++)
-            _file << "\\subsection{"<< _Data->strategyName(i) <<"}\n"
-                        "\\input{../gen/graph/"<< _Data->strategyName(i) <<"_values.tex}\n";
+        {
+            _file << "\\subsection{"<< _Data->strategyName(i) <<"}\n";
+
+            //"\\input{../gen/graph/"<< _Data->strategyName(i) <<"_values.tex}\n";
+            addFigure("../gen/graph/" + _Data->strategyName(i) + "_values.tex", _Data->strategyName(i) + " Assets");
+        }
 
         // =================================
-        _file <<"\\section{Holdings}\n"
-                "Holdings'' percentage variation ";
+        _file <<"\\section{Holdings}\n";
+                //"Holdings'' percentage variation ";
 
         for (int i = 0; i < _Data->size(); i++)
-            _file << "\\subsection{"<< _Data->strategyName(i) <<"}\n"
-                        "\\input{../gen/graph/"<< _Data->strategyName(i) <<"_holding_evol.tex}\n";
+        {
+            _file << "\\subsection{"<< _Data->strategyName(i) <<"}\n";
+
+            //"\\input{../gen/graph/"<< _Data->strategyName(i) <<"_holding_evol.tex}\n";
+            addFigure("../gen/graph/" + _Data->strategyName(i) + "_holding_evol.tex", _Data->strategyName(i) + " Holdings percentage variation");
+        }
 
         // =================================
         _file <<"\\section{Transaction Order}\n"
-              "Statistics about the number of Asset's unit bought/sold. The first observation is skipped"
-         ;
+              "Statistics about the number of Asset's unit bought/sold. The first observation is skipped";
 
         for (int k = 0; k < _Data->size(); k++)
         {
@@ -296,12 +365,12 @@ void TEXReport::data()
 
                      for(int i = 0, n = _Data->security_size(); i < n; i++)
                          _file << "Sec" << std::to_string(i) << " & " <<
-                                  trunc(_Data->_HoldStat[k](DataAnalyser::Mean, i), 4)         << " & " <<
-                                  trunc(_Data->_HoldStat[k](DataAnalyser::MeanPositive, i), 2) << " & " <<
-                                  trunc(_Data->_HoldStat[k](DataAnalyser::MeanNegative, i), 2) << " & " <<
-                                  trunc(_Data->_HoldStat[k](DataAnalyser::SD, i), 2)           << " & " <<
-                                  trunc(_Data->_HoldStat[k](DataAnalyser::Positive, i) * 100.0/ m, 2) << " & " <<
-                                  trunc(_Data->_HoldStat[k](DataAnalyser::Negative, i) * 100.0/ m, 2) << " \\\\ \n";
+                                  format_double(_Data->_HoldStat[k](DataAnalyser::Mean, i), 4)         << " & " <<
+                                  format_double(_Data->_HoldStat[k](DataAnalyser::MeanPositive, i), 2) << " & " <<
+                                  format_double(_Data->_HoldStat[k](DataAnalyser::MeanNegative, i), 2) << " & " <<
+                                  format_double(_Data->_HoldStat[k](DataAnalyser::SD, i), 2)           << " & " <<
+                                  format_double(_Data->_HoldStat[k](DataAnalyser::Positive, i) * 100.0/ m, 2) << " & " <<
+                                  format_double(_Data->_HoldStat[k](DataAnalyser::Negative, i) * 100.0/ m, 2) << " \\\\ \n";
 
                      _file << "\\hline\n"
                      "\\end{tabular}\n"
@@ -312,6 +381,29 @@ void TEXReport::data()
         _file <<"\\section{Target Weight}\n";
 
         for (int i = 0; i < _Data->size(); i++)
-            _file << "\\subsection{"<< _Data->strategyName(i) <<"}\n"
-                        "\\input{../gen/graph/"<< _Data->strategyName(i) <<"_weight_target.tex}\n";
+        {
+            _file << "\\subsection{"<< _Data->strategyName(i) <<"}\n";
+                     //"\\input{../gen/graph/"<< _Data->strategyName(i) <<"_weight_target.tex}\n";
+                     addFigure("../gen/graph/" + _Data->strategyName(i) + "_weight_target.tex", _Data->strategyName(i) + " Target Weight");
+        }
+}
+
+std::fstream& TEXReport::addFigure(Key input, Key caption, Key label)
+{
+    _file <<
+//    "\\begin{figure}[htbp]\n"
+//        "\\begin{center}\n"
+            "\\input{"<< input <<"}\n"
+//        "\\end{center}\n"
+    ;
+
+//    if (!caption.empty())
+//        _file << "\\caption{"<< caption <<"}\n";
+
+//    if (!caption.empty())
+//        _file << "\\label{"<< label <<"}\n";
+
+//    _file << "\\end{figure}\n";
+
+    return _file;
 }

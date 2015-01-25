@@ -127,27 +127,27 @@ void HTMLReport::overview()
        _file << "<tr>"
                     "<td> Mean*</td>";
            for(int i = 0; i < _Data->size(); i++)
-                _file << "<td>" << _Data->_StatisticPoint(DataAnalyser::Mean, i) * 100.0 * 250.0 << "</td>";
+                _file << "<td>" << trunc(_Data->_StatisticPoint(DataAnalyser::Mean, i) * 100.0 * 250.0, 2) << "</td>";
        _file << "</tr>";
        _file << "<tr>"
                     "<td> Standard Deviation**</td>";
            for(int i = 0; i < _Data->size(); i++)
-                _file << "<td>" << _Data->_StatisticPoint(DataAnalyser::SD, i) * sqrt(250.0) * 100.0 << "</td>";
+                _file << "<td>" << trunc(_Data->_StatisticPoint(DataAnalyser::SD, i) * sqrt(250.0) * 100.0, 2) << "</td>";
        _file << "</tr>";
        _file << "<tr>"
                     "<td> Sharp</td>";
            for(int i = 0; i < _Data->size(); i++)
-                _file << "<td>" << _Data->_StatisticPoint(DataAnalyser::Mean, i) * 250.0 / (_Data->_StatisticPoint(DataAnalyser::SD, i) * sqrt(250.0)) << "</td>";
+                _file << "<td>" << trunc(_Data->_StatisticPoint(DataAnalyser::Mean, i) * 250.0 / (_Data->_StatisticPoint(DataAnalyser::SD, i) * sqrt(250.0)), 2) << "</td>";
        _file << "</tr>";
        _file << "<tr>"
                     "<td> Skew </td>";
            for(int i = 0; i < _Data->size(); i++)
-                _file << "<td>" << "NA" << "</td>";
+                _file << "<td>" << trunc(_Data->_StatisticPoint(DataAnalyser::Skew, i), 4) << "</td>";
        _file << "</tr>";
        _file << "<tr>"
                     "<td> Kurtosis </td>";
            for(int i = 0; i < _Data->size(); i++)
-                _file << "<td>" <<  "NA" << "</td>";
+                _file << "<td>" <<  trunc(_Data->_StatisticPoint(DataAnalyser::Kurtosis, i), 2) << "</td>";
        _file << "</tr>";
        _file << "<tr>"
                     "<td> Positive </td>";
@@ -201,8 +201,8 @@ void HTMLReport::risk()
                      for(int i = 0; i < _Data->size(); i++)
                          _file << "<tr>"
                                       "<td>" << _Data->strategyName(i) << "</td>"
-                                      "<td>" << _Data->_MovingSDStat(DataAnalyser::Mean, i) * 100.0 * sqrt(250.0)<< "</td>"
-                                      "<td>" << _Data->_MovingSDStat(DataAnalyser::SD, i) * 100.0 * sqrt(250.0) << "</td>"
+                                      "<td>" << trunc(_Data->_MovingSDStat(DataAnalyser::Mean, i) * 100.0 * sqrt(250.0), 2)<< "</td>"
+                                      "<td>" << trunc(_Data->_MovingSDStat(DataAnalyser::SD, i) * 100.0 * sqrt(250.0), 2)  << "</td>"
                                       "<td>" << _Data->_MovingSDStat(DataAnalyser::Positive, i)<< "</td>"
                                   "</tr>";
             _file << "<tr>"
@@ -233,9 +233,9 @@ void HTMLReport::risk()
                         for(int i = 0; i < _Data->size(); i++)
                             _file << "<tr>"
                                          "<td>" << _Data->strategyName(i) << "</td>"
-                                         "<td>" << _Data->_StatisticPoint(DataAnalyser::MeanNegative, i) * 100.0 * 250.0<< "</td>"
-                                         "<td>" << _Data->_StatisticPoint(DataAnalyser::SDNegative, i) * 100.0 * sqrt(250.0) << "</td>"
-                                         "<td>" << double(_Data->_StatisticPoint(DataAnalyser::Negative, i) * 100.0) / n<< "</td>"
+                                         "<td>" << trunc(_Data->_StatisticPoint(DataAnalyser::MeanNegative, i) * 100.0 * 250.0, 2)<< "</td>"
+                                         "<td>" << trunc(_Data->_StatisticPoint(DataAnalyser::SDNegative, i) * 100.0 * sqrt(250.0), 2) << "</td>"
+                                         "<td>" << trunc(double(_Data->_StatisticPoint(DataAnalyser::Negative, i) * 100.0) / n, 2)<< "</td>"
                                      "</tr>";
                _file << "<tr>"
                     "</tbody>"
@@ -257,9 +257,9 @@ void HTMLReport::risk()
                             for(int i = 0; i < _Data->size(); i++)
                                 _file << "<tr>"
                                              "<td>" << _Data->strategyName(i) << "</td>"
-                                             "<td>" << _Data->_StatisticPoint(DataAnalyser::MeanPositive, i) * 100.0 * 250.0<< "</td>"
-                                             "<td>" << _Data->_StatisticPoint(DataAnalyser::SDPositive, i) * 100.0 * sqrt(250.0)<< "</td>"
-                                             "<td>" << double(_Data->_StatisticPoint(DataAnalyser::Positive, i) * 100.0) / n<< "</td>"
+                                             "<td>" << trunc(_Data->_StatisticPoint(DataAnalyser::MeanPositive, i) * 100.0 * 250.0, 2)<< "</td>"
+                                             "<td>" << trunc(_Data->_StatisticPoint(DataAnalyser::SDPositive, i) * 100.0 * sqrt(250.0), 2)<< "</td>"
+                                             "<td>" << trunc(double(_Data->_StatisticPoint(DataAnalyser::Positive, i) * 100.0) / n, 2)<< "</td>"
                                          "</tr>";
                    _file << "<tr>"
                         "</tbody>"

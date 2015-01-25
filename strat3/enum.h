@@ -10,7 +10,7 @@
 
 typedef std::string         Key;
 typedef std::string         FileName;
-typedef Eigen::MatrixXd     Matrix;
+typedef Eigen::Matrix<double, -1, -1>     Matrix;
 typedef Eigen::VectorXd     Column;
 typedef Eigen::RowVectorXd  Row;
 typedef unsigned int        Index;

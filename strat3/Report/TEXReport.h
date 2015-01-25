@@ -41,24 +41,46 @@ public:
         _file <<
         "\\documentclass[11pt, openany]{book}\n"
         "\\usepackage[top=2.5cm, bottom=2.5cm, left=2.5cm, right=2.5cm]{geometry}\n"
-        "\\usepackage{hyperref}\n"
+        "\\usepackage[colorlinks=true,linkcolor=blue]{hyperref}\n"
         "\\usepackage{amsmath}\n"
         "\\usepackage{amssymb}\n"
         "\\usepackage{graphicx}\n"
         "\\usepackage{color}\n"
+        "\\usepackage{multicol}\n"
+        //"\\usepackage{lmodern}\n"
         "\\definecolor{linkcolour}{rgb}{0,0.2,0.6}\n"
         "%\\usepackage{multirow}\n\n"
+        "\\usepackage{fancyhdr}\n"
+
+
+        "\\usepackage{draftwatermark}\n"
+        "\\SetWatermarkText{PRE ALPHA}\n"
+        "\\SetWatermarkScale{5}\n"
+        //\SetWatermarkColor[rgb]{1,0,0}
+        //\SetWatermarkColor[gray]{0.5}
 
         "\\title{"<< title <<"}\n"
         "\\author{Strat 3}\n\n"
 
+        "\\pagestyle{fancy}\n"
+
+        //"\\cfoot{Title \\copyright Pierre Delaunay}\n"
+        //"\\lfoot{Strat3}\n"
+        //\\copyright Pierre Delaunay
+        //"\\cfoot{\\thepage}\n"
+        //"\\rfoot{\\thepage}\n"
+
         "\\begin{document}\n\n"
 
         "\\maketitle\n"
-        "\\tableofcontents\n";
+        "\\tableofcontents\n"
+        ;
     }
 
     void data();
+
+
+    std::fstream& addFigure(Key input, Key caption = Key(""), Key label = Key(""));
 
     void performance()
     {

@@ -72,12 +72,12 @@ public:
         for(int i = 0; i < n; i++)
         {
             // generate the matrix with all portfolio value side by side
-            _EquityPath.col(i) =_Data->getLog(i)->portfolioValues().col(5);
+            _EquityPath.col(i) =_Data->getLog(i)->portfolioValues().col(DataLog::Invested);
             double cash        = _EquityPath(0, i);
 
             // setup
             _PathAnalysis[i]                 = Matrix::Zero(end, PathFieldMax);
-            _PathAnalysis[i].col(Time)       = _Data->getLog(i)->portfolioValues().col(0);
+            _PathAnalysis[i].col(Time)       = _Data->getLog(i)->portfolioValues().col(DataLog::Time);
             _PathAnalysis[i].col(RawValue)   = _EquityPath.col(i);
             _PathAnalysis[i].col(Cumulative) = (_EquityPath.col(i)/cash).unaryExpr(std::ptr_fun(log_double));
         }
@@ -106,19 +106,26 @@ public:
         StatisticPoint md(n);
         _EquityRet.visit(md);
 
+
+
         _StatisticPoint = Matrix::Zero(FieldMax, n);
 
         _StatisticPoint.row(Mean        ) = md.usual.getAllMean();
         _StatisticPoint.row(Var         ) = md.usual.getAllVariance();
         _StatisticPoint.row(SD          ) = md.usual.getAllSD();
-//        _StatisticPoint.row(Mean        ) = md.usual.getAllMean();
-//        _StatisticPoint.row(Mean        ) = md.usual.getAllMean();
+
         _StatisticPoint.row(Positive    ) = get_matrix(md.positive.element).cast<double>();
         _StatisticPoint.row(Negative    ) = get_matrix(md.negative.element).cast<double>();
         _StatisticPoint.row(MeanPositive) = md.positive.getAllMean();
         _StatisticPoint.row(MeanNegative) = md.negative.getAllMean();
         _StatisticPoint.row(SDPositive  ) = md.positive.getAllSD();
         _StatisticPoint.row(SDNegative  ) = md.negative.getAllSD();
+
+        SkewKurtosis sk(_StatisticPoint.row(Mean), _StatisticPoint.row(SD));
+        _EquityRet.visit(sk);
+
+        _StatisticPoint.row(Skew        ) = sk.getSkew();
+        _StatisticPoint.row(Kurtosis    ) = sk.getKurtosis();
 
         // compute frequency
         _ReturnFrequency = frequency(_EquityRet);
@@ -374,7 +381,7 @@ public:
             temp.leftCols(offset) = date.block(_Data->stratWindow(), 0, end, offset);
 
         for (int i = 0; i < n; i++)
-            temp.col(i + offset) = _MovingSD.col(i);
+            temp.col(i + offset) = _MovingSD.col(i) * sqrt(250.0);
 
         // OUT
         file.open("../gen/data/volatility_ret.dat", std::ios::out);

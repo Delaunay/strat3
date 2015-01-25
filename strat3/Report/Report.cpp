@@ -269,23 +269,24 @@ void DataAnalyser::gpTimeSecData()
     //      Portfolio Values
     //==================================
 
-    temp = Matrix::Zero(end, 2 + offset);
+    temp = Matrix::Zero(end, 3 + offset);
 
     if (dates)
     {
-        header = "#year,month,days,liabilities,equity\n";
+        header = "#year,month,days,liabilities,equity,asset\n";
         temp.leftCols(offset) = date.block(_Data->stratWindow(), 0, end, offset);
     }
     else
     {
-        header = "#time,liabilities,equity\n";
+        header = "#time,liabilities,equity,asset\n";
         temp.leftCols(offset) = date.bottomRows(end);
     }
 
     for(int k  = 0; k < n; k++)
     {
-        temp.col(offset)     = _Data->getLog(k)->portfolioValues().col(DataLog::Liabilities);
-        temp.col(offset + 1) = temp.col(offset) + _Data->getLog(k)->portfolioValues().col(DataLog::Equity);
+        temp.col(offset)     = - _Data->getLog(k)->portfolioValues().col(DataLog::Liabilities);
+        temp.col(offset + 1) = /*temp.col(offset) +*/ _Data->getLog(k)->portfolioValues().col(DataLog::Equity);
+        temp.col(offset + 2) = _Data->getLog(k)->portfolioValues().col(DataLog::Asset);
 
         // OUT
         file.open("../gen/data/" + _Data->getStrategy(k)->title() + "_values.dat", std::ios::out);
