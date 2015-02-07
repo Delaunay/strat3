@@ -23,15 +23,22 @@ struct TransactionWeight
 };
 
 class DataLog;
+class Predictor;
+class SecurityDatabase;
 
+// define what is available to each strategies
 struct DataStruct
 {
 public:
     DataQuery* dataManager;
-//    std::unordered_map<Key, DataLog*> dataLogs;
-    unsigned int time;
 
-//    std::unordered_map<unsigned int, TimeType> time;
+    // TODO
+    // make logs available as const
+
+    std::vector<Predictor>* predictor;
+    SecurityDatabase*       securities;
+
+    unsigned int time;
 };
 
 /*!

@@ -51,8 +51,9 @@ public:
         "\\definecolor{linkcolour}{rgb}{0,0.2,0.6}\n"
         "%\\usepackage{multirow}\n\n"
         "\\usepackage{fancyhdr}\n"
+        //"\\defaultfontfeatures{Mapping=tex-text}n"
 
-
+        //"\\usepackage{xunicode,xltxtra,url,parskip}\n"
         "\\usepackage{draftwatermark}\n"
         "\\SetWatermarkText{PRE ALPHA}\n"
         "\\SetWatermarkScale{5}\n"
@@ -60,7 +61,7 @@ public:
         //\SetWatermarkColor[gray]{0.5}
 
         "\\title{"<< title <<"}\n"
-        "\\author{Strat 3}\n\n"
+        "\\author{Strat 3 Version: 0.0.0}\n\n"
 
         "\\pagestyle{fancy}\n"
 

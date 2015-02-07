@@ -2,7 +2,9 @@
 #define STRAT3_TESTER_HEADER
 
 #include "enum.h"
+
 #include "DataManager/DataQuery.h"
+#include "Predictor/Predictor.h"
 
 class Predictor;
 class Strategy;
@@ -10,6 +12,7 @@ class Portfolio;
 class DataLog;
 class DataManager;
 class MarketEngine;
+class SecurityDatabase;
 
 struct NodeTuple
 {
@@ -22,7 +25,7 @@ struct NodeTuple
         Portfolio*      portfolio;
         MarketEngine*   market;
         DataLog*        log;
-        Predictor*      predictor;
+        //Predictor*      predictor;
 };
 
 class Tester
@@ -69,6 +72,8 @@ class Tester
         Matrix  _Dates;
         bool    _UsingDates;
 
+        // Securities Description
+
         // Price
         Key     _PriceManager;
         Key     _PriceMatrix;
@@ -79,6 +84,8 @@ class Tester
         DataManager* _Data;
 
         std::vector<NodeTuple*> _Strategies;
+        std::vector<Predictor>  _Predictors;
+        SecurityDatabase*       _SecurityDatabase;
 
 };
 

@@ -61,16 +61,20 @@ void TEXReport::disclaimer()
          "POSSIBILITY OF SUCH DAMAGE.\\n"
 
     "\\section{Report Disclaimer}\n"
-        "To the best of our knowledge, the information contained herein is accurate"
-        "and reliable as of the date of publication; however, we do not assume any liability"
-        "whatsoever for the accuracy and completeness of the above information. "<<
 
-        "Strat3" << " makes no warranties which extend beyond the"
-        "description contained herein. Any information given in this statement does not"
-        "constitute any warranty of merchantability or fitness for a particular use. It is the"
-        "customers' responsibility to inspect and to"
-        "test our products in order to satisfy"
-        "themselves as to the suitability of the products to their particular purpose.\n"
+        "This report was regerated automaticly by Strat3 (Version: " << 0 << "." << 0 << "." << 0 <<")"
+        "It is the users' responsibility to verify any information that may have been provided "
+        "by this report. This report is provided \"AS IS\" "
+        "AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE "
+        "IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE "
+        "ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE "
+        "LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR "
+        "CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF "
+        "SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS "
+        "INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN "
+        "CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) "
+        "ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE "
+        "POSSIBILITY OF SUCH DAMAGE.\\n"
     ;
 }
 

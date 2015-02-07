@@ -8,7 +8,8 @@
 
 Tester::Tester():
     _PriceManager(""), _PriceMatrix(""),
-    _Cash(1000), _CurrentTime(0), _StratWindow(1), _UsingDates(false)
+    _Cash(1000), _CurrentTime(0), _StratWindow(1), _UsingDates(false),
+    _SecurityDatabase(0), _Data(0)
 {}
 
 DataQuery Tester::makeQuery    ()   {   return _Data->dataQuery(0, _StratWindow + _CurrentTime);    }
@@ -61,6 +62,8 @@ void Tester::runOneStep()
 
     DataStruct ds;
                ds.dataManager = &dq;
+               ds.predictor   = &this->_Predictors;
+               ds.securities  = this->_SecurityDatabase;
 
     TransactionWeight*  w;
 
