@@ -1,4 +1,4 @@
-#include "../DataManager/DataManager.h"
+#include "../DataManager/all.h"
 #include <unordered_map>
 
 #include <gtest/gtest.h>
@@ -76,7 +76,7 @@ TEST(MatrixManager, LoadCSV)
     MatrixManager mm;
 
     mm.readCSV("../data/test.csv", "price");
-   
+
 //    std::cout << *mm.matrix("price") << std::endl;
 }
 

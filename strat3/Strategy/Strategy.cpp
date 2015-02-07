@@ -9,11 +9,6 @@ Strategy::Strategy(Key managerKey, Key matrixkey, int securitySize, bool rebalan
     _Weight.weight = Matrix::Zero(securitySize, 1);
 }
 
-TransactionWeight* Strategy::operator() (DataQuery* q)
-{
-    return &_Weight;
-}
-
 TransactionWeight* Strategy::weight() {   return &_Weight;    }
 
 string &Strategy::title()        {   return _Title;        }
@@ -32,14 +27,17 @@ TransactionWeight* Strategy::operator() (DataStruct* q)
     return &_Weight;
 }
 
+//TransactionWeight* Strategy::operator() (DataQuery* q)
+//{
+//    return &_Weight;
+//}
 
-// new
 TransactionWeight* Strategy::compute_weight(DataStruct* q)
 {
     return &_Weight;
 }
 
-TransactionWeight* Strategy::compute_weight(DataQuery* q)
-{
-    return &_Weight;
-}
+//TransactionWeight* Strategy::compute_weight(DataQuery* q)
+//{
+//    return &_Weight;
+//}

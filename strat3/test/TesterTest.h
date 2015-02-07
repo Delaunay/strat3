@@ -20,7 +20,7 @@ class SingleSec : public Strategy
             _Version = 1;
         }
 
-        TransactionWeight* operator() (DataQuery* m)
+        TransactionWeight* operator() (DataStruct* m)
         {
             if (!_Set)
             {
@@ -50,7 +50,7 @@ class SingleSec2 : public Strategy
             _Version = 1;
         }
 
-        TransactionWeight* operator() (DataQuery* m)
+        TransactionWeight* operator() (DataStruct* m)
         {
             if (!_Set)
             {
@@ -153,8 +153,14 @@ TEST(Tester, Gnuplot_data)
     test.setDates(date);
 
     // export the data into gnuplot friendly format
+
+    printf("TimesStrat \n");
     mt.gpTimeStratData();
+
+    printf("Distri \n");
     mt.gpDistributionData();
+
+    printf("TimesSec \n");
     mt.gpTimeSecData();
 }
 

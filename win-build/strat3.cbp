@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+   <FileVersion major="1" minor="6" />
+   <Project>
+      <Option title="strat3" />
+      <Option makefile_is_custom="1" />
+      <Option compiler="gcc" />
+      <Option virtualFolders="CMake Files\;CMake Files\DataManager\;CMake Files\Portfolio\;CMake Files\Strategy\;CMake Files\DataLog\;CMake Files\Report\;CMake Files\test\;" />
+      <Build>
+      <Target title="all">
+         <Option working_dir="C:/Users/pastafarian/Dropbox/project/Strat3/win-build" />
+         <Option type="4" />
+         <MakeCommands>
+            <Build command="C:/cygwin/bin/make.exe -f &quot;C:/Users/pastafarian/Dropbox/project/Strat3/win-build/Makefile&quot;  VERBOSE=1 all" />
+            <CompileFile command="C:/cygwin/bin/make.exe -f &quot;C:/Users/pastafarian/Dropbox/project/Strat3/win-build/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="C:/cygwin/bin/make.exe -f &quot;C:/Users/pastafarian/Dropbox/project/Strat3/win-build/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="C:/cygwin/bin/make.exe -f &quot;C:/Users/pastafarian/Dropbox/project/Strat3/win-build/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="cstrat3">
+         <Option output="C:/Users/pastafarian/Dropbox/project/Strat3/win-build/cstrat3.exe" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="C:/Users/pastafarian/Dropbox/project/Strat3/win-build" />
+         <Option object_output="./" />
+         <Option type="1" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add directory="/usr/include" />
+            <Add directory="/usr/lib/gcc/i686-pc-cygwin/4.8.3/../../../../include/w32api" />
+            <Add directory="/usr/lib/gcc/i686-pc-cygwin/4.8.3/include" />
+            <Add directory="/usr/lib/gcc/i686-pc-cygwin/4.8.3/include-fixed" />
+            <Add directory="/usr/lib/gcc/i686-pc-cygwin/4.8.3/include/c++" />
+            <Add directory="/usr/lib/gcc/i686-pc-cygwin/4.8.3/include/c++/backward" />
+            <Add directory="/usr/lib/gcc/i686-pc-cygwin/4.8.3/include/c++/i686-pc-cygwin" />
+            <Add directory="C:/Users/pastafarian/Dropbox/project/Strat3/strat3/../../gtest/gtest" />
+            <Add directory="C:/Users/pastafarian/Dropbox/project/Strat3/strat3/../../gtest/gtest/include" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="C:/cygwin/bin/make.exe -f &quot;C:/Users/pastafarian/Dropbox/project/Strat3/win-build/Makefile&quot;  VERBOSE=1 cstrat3" />
+            <CompileFile command="C:/cygwin/bin/make.exe -f &quot;C:/Users/pastafarian/Dropbox/project/Strat3/win-build/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="C:/cygwin/bin/make.exe -f &quot;C:/Users/pastafarian/Dropbox/project/Strat3/win-build/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="C:/cygwin/bin/make.exe -f &quot;C:/Users/pastafarian/Dropbox/project/Strat3/win-build/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="cstrat3/fast">
+         <Option output="C:/Users/pastafarian/Dropbox/project/Strat3/win-build/cstrat3.exe" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="C:/Users/pastafarian/Dropbox/project/Strat3/win-build" />
+         <Option object_output="./" />
+         <Option type="1" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add directory="/usr/include" />
+            <Add directory="/usr/lib/gcc/i686-pc-cygwin/4.8.3/../../../../include/w32api" />
+            <Add directory="/usr/lib/gcc/i686-pc-cygwin/4.8.3/include" />
+            <Add directory="/usr/lib/gcc/i686-pc-cygwin/4.8.3/include-fixed" />
+            <Add directory="/usr/lib/gcc/i686-pc-cygwin/4.8.3/include/c++" />
+            <Add directory="/usr/lib/gcc/i686-pc-cygwin/4.8.3/include/c++/backward" />
+            <Add directory="/usr/lib/gcc/i686-pc-cygwin/4.8.3/include/c++/i686-pc-cygwin" />
+            <Add directory="C:/Users/pastafarian/Dropbox/project/Strat3/strat3/../../gtest/gtest" />
+            <Add directory="C:/Users/pastafarian/Dropbox/project/Strat3/strat3/../../gtest/gtest/include" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="C:/cygwin/bin/make.exe -f &quot;C:/Users/pastafarian/Dropbox/project/Strat3/win-build/Makefile&quot;  VERBOSE=1 cstrat3/fast" />
+            <CompileFile command="C:/cygwin/bin/make.exe -f &quot;C:/Users/pastafarian/Dropbox/project/Strat3/win-build/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="C:/cygwin/bin/make.exe -f &quot;C:/Users/pastafarian/Dropbox/project/Strat3/win-build/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="C:/cygwin/bin/make.exe -f &quot;C:/Users/pastafarian/Dropbox/project/Strat3/win-build/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="edit_cache">
+         <Option working_dir="C:/Users/pastafarian/Dropbox/project/Strat3/win-build" />
+         <Option type="4" />
+         <MakeCommands>
+            <Build command="C:/cygwin/bin/make.exe -f &quot;C:/Users/pastafarian/Dropbox/project/Strat3/win-build/Makefile&quot;  VERBOSE=1 edit_cache" />
+            <CompileFile command="C:/cygwin/bin/make.exe -f &quot;C:/Users/pastafarian/Dropbox/project/Strat3/win-build/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="C:/cygwin/bin/make.exe -f &quot;C:/Users/pastafarian/Dropbox/project/Strat3/win-build/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="C:/cygwin/bin/make.exe -f &quot;C:/Users/pastafarian/Dropbox/project/Strat3/win-build/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="gtest">
+         <Option output="C:/Users/pastafarian/Dropbox/project/Strat3/win-build/libgtest.a" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="C:/Users/pastafarian/Dropbox/project/Strat3/win-build" />
+         <Option object_output="./" />
+         <Option type="2" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add directory="/usr/include" />
+            <Add directory="/usr/lib/gcc/i686-pc-cygwin/4.8.3/../../../../include/w32api" />
+            <Add directory="/usr/lib/gcc/i686-pc-cygwin/4.8.3/include" />
+            <Add directory="/usr/lib/gcc/i686-pc-cygwin/4.8.3/include-fixed" />
+            <Add directory="/usr/lib/gcc/i686-pc-cygwin/4.8.3/include/c++" />
+            <Add directory="/usr/lib/gcc/i686-pc-cygwin/4.8.3/include/c++/backward" />
+            <Add directory="/usr/lib/gcc/i686-pc-cygwin/4.8.3/include/c++/i686-pc-cygwin" />
+            <Add directory="C:/Users/pastafarian/Dropbox/project/Strat3/strat3/../../gtest/gtest" />
+            <Add directory="C:/Users/pastafarian/Dropbox/project/Strat3/strat3/../../gtest/gtest/include" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="C:/cygwin/bin/make.exe -f &quot;C:/Users/pastafarian/Dropbox/project/Strat3/win-build/Makefile&quot;  VERBOSE=1 gtest" />
+            <CompileFile command="C:/cygwin/bin/make.exe -f &quot;C:/Users/pastafarian/Dropbox/project/Strat3/win-build/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="C:/cygwin/bin/make.exe -f &quot;C:/Users/pastafarian/Dropbox/project/Strat3/win-build/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="C:/cygwin/bin/make.exe -f &quot;C:/Users/pastafarian/Dropbox/project/Strat3/win-build/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="gtest/fast">
+         <Option output="C:/Users/pastafarian/Dropbox/project/Strat3/win-build/libgtest.a" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="C:/Users/pastafarian/Dropbox/project/Strat3/win-build" />
+         <Option object_output="./" />
+         <Option type="2" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add directory="/usr/include" />
+            <Add directory="/usr/lib/gcc/i686-pc-cygwin/4.8.3/../../../../include/w32api" />
+            <Add directory="/usr/lib/gcc/i686-pc-cygwin/4.8.3/include" />
+            <Add directory="/usr/lib/gcc/i686-pc-cygwin/4.8.3/include-fixed" />
+            <Add directory="/usr/lib/gcc/i686-pc-cygwin/4.8.3/include/c++" />
+            <Add directory="/usr/lib/gcc/i686-pc-cygwin/4.8.3/include/c++/backward" />
+            <Add directory="/usr/lib/gcc/i686-pc-cygwin/4.8.3/include/c++/i686-pc-cygwin" />
+            <Add directory="C:/Users/pastafarian/Dropbox/project/Strat3/strat3/../../gtest/gtest" />
+            <Add directory="C:/Users/pastafarian/Dropbox/project/Strat3/strat3/../../gtest/gtest/include" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="C:/cygwin/bin/make.exe -f &quot;C:/Users/pastafarian/Dropbox/project/Strat3/win-build/Makefile&quot;  VERBOSE=1 gtest/fast" />
+            <CompileFile command="C:/cygwin/bin/make.exe -f &quot;C:/Users/pastafarian/Dropbox/project/Strat3/win-build/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="C:/cygwin/bin/make.exe -f &quot;C:/Users/pastafarian/Dropbox/project/Strat3/win-build/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="C:/cygwin/bin/make.exe -f &quot;C:/Users/pastafarian/Dropbox/project/Strat3/win-build/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="rebuild_cache">
+         <Option working_dir="C:/Users/pastafarian/Dropbox/project/Strat3/win-build" />
+         <Option type="4" />
+         <MakeCommands>
+            <Build command="C:/cygwin/bin/make.exe -f &quot;C:/Users/pastafarian/Dropbox/project/Strat3/win-build/Makefile&quot;  VERBOSE=1 rebuild_cache" />
+            <CompileFile command="C:/cygwin/bin/make.exe -f &quot;C:/Users/pastafarian/Dropbox/project/Strat3/win-build/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="C:/cygwin/bin/make.exe -f &quot;C:/Users/pastafarian/Dropbox/project/Strat3/win-build/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="C:/cygwin/bin/make.exe -f &quot;C:/Users/pastafarian/Dropbox/project/Strat3/win-build/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="strat3">
+         <Option output="C:/Users/pastafarian/Dropbox/project/Strat3/win-build/libstrat3.a" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="C:/Users/pastafarian/Dropbox/project/Strat3/win-build" />
+         <Option object_output="./" />
+         <Option type="2" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add directory="/usr/include" />
+            <Add directory="/usr/lib/gcc/i686-pc-cygwin/4.8.3/../../../../include/w32api" />
+            <Add directory="/usr/lib/gcc/i686-pc-cygwin/4.8.3/include" />
+            <Add directory="/usr/lib/gcc/i686-pc-cygwin/4.8.3/include-fixed" />
+            <Add directory="/usr/lib/gcc/i686-pc-cygwin/4.8.3/include/c++" />
+            <Add directory="/usr/lib/gcc/i686-pc-cygwin/4.8.3/include/c++/backward" />
+            <Add directory="/usr/lib/gcc/i686-pc-cygwin/4.8.3/include/c++/i686-pc-cygwin" />
+            <Add directory="C:/Users/pastafarian/Dropbox/project/Strat3/strat3/../../gtest/gtest" />
+            <Add directory="C:/Users/pastafarian/Dropbox/project/Strat3/strat3/../../gtest/gtest/include" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="C:/cygwin/bin/make.exe -f &quot;C:/Users/pastafarian/Dropbox/project/Strat3/win-build/Makefile&quot;  VERBOSE=1 strat3" />
+            <CompileFile command="C:/cygwin/bin/make.exe -f &quot;C:/Users/pastafarian/Dropbox/project/Strat3/win-build/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="C:/cygwin/bin/make.exe -f &quot;C:/Users/pastafarian/Dropbox/project/Strat3/win-build/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="C:/cygwin/bin/make.exe -f &quot;C:/Users/pastafarian/Dropbox/project/Strat3/win-build/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="strat3/fast">
+         <Option output="C:/Users/pastafarian/Dropbox/project/Strat3/win-build/libstrat3.a" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="C:/Users/pastafarian/Dropbox/project/Strat3/win-build" />
+         <Option object_output="./" />
+         <Option type="2" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add directory="/usr/include" />
+            <Add directory="/usr/lib/gcc/i686-pc-cygwin/4.8.3/../../../../include/w32api" />
+            <Add directory="/usr/lib/gcc/i686-pc-cygwin/4.8.3/include" />
+            <Add directory="/usr/lib/gcc/i686-pc-cygwin/4.8.3/include-fixed" />
+            <Add directory="/usr/lib/gcc/i686-pc-cygwin/4.8.3/include/c++" />
+            <Add directory="/usr/lib/gcc/i686-pc-cygwin/4.8.3/include/c++/backward" />
+            <Add directory="/usr/lib/gcc/i686-pc-cygwin/4.8.3/include/c++/i686-pc-cygwin" />
+            <Add directory="C:/Users/pastafarian/Dropbox/project/Strat3/strat3/../../gtest/gtest" />
+            <Add directory="C:/Users/pastafarian/Dropbox/project/Strat3/strat3/../../gtest/gtest/include" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="C:/cygwin/bin/make.exe -f &quot;C:/Users/pastafarian/Dropbox/project/Strat3/win-build/Makefile&quot;  VERBOSE=1 strat3/fast" />
+            <CompileFile command="C:/cygwin/bin/make.exe -f &quot;C:/Users/pastafarian/Dropbox/project/Strat3/win-build/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="C:/cygwin/bin/make.exe -f &quot;C:/Users/pastafarian/Dropbox/project/Strat3/win-build/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="C:/cygwin/bin/make.exe -f &quot;C:/Users/pastafarian/Dropbox/project/Strat3/win-build/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="test">
+         <Option working_dir="C:/Users/pastafarian/Dropbox/project/Strat3/win-build" />
+         <Option type="4" />
+         <MakeCommands>
+            <Build command="C:/cygwin/bin/make.exe -f &quot;C:/Users/pastafarian/Dropbox/project/Strat3/win-build/Makefile&quot;  VERBOSE=1 test" />
+            <CompileFile command="C:/cygwin/bin/make.exe -f &quot;C:/Users/pastafarian/Dropbox/project/Strat3/win-build/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="C:/cygwin/bin/make.exe -f &quot;C:/Users/pastafarian/Dropbox/project/Strat3/win-build/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="C:/cygwin/bin/make.exe -f &quot;C:/Users/pastafarian/Dropbox/project/Strat3/win-build/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="tests">
+         <Option output="C:/Users/pastafarian/Dropbox/project/Strat3/win-build/tests.exe" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="C:/Users/pastafarian/Dropbox/project/Strat3/win-build" />
+         <Option object_output="./" />
+         <Option type="1" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add directory="/usr/include" />
+            <Add directory="/usr/lib/gcc/i686-pc-cygwin/4.8.3/../../../../include/w32api" />
+            <Add directory="/usr/lib/gcc/i686-pc-cygwin/4.8.3/include" />
+            <Add directory="/usr/lib/gcc/i686-pc-cygwin/4.8.3/include-fixed" />
+            <Add directory="/usr/lib/gcc/i686-pc-cygwin/4.8.3/include/c++" />
+            <Add directory="/usr/lib/gcc/i686-pc-cygwin/4.8.3/include/c++/backward" />
+            <Add directory="/usr/lib/gcc/i686-pc-cygwin/4.8.3/include/c++/i686-pc-cygwin" />
+            <Add directory="C:/Users/pastafarian/Dropbox/project/Strat3/strat3/../../gtest/gtest" />
+            <Add directory="C:/Users/pastafarian/Dropbox/project/Strat3/strat3/../../gtest/gtest/include" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="C:/cygwin/bin/make.exe -f &quot;C:/Users/pastafarian/Dropbox/project/Strat3/win-build/Makefile&quot;  VERBOSE=1 tests" />
+            <CompileFile command="C:/cygwin/bin/make.exe -f &quot;C:/Users/pastafarian/Dropbox/project/Strat3/win-build/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="C:/cygwin/bin/make.exe -f &quot;C:/Users/pastafarian/Dropbox/project/Strat3/win-build/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="C:/cygwin/bin/make.exe -f &quot;C:/Users/pastafarian/Dropbox/project/Strat3/win-build/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="tests/fast">
+         <Option output="C:/Users/pastafarian/Dropbox/project/Strat3/win-build/tests.exe" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="C:/Users/pastafarian/Dropbox/project/Strat3/win-build" />
+         <Option object_output="./" />
+         <Option type="1" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add directory="/usr/include" />
+            <Add directory="/usr/lib/gcc/i686-pc-cygwin/4.8.3/../../../../include/w32api" />
+            <Add directory="/usr/lib/gcc/i686-pc-cygwin/4.8.3/include" />
+            <Add directory="/usr/lib/gcc/i686-pc-cygwin/4.8.3/include-fixed" />
+            <Add directory="/usr/lib/gcc/i686-pc-cygwin/4.8.3/include/c++" />
+            <Add directory="/usr/lib/gcc/i686-pc-cygwin/4.8.3/include/c++/backward" />
+            <Add directory="/usr/lib/gcc/i686-pc-cygwin/4.8.3/include/c++/i686-pc-cygwin" />
+            <Add directory="C:/Users/pastafarian/Dropbox/project/Strat3/strat3/../../gtest/gtest" />
+            <Add directory="C:/Users/pastafarian/Dropbox/project/Strat3/strat3/../../gtest/gtest/include" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="C:/cygwin/bin/make.exe -f &quot;C:/Users/pastafarian/Dropbox/project/Strat3/win-build/Makefile&quot;  VERBOSE=1 tests/fast" />
+            <CompileFile command="C:/cygwin/bin/make.exe -f &quot;C:/Users/pastafarian/Dropbox/project/Strat3/win-build/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="C:/cygwin/bin/make.exe -f &quot;C:/Users/pastafarian/Dropbox/project/Strat3/win-build/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="C:/cygwin/bin/make.exe -f &quot;C:/Users/pastafarian/Dropbox/project/Strat3/win-build/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      </Build>
+      <Unit filename="C:/Users/pastafarian/Dropbox/project/Strat3/strat3/DataLog/DataLog.cpp">
+      </Unit>
+      <Unit filename="C:/Users/pastafarian/Dropbox/project/Strat3/strat3/DataManager/DataManager.cpp">
+      </Unit>
+      <Unit filename="C:/Users/pastafarian/Dropbox/project/Strat3/strat3/Portfolio/MarketEngine.cpp">
+      </Unit>
+      <Unit filename="C:/Users/pastafarian/Dropbox/project/Strat3/strat3/Portfolio/Portfolio.cpp">
+      </Unit>
+      <Unit filename="C:/Users/pastafarian/Dropbox/project/Strat3/strat3/Portfolio/Transaction.cpp">
+      </Unit>
+      <Unit filename="C:/Users/pastafarian/Dropbox/project/Strat3/strat3/Portfolio/TransactionAnswer.cpp">
+      </Unit>
+      <Unit filename="C:/Users/pastafarian/Dropbox/project/Strat3/strat3/Report/HTMLReport.cpp">
+      </Unit>
+      <Unit filename="C:/Users/pastafarian/Dropbox/project/Strat3/strat3/Report/Report.cpp">
+      </Unit>
+      <Unit filename="C:/Users/pastafarian/Dropbox/project/Strat3/strat3/Report/Statistics.cpp">
+      </Unit>
+      <Unit filename="C:/Users/pastafarian/Dropbox/project/Strat3/strat3/Report/TEXReport.cpp">
+      </Unit>
+      <Unit filename="C:/Users/pastafarian/Dropbox/project/Strat3/strat3/Report/script.cpp">
+      </Unit>
+      <Unit filename="C:/Users/pastafarian/Dropbox/project/Strat3/strat3/Strategy/Strategy.cpp">
+      </Unit>
+      <Unit filename="C:/Users/pastafarian/Dropbox/project/Strat3/strat3/Strategy/VarianceMin.cpp">
+      </Unit>
+      <Unit filename="C:/Users/pastafarian/Dropbox/project/Strat3/strat3/Tester.cpp">
+      </Unit>
+      <Unit filename="C:/Users/pastafarian/Dropbox/project/Strat3/strat3/cml/cml.cpp">
+      </Unit>
+      <Unit filename="C:/Users/pastafarian/Dropbox/project/Strat3/strat3/cml/main.cpp">
+      </Unit>
+      <Unit filename="C:/Users/pastafarian/Dropbox/project/Strat3/strat3/smath.cpp">
+      </Unit>
+      <Unit filename="C:/Users/pastafarian/Dropbox/project/Strat3/strat3/test/main_test.cpp">
+      </Unit>
+      <Unit filename="C:/Users/pastafarian/Dropbox/project/gtest/gtest/src/gtest-all.cc">
+      </Unit>
+      <Unit filename="C:/Users/pastafarian/Dropbox/project/Strat3/strat3/DataLog/DataLog.h">
+      </Unit>
+      <Unit filename="C:/Users/pastafarian/Dropbox/project/Strat3/strat3/DataManager/DataManager.h">
+      </Unit>
+      <Unit filename="C:/Users/pastafarian/Dropbox/project/Strat3/strat3/Portfolio/MarketEngine.h">
+      </Unit>
+      <Unit filename="C:/Users/pastafarian/Dropbox/project/Strat3/strat3/Portfolio/Portfolio.h">
+      </Unit>
+      <Unit filename="C:/Users/pastafarian/Dropbox/project/Strat3/strat3/Portfolio/Transaction.h">
+      </Unit>
+      <Unit filename="C:/Users/pastafarian/Dropbox/project/Strat3/strat3/Portfolio/TransactionAnswer.h">
+      </Unit>
+      <Unit filename="C:/Users/pastafarian/Dropbox/project/Strat3/strat3/Report/HTMLReport.h">
+      </Unit>
+      <Unit filename="C:/Users/pastafarian/Dropbox/project/Strat3/strat3/Report/Report.h">
+      </Unit>
+      <Unit filename="C:/Users/pastafarian/Dropbox/project/Strat3/strat3/Report/Statistics.h">
+      </Unit>
+      <Unit filename="C:/Users/pastafarian/Dropbox/project/Strat3/strat3/Report/TEXReport.h">
+      </Unit>
+      <Unit filename="C:/Users/pastafarian/Dropbox/project/Strat3/strat3/Report/script.h">
+      </Unit>
+      <Unit filename="C:/Users/pastafarian/Dropbox/project/Strat3/strat3/Strategy/Strategy.h">
+      </Unit>
+      <Unit filename="C:/Users/pastafarian/Dropbox/project/Strat3/strat3/Strategy/VarianceMin.h">
+      </Unit>
+      <Unit filename="C:/Users/pastafarian/Dropbox/project/Strat3/strat3/Tester.h">
+      </Unit>
+      <Unit filename="C:/Users/pastafarian/Dropbox/project/Strat3/strat3/cml/cml.h">
+      </Unit>
+      <Unit filename="C:/Users/pastafarian/Dropbox/project/Strat3/strat3/smath.h">
+      </Unit>
+      <Unit filename="C:/Users/pastafarian/Dropbox/project/Strat3/strat3/CMakeLists.txt">
+          <Option virtualFolder="CMake Files\" />
+      </Unit>
+      <Unit filename="C:/Users/pastafarian/Dropbox/project/Strat3/strat3/DataManager/CMakeLists.txt">
+          <Option virtualFolder="CMake Files\DataManager\" />
+      </Unit>
+      <Unit filename="C:/Users/pastafarian/Dropbox/project/Strat3/strat3/Portfolio/CMakeLists.txt">
+          <Option virtualFolder="CMake Files\Portfolio\" />
+      </Unit>
+      <Unit filename="C:/Users/pastafarian/Dropbox/project/Strat3/strat3/Strategy/CMakeLists.txt">
+          <Option virtualFolder="CMake Files\Strategy\" />
+      </Unit>
+      <Unit filename="C:/Users/pastafarian/Dropbox/project/Strat3/strat3/DataLog/CMakeLists.txt">
+          <Option virtualFolder="CMake Files\DataLog\" />
+      </Unit>
+      <Unit filename="C:/Users/pastafarian/Dropbox/project/Strat3/strat3/Report/CMakeLists.txt">
+          <Option virtualFolder="CMake Files\Report\" />
+      </Unit>
+      <Unit filename="C:/Users/pastafarian/Dropbox/project/Strat3/strat3/test/CMakeLists.txt">
+          <Option virtualFolder="CMake Files\test\" />
+      </Unit>
+   </Project>
+</CodeBlocks_project_file>

@@ -16,7 +16,7 @@ class EqualWeight : public Strategy
             _Version = 1;
         }
 
-        TransactionWeight* operator() (DataQuery* m)
+        TransactionWeight* operator() (DataStruct* m)
         {
             if (!_Set)
             {
@@ -38,7 +38,10 @@ TEST(Strategy, Operator)
     DataManager B;
     DataQuery   C = B.dataQuery(0, 0);
 
-    TransactionWeight* w = A(&C);
+    DataStruct ds;
+    ds.dataManager = &C;
+
+    TransactionWeight* w = A(&ds);
 
     EXPECT_EQ(w->weight(0, 0), 0.5);
     EXPECT_EQ(w->weight(1, 0), 0.5);

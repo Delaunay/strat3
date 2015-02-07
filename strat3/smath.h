@@ -29,10 +29,6 @@ T trunc(T x, int decimal = 2)
     return xx;
 }
 
-
-
-
-
 // we force specialization because we had troubles with eigen's Matrix and unaryExpr
 // (complex numbers were involved)
 double log_double(double x);

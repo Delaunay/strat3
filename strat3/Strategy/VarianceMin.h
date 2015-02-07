@@ -13,7 +13,8 @@ public:
 
     void setWindow(int x);
 
-    TransactionWeight* operator() (DataQuery* dq);
+    TransactionWeight* operator() (DataStruct* dq);
+    //TransactionWeight* operator() (DataQuery* dq);
 
 protected:
 

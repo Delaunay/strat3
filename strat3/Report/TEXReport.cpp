@@ -11,8 +11,8 @@ void TEXReport::overview()
     _file <<
     "\\chapter{Overview}\n"
         "\\section{Holding Period Return}\n";
-    addFigure("../gen/graph/holding_ret.tex", "Holding Period Return");
-        //"\\input{../gen/graph/holding_ret.tex}\n"
+
+        addFigure("../gen/graph/holding_ret.tex", "Holding Period Return");
         _file << "\\section{Statistics}\n";
 
     _file <<
@@ -25,123 +25,17 @@ void TEXReport::overview()
 
     for (int i = 0; i < m; i++)
     {
-        _file << _Data->strategyName(i) << " & "
+        _file << _Data->strategyName(i)                                                                  << " & "
                 << format_double(_Data->_StatisticPoint(DataAnalyser::Mean, i) * 250.0 * 100.0, 2)       << " & "
                 << format_double(_Data->_StatisticPoint(DataAnalyser::SD, i)   * sqrt(250.0) * 100.0, 2) << " & "
                 << format_double(_Data->_StatisticPoint(DataAnalyser::Mean, i) * 250.0 /
                                 (_Data->_StatisticPoint(DataAnalyser::SD, i)   * sqrt(250.0)), 4)        << " & "
-
-                << format_double(_Data->_StatisticPoint(DataAnalyser::Skew, i), 4)                      << " & "
-                << format_double(_Data->_StatisticPoint(DataAnalyser::Kurtosis, i), 2)                  << " & "
-                << _Data->_StatisticPoint(DataAnalyser::Positive, i)                                    << " & "
-                << _Data->_StatisticPoint(DataAnalyser::Negative, i)                                    << " \\\\ \n "
+                << format_double(_Data->_StatisticPoint(DataAnalyser::Skew, i), 4)                       << " & "
+                << format_double(_Data->_StatisticPoint(DataAnalyser::Kurtosis, i), 2)                   << " & "
+                << _Data->_StatisticPoint(DataAnalyser::Positive, i)                                     << " & "
+                << _Data->_StatisticPoint(DataAnalyser::Negative, i)                                     << " \\\\ \n "
                  ;
     }
-
-//    "\\begin{tabular}{|r|";
-//    for (int i = 0; i < m; i++)
-//        _file <<"r";
-
-//    _file << "|}\n \\hline \n";
-
-//    // line 1
-//    _file << "n = " << _Data->obs() << " & ";
-
-//    for (int i = 0; i < m; i++)
-//        if (i < m - 1)
-//            _file << _Data->strategyName(i) << " & " ;
-//        else
-//            _file << _Data->strategyName(i) << "\\\\ \n";
-
-//    _file << "\\hline \n";
-
-////    std::vector<std::string> tvec(7);
-////    std::vector<     double> dvec(7);
-////    std::vector<        int> pvec(7);
-
-
-////    tvec[0] = "Mean";       dvec[0] = 250.0 * 100.0;        pvec[0] = 2;
-////    tvec[1] = "St. Dev";    dvec[1] = sqrt(250.0) * 100.0;  pvec[1] = 2;
-////    tvec[2] = "Sharp";      dvec[2] = 250.0/sqrt(250.0);    pvec[2] = 2;
-////    tvec[3] = "Skew";       dvec[3] = 1;                    pvec[3] = 4;
-////    tvec[4] = "Kurtosis";   dvec[4] = 1;                    pvec[4] = 2;
-////    tvec[5] = "Positive";   dvec[5] = 1;                    pvec[5] = 0;
-////    tvec[6] = "Negative";   dvec[6] = 1;                    pvec[6] = 0;
-
-//    // line 2
-//    _file << "Mean & ";
-
-//    for (int i = 0; i < m; i++)
-//        if (i < m - 1)
-//            _file <<  format_double(
-//                          _Data->_StatisticPoint(DataAnalyser::Mean, i) * 250.0 * 100.0,
-//                          2) << " & ";
-//        else
-//            _file <<  format_double(
-//                          _Data->_StatisticPoint(DataAnalyser::Mean, i) * 250.0 * 100.0,
-//                          2) << "\\\\ \n";
-
-//    // line 3
-//    _file << "St. Dev & ";
-
-//    for (int i = 0; i < m; i++)
-//        if (i < m - 1)
-//            _file <<  format_double(
-//                          _Data->_StatisticPoint(DataAnalyser::SD, i) * sqrt(250.0) * 100.0,
-//                          2) << " & ";
-//        else
-//            _file <<  format_double(
-//                          _Data->_StatisticPoint(DataAnalyser::SD, i) * sqrt(250.0) * 100.0,
-//                          2) << "\\\\ \n";
-
-//    // line 4
-//    _file << "Sharp & ";
-
-//    for (int i = 0; i < m; i++)
-//        if (i < m - 1)
-//            _file << format_double(
-//                         _Data->_StatisticPoint(DataAnalyser::Mean, i) * 250.0 / (_Data->_StatisticPoint(DataAnalyser::SD, i) * sqrt(250.0)),
-//                         4) << " & ";
-//        else
-//            _file << format_double(
-//                         _Data->_StatisticPoint(DataAnalyser::Mean, i) * 250.0 / (_Data->_StatisticPoint(DataAnalyser::SD, i) * sqrt(250.0)),
-//                         4) << "\\\\ \n";
-
-//    // line 5
-//    _file << "Skew & ";
-
-//    for (int i = 0; i < m; i++)
-//        if (i < m - 1)
-//            _file << format_double(_Data->_StatisticPoint(DataAnalyser::Skew, i), 4) << " & ";
-//        else
-//            _file << format_double(_Data->_StatisticPoint(DataAnalyser::Skew, i), 4) << "\\\\ \n";
-
-//    // line 6
-//    _file << "Kurtosis & ";
-
-//    for (int i = 0; i < m; i++)
-//        if (i < m - 1)
-//            _file << format_double(_Data->_StatisticPoint(DataAnalyser::Kurtosis, i), 2) << " & ";
-//        else
-//            _file << format_double(_Data->_StatisticPoint(DataAnalyser::Kurtosis, i), 2) << "\\\\ \n";
-
-//    // line 7
-//    _file << "Positive & ";
-
-//    for (int i = 0; i < m; i++)
-//        if (i < m - 1)
-//            _file << _Data->_StatisticPoint(DataAnalyser::Positive, i) << " & ";
-//        else
-//            _file << _Data->_StatisticPoint(DataAnalyser::Positive, i) << "\\\\ \n";
-
-//    // line 8
-//    _file << "Negative & ";
-
-//    for (int i = 0; i < m; i++)
-//        if (i < m - 1)
-//            _file << _Data->_StatisticPoint(DataAnalyser::Negative, i) << " & ";
-//        else
-//            _file << _Data->_StatisticPoint(DataAnalyser::Negative, i) << "\\\\ \n";
 
     _file << "\\hline \n";
     _file << "\\end{tabular} \n"
@@ -152,6 +46,7 @@ void TEXReport::disclaimer()
 {
     _file <<
     "\\chapter{Disclaimer}\n"
+
     "\\section{Strat3 Disclaimer}\n"
          "THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\" "
          "AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE "
@@ -164,7 +59,18 @@ void TEXReport::disclaimer()
          "CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) "
          "ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE "
          "POSSIBILITY OF SUCH DAMAGE.\\n"
+
     "\\section{Report Disclaimer}\n"
+        "To the best of our knowledge, the information contained herein is accurate"
+        "and reliable as of the date of publication; however, we do not assume any liability"
+        "whatsoever for the accuracy and completeness of the above information. "<<
+
+        "Strat3" << " makes no warranties which extend beyond the"
+        "description contained herein. Any information given in this statement does not"
+        "constitute any warranty of merchantability or fitness for a particular use. It is the"
+        "customers' responsibility to inspect and to"
+        "test our products in order to satisfy"
+        "themselves as to the suitability of the products to their particular purpose.\n"
     ;
 }
 

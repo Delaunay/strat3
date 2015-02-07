@@ -11,6 +11,10 @@
 
 #include "script.h"
 
+#include "../debug.h"
+
+#define STRAT3_DEBUG_REP 0
+
 class Tester;
 
 
@@ -58,15 +62,28 @@ public:
 
     void create_matrix()
     {
+#if STRAT3_DEBUG_REP
+        DEBUG_IDX_INIT;
+        DEBUG_IDX_PRINT;    // 0
+#endif
+
         int n   = _Data->size();
         int m   = _Data->getLog(0)->securityNumber();
         int end = _Data->max_period();
+
+#if STRAT3_DEBUG_REP
+        DEBUG_IDX_PRINT;    // 1
+#endif
 
         // initialization
         _EquityPath = Matrix::Zero(end, n);
         _PathAnalysis = std::vector<Matrix>(n);
         _NegativeRet  = std::vector<std::vector<double> >(n);
         _PositiveRet  = std::vector<std::vector<double> >(n);
+
+#if STRAT3_DEBUG_REP
+        DEBUG_IDX_PRINT;    // 2
+#endif
 
         //  Get portfolio values
         for(int i = 0; i < n; i++)
@@ -82,7 +99,9 @@ public:
             _PathAnalysis[i].col(Cumulative) = (_EquityPath.col(i)/cash).unaryExpr(std::ptr_fun(log_double));
         }
 
-
+#if STRAT3_DEBUG_REP
+        DEBUG_IDX_PRINT;    // 3
+#endif
 
         // compute periodic return
         _EquityRet    = compute_returns(_EquityPath);
@@ -106,7 +125,9 @@ public:
         StatisticPoint md(n);
         _EquityRet.visit(md);
 
-
+#if STRAT3_DEBUG_REP
+        DEBUG_IDX_PRINT;    // 4
+#endif
 
         _StatisticPoint = Matrix::Zero(FieldMax, n);
 
@@ -145,6 +166,9 @@ public:
         _MovingSDStat.row(SD          ) = msdstat.usual.getAllSD();
         _MovingSDStat.row(Positive    ) = get_matrix(msdstat.positive.element).cast<double>();
 
+#if STRAT3_DEBUG_REP
+        DEBUG_IDX_PRINT;    // 5
+#endif
 //        _NegativeRet = std::vector<std::vector<double> >(n); //= Matrix::Zero(md.negative.element);
 //        _PositiveRet = std::vector<std::vector<double> >(n); //= Matrix::Zero();
 
@@ -164,10 +188,22 @@ public:
             _HoldStat[i].row(Negative) = get_matrix(holdstat.negative.element).cast<double>();
         }
 
+#if STRAT3_DEBUG_REP
+        DEBUG_IDX_PRINT;    // 6
+
+        DEBUG_PRINT("n   ", n);
+        DEBUG_PRINT("end ", end);
+#endif
+
+
         for(int i = 0; i < n; i++)
         {
             for (int l = 0; l < end; l++)
             {
+#if STRAT3_DEBUG_REP
+           //     DEBUG_LOOP(l, i);
+#endif
+
                 if (_PathAnalysis[i](l, Periodically) < 0)
                     _NegativeRet[i].push_back(_PathAnalysis[i](l, Periodically));
 
@@ -175,12 +211,22 @@ public:
                     _PositiveRet[i].push_back(_PathAnalysis[i](l, Periodically));
             }
 
+#if STRAT3_DEBUG_REP
+        DEBUG_IDX_PRINT;    // 7
+#endif
             _NegativeFreq.push_back(frequency(Eigen::Map<Matrix>(&_NegativeRet[i][0], _NegativeRet[i].size(), 1),
                                     sqrt(_NegativeRet[i].size()), true));
+#if STRAT3_DEBUG_REP
+        DEBUG_IDX_PRINT;    // 8
+#endif
 
             _PositiveFreq.push_back(frequency(Eigen::Map<Matrix>(&_PositiveRet[i][0], _PositiveRet[i].size(), 1),
                                     sqrt(_PositiveRet[i].size()), true));
         }
+
+#if STRAT3_DEBUG_REP
+        DEBUG_IDX_PRINT;    // 9
+#endif
 
         for(int i = 0; i < n; i++)
         {
@@ -194,6 +240,10 @@ public:
             _HoldingsVariation.push_back(logthing.middleRows(1, end - 1) - logthing.middleRows(0, end - 1));
 
         }
+
+#if STRAT3_DEBUG_REP
+        DEBUG_IDX_PRINT;    // 3
+#endif
     }
 
     Index size()    {   return _Data->size(); }
@@ -207,6 +257,11 @@ public:
      */
     void gpDistributionData()
     {
+#if 0
+        DEBUG_IDX_INIT;
+        DEBUG_IDX_PRINT;    // 0
+#endif
+
         // init
         Eigen::IOFormat gpformat(4, Eigen::DontAlignCols, ",", "\n", "", "", "", "");
         std::fstream file;
@@ -254,19 +309,28 @@ public:
             max = std::max(max, _NegativeFreq[i].rows());
 
         temp = Matrix::Zero(max, _EquityPath.cols() * 2);
-
+#if 0
+        DEBUG_IDX_PRINT;    // 1
+#endif
         for (int i = 0; i < n; i++)
         {
-            // set frequency and bin
-            temp.block(0, 2 * i, _NegativeFreq[i].rows(), 1) =(_NegativeFreq[i].col(0) + _NegativeFreq[i].col(1))/2.0;
-            temp.block(0, 2 * i + 1, _NegativeFreq[i].rows(), 1) =_NegativeFreq[i].col(2);
+            // prevent crash if no postive return were recorded
+            if ((_NegativeFreq[i].rows() != 0) || (_NegativeFreq[i].cols() != 0))
+            {
+                // set frequency and bin
+                temp.block(0, 2 * i, _NegativeFreq[i].rows(), 1) = (_NegativeFreq[i].col(0) + _NegativeFreq[i].col(1))/2.0;
+                temp.block(0, 2 * i + 1, _NegativeFreq[i].rows(), 1) =_NegativeFreq[i].col(2);
 
-            // generate the header that will be used twice
-            if (i < n - 1)
-                header += "ret, " + _Data->getStrategy(i)->title() + ",";
-            else
-                header += "ret, " + _Data->getStrategy(i)->title() + "\n";
+                // generate the header that will be used twice
+                if (i < n - 1)
+                    header += "ret, " + _Data->getStrategy(i)->title() + ",";
+                else
+                    header += "ret, " + _Data->getStrategy(i)->title() + "\n";
+            }
         }
+#if 0
+        DEBUG_IDX_PRINT;    // 2
+#endif
 
         // OUT
         file.open("../gen/data/loss_distri_ret.dat", std::ios::out);
@@ -289,8 +353,12 @@ public:
 
         for (int i = 0; i < n; i++)
         {
-            temp.block(0, 2 * i, _PositiveFreq[i].rows(), 1) =(_PositiveFreq[i].col(0) + _PositiveFreq[i].col(1))/2.0;
-            temp.block(0, 2 * i + 1, _PositiveFreq[i].rows(), 1) =_PositiveFreq[i].col(2);
+            // prevent crash if no postive return were recorded
+            if ((_PositiveFreq[i].rows() != 0) || (_PositiveFreq[i].cols() != 0))
+            {
+                temp.block(0, 2 * i, _PositiveFreq[i].rows(), 1) =(_PositiveFreq[i].col(0) + _PositiveFreq[i].col(1))/2.0;
+                temp.block(0, 2 * i + 1, _PositiveFreq[i].rows(), 1) =_PositiveFreq[i].col(2);
+            }
         }
 
         // OUT
@@ -488,7 +556,7 @@ public:
             pathStat.close();
         }
     }
-    
+
 //protected:
 
     std::vector<std::vector<double> > _NegativeRet;

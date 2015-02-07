@@ -1,0 +1,4 @@
+C:/Users/pastafarian/Dropbox/project/Strat3/win-build/CMakeFiles/cstrat3.dir
+C:/Users/pastafarian/Dropbox/project/Strat3/win-build/CMakeFiles/gtest.dir
+C:/Users/pastafarian/Dropbox/project/Strat3/win-build/CMakeFiles/strat3.dir
+C:/Users/pastafarian/Dropbox/project/Strat3/win-build/CMakeFiles/tests.dir

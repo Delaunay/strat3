@@ -7,12 +7,11 @@ Dependencies
 * Bootstrap - base CSS/JavaScript   - License
 * Python    -
 
-
-
-
 TODO
 ----
-
+* Event Handler
+* Predictor
+* 
 * Implement a Monte Carlo Benchmark 
 in order to do so we need
     * Portfolio managing n strategies at the same time
@@ -27,3 +26,9 @@ in order to do so we need
         
 this is made to rule out the possibility that the portfolio performance is a product
 of luck and truly represent an economic reality
+
+
+Issues
+------
+
+* if the strategy produce no negative return we have a segmentation fault

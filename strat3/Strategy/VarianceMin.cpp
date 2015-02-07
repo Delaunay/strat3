@@ -1,3 +1,5 @@
+
+#include "../DataManager/DataQuery.h"
 #include "VarianceMin.h"
 #include "../smath.h"
 
@@ -30,10 +32,10 @@ void VarianceMin::setWindow(int x)
     _Window = x;
 }
 
-TransactionWeight* VarianceMin::operator() (DataQuery* dq)
+TransactionWeight* VarianceMin::operator() (DataStruct* dq)
 {
     // query data
-    data = dq->reverseMiddleRows(this->_FeatureManagerKey, this->_FeatureMatrixKey, _Window + 1);
+    data = dq->dataManager->reverseMiddleRows(this->_FeatureManagerKey, this->_FeatureMatrixKey, _Window + 1);
 
     // compute returns
     ret = data.bottomRows(_Window).cwiseQuotient(data.topRows(_Window));

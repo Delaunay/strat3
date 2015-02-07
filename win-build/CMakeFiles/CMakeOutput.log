@@ -1,0 +1,56 @@
+The system is: Windows - 6.1 - AMD64
+Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" succeeded.
+Compiler: C:/cygwin/bin/c++.exe 
+Build flags: 
+Id flags: 
+
+The output was:
+0
+
+
+Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "a.exe"
+
+The CXX compiler identification is GNU, found in "C:/Users/pastafarian/Dropbox/project/Strat3/win-build/CMakeFiles/2.8.12.2/CompilerIdCXX/a.exe"
+
+Determining if the C compiler works passed with the following output:
+Change Dir: C:/Users/pastafarian/Dropbox/project/Strat3/win-build/CMakeFiles/CMakeTmp
+
+Run Build Command:C:/cygwin/bin/make.exe "cmTryCompileExec1735099466/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec1735099466.dir/build.make CMakeFiles/cmTryCompileExec1735099466.dir/build
+make[1]: Entering directory '/cygdrive/c/Users/pastafarian/Dropbox/project/Strat3/win-build/CMakeFiles/CMakeTmp'
+"C:/Program Files (x86)/CMake 2.8/bin/cmake.exe" -E cmake_progress_report C:/Users/pastafarian/Dropbox/project/Strat3/win-build/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec1735099466.dir/testCCompiler.c.obj
+C:/cygwin/bin/cc    -o CMakeFiles/cmTryCompileExec1735099466.dir/testCCompiler.c.obj   -c C:/Users/pastafarian/Dropbox/project/Strat3/win-build/CMakeFiles/CMakeTmp/testCCompiler.c
+cygwin warning:
+  MS-DOS style path detected: C:/Users/pastafarian/Dropbox/project/Strat3/win-build/CMakeFiles/CMakeTmp/testCCompiler.c
+  Preferred POSIX equivalent is: /cygdrive/c/Users/pastafarian/Dropbox/project/Strat3/win-build/CMakeFiles/CMakeTmp/testCCompiler.c
+  CYGWIN environment variable option "nodosfilewarning" turns off this warning.
+  Consult the user's guide for more details about POSIX paths:
+    http://cygwin.com/cygwin-ug-net/using.html#using-pathnames
+Linking C executable cmTryCompileExec1735099466.exe
+C:/cygwin/bin/cc       "CMakeFiles/cmTryCompileExec1735099466.dir/testCCompiler.c.obj"   -o cmTryCompileExec1735099466.exe  
+make[1]: Leaving directory '/cygdrive/c/Users/pastafarian/Dropbox/project/Strat3/win-build/CMakeFiles/CMakeTmp'
+
+
+Determining if the CXX compiler works passed with the following output:
+Change Dir: C:/Users/pastafarian/Dropbox/project/Strat3/win-build/CMakeFiles/CMakeTmp
+
+Run Build Command:C:/cygwin/bin/make.exe "cmTryCompileExec2581234929/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec2581234929.dir/build.make CMakeFiles/cmTryCompileExec2581234929.dir/build
+make[1]: Entering directory '/cygdrive/c/Users/pastafarian/Dropbox/project/Strat3/win-build/CMakeFiles/CMakeTmp'
+"C:/Program Files (x86)/CMake 2.8/bin/cmake.exe" -E cmake_progress_report C:/Users/pastafarian/Dropbox/project/Strat3/win-build/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building CXX object CMakeFiles/cmTryCompileExec2581234929.dir/testCXXCompiler.cxx.o
+C:/cygwin/bin/c++.exe     -o CMakeFiles/cmTryCompileExec2581234929.dir/testCXXCompiler.cxx.o -c C:/Users/pastafarian/Dropbox/project/Strat3/win-build/CMakeFiles/CMakeTmp/testCXXCompiler.cxx
+cygwin warning:
+  MS-DOS style path detected: C:/Users/pastafarian/Dropbox/project/Strat3/win-build/CMakeFiles/CMakeTmp/testCXXCompiler.cxx
+  Preferred POSIX equivalent is: /cygdrive/c/Users/pastafarian/Dropbox/project/Strat3/win-build/CMakeFiles/CMakeTmp/testCXXCompiler.cxx
+  CYGWIN environment variable option "nodosfilewarning" turns off this warning.
+  Consult the user's guide for more details about POSIX paths:
+    http://cygwin.com/cygwin-ug-net/using.html#using-pathnames
+Linking CXX executable cmTryCompileExec2581234929.exe
+"C:/Program Files (x86)/CMake 2.8/bin/cmake.exe" -E remove -f CMakeFiles/cmTryCompileExec2581234929.dir/objects.a
+C:/cygwin/bin/ar.exe cr CMakeFiles/cmTryCompileExec2581234929.dir/objects.a @CMakeFiles/cmTryCompileExec2581234929.dir/objects1.rsp
+C:/cygwin/bin/c++.exe       -Wl,--whole-archive CMakeFiles/cmTryCompileExec2581234929.dir/objects.a -Wl,--no-whole-archive  -o cmTryCompileExec2581234929.exe -Wl,--out-implib,libcmTryCompileExec2581234929.dll.a -Wl,--major-image-version,0,--minor-image-version,0  
+make[1]: Leaving directory '/cygdrive/c/Users/pastafarian/Dropbox/project/Strat3/win-build/CMakeFiles/CMakeTmp'
+
+

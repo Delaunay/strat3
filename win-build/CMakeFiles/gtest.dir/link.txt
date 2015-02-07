@@ -1,0 +1,2 @@
+C:/cygwin/bin/ar.exe cr libgtest.a  CMakeFiles/gtest.dir/C_/Users/pastafarian/Dropbox/project/gtest/gtest/src/gtest-all.cc.obj
+C:/cygwin/bin/ranlib.exe libgtest.a

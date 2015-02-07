@@ -48,12 +48,12 @@ class Strategy
         {}
 
         // legacy
-        virtual TransactionWeight* operator() (DataQuery*);
+        //virtual TransactionWeight* operator() (DataQuery*);
         virtual TransactionWeight* operator() (DataStruct*);
 
         // new
         virtual TransactionWeight* compute_weight(DataStruct*);
-        virtual TransactionWeight* compute_weight(DataQuery*);
+        //virtual TransactionWeight* compute_weight(DataQuery*);
 
         //else
         virtual std::string &title();

@@ -1,7 +1,7 @@
-#include "Statistics.h"
-
 #include <algorithm>
 
+#include "../debug.h"
+#include "Statistics.h"
 
 Matrix sort(Matrix x)
 {
@@ -33,12 +33,24 @@ Matrix sort(Matrix x)
 // bucket have the same size
 Matrix frequency(Matrix x, int bucket, bool percentage)
 {
+#if STRAT3_DEBUG_STAT
+    DEBUG_IDX_INIT;
+    DEBUG_IDX_PRINT; // 0
+    printf("(%dx%d)\n", x.rows(), x.cols());
+#endif
+    if ((x.rows() == 0) || (x.cols() == 0))
+        return Matrix::Zero(1, 1);
+
     double min = x.minCoeff();
     double max = x.maxCoeff();
 
     double step = (max - min) / double(bucket);
     Matrix freq = Matrix::Zero(bucket, x.cols() + 2);
 
+#if STRAT3_DEBUG_STAT
+    printf("(%dx%d)\n", bucket, x.cols() + 2);
+    DEBUG_IDX_PRINT; // 3
+#endif
     // first we sort the matrix
 
     Matrix temp = sort(x);
@@ -64,6 +76,9 @@ Matrix frequency(Matrix x, int bucket, bool percentage)
             }
         }
     }
+#if STRAT3_DEBUG_STAT
+    DEBUG_IDX_PRINT; // 0
+#endif
 
     for (int i = 0; i < bucket; i ++)
     {

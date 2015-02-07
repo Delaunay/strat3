@@ -11,8 +11,10 @@ TEST(DataLog, PortfolioState)
     EqualWeight strat("GTFO", "GTFO", 2);
     DataManager DM;
     DataQuery   DQ = DM.dataQuery(0, 0);
+    DataStruct  ds;
+                ds.dataManager = &DQ;
 
-    TransactionWeight* w = strat(&DQ);
+    TransactionWeight* w = strat(&ds);
     Row price[2];
     price[0] = Row::Zero(1, 2);
     price[1] = Row::Zero(1, 2);
