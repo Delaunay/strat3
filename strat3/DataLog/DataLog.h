@@ -1,5 +1,5 @@
-#ifndef STRAT3_DATALOG_HEADER
-#define STRAT3_DATALOG_HEADER
+#ifndef STRAT3_DATALOG_DATALOG_HEADER
+#define STRAT3_DATALOG_DATALOG_HEADER
 
 #include <iostream>
 #include <fstream>

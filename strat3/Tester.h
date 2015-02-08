@@ -44,7 +44,6 @@ class Tester
         double    beginningCash();
 
         void         addStrategy    (NodeTuple* x);
-
         void         setDataManager (DataManager* x, Key priceManager, Key priceMatrix);
         void         setStratWindow (int a);
         void         setDates       (Matrix Dates);

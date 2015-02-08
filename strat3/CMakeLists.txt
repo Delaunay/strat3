@@ -66,6 +66,7 @@ add_subdirectory( "${PROJECT_SOURCE_DIR}/Predictor"  )
 add_subdirectory( "${PROJECT_SOURCE_DIR}/Error"      )
 add_subdirectory( "${PROJECT_SOURCE_DIR}/Security"      )
 
+
 # Sources
 aux_source_directory( "${PROJECT_SOURCE_DIR}/DataManager"   SRC_LIST )
 aux_source_directory( "${PROJECT_SOURCE_DIR}/Portfolio"     SRC_LIST )
@@ -73,9 +74,9 @@ aux_source_directory( "${PROJECT_SOURCE_DIR}/Strategy"      SRC_LIST )
 aux_source_directory( "${PROJECT_SOURCE_DIR}/DataLog"       SRC_LIST )
 aux_source_directory( "${PROJECT_SOURCE_DIR}/Report"        SRC_LIST )
 aux_source_directory( "${PROJECT_SOURCE_DIR}/Predictor"     SRC_LIST )
-aux_source_directory( "${PROJECT_SOURCE_DIR}/Error"     SRC_LIST )
-aux_source_directory( "${PROJECT_SOURCE_DIR}/Security"     SRC_LIST )
-#aux_source_directory( "${PROJECT_SOURCE_DIR}/test"          SRC_LIST )
+aux_source_directory( "${PROJECT_SOURCE_DIR}/Error"         SRC_LIST )
+aux_source_directory( "${PROJECT_SOURCE_DIR}/Security"      SRC_LIST )
+# aux_source_directory( "${PROJECT_SOURCE_DIR}/test"          SRC_LIST )
 
 # main lib
 add_library(strat3 ${SRC_LIST})
@@ -83,6 +84,7 @@ add_library(strat3 ${SRC_LIST})
 #SET(CML_SRC_LIST)
 
 # Command line prog
+add_subdirectory("${PROJECT_SOURCE_DIR}/cml"      )
 AUX_SOURCE_DIRECTORY("${PROJECT_SOURCE_DIR}/cml"        CML_SRC_LIST)
 
 #===============================================================================
@@ -93,10 +95,12 @@ AUX_SOURCE_DIRECTORY("${PROJECT_SOURCE_DIR}/cml"        CML_SRC_LIST)
 link_directories(${PROJECT_BINARY_DIR})
 
 #cml ex
-ADD_EXECUTABLE(cstrat3 "${PROJECT_SOURCE_DIR}/cml/main.cpp" ${CML_SRC_LIST})
+#ADD_EXECUTABLE(cstrat3 "${PROJECT_SOURCE_DIR}/cml/main.cpp" ${CML_SRC_LIST})
 
 # executable and linking
-add_executable(tests "${PROJECT_SOURCE_DIR}/test/main_test.cpp" ${SRC_LIST})
+add_executable(tests     "${PROJECT_SOURCE_DIR}/test/main_test.cpp"     ${SRC_LIST})
+add_executable(tests_cml "${PROJECT_SOURCE_DIR}/test/main_cml_test.cpp" ${CML_SRC_LIST})
 
 #target_link_libraries(tests -isystem libgtest.a libStrat3.a -pthread)
 target_link_libraries(tests -isystem libgtest.a -pthread)
+target_link_libraries(tests_cml -isystem libgtest.a -pthread)
