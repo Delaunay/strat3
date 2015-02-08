@@ -16,7 +16,7 @@ class EqualWeight : public Strategy
             _Version = 1;
         }
 
-        TransactionWeight* operator() (DataStruct* m)
+        TransactionWeight* operator() (DataStruct* m, Predictor* p = 0)
         {
             if (!_Set)
             {

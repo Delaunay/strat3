@@ -1,5 +1,6 @@
 #include "Strategy.h"
 
+//#include "../Error/ImplementationError.h"
 
 Strategy::Strategy(Key managerKey, Key matrixkey, int securitySize, bool rebalanced, Index frequency):
     _Rebalanced(rebalanced), _Frequency(frequency), _Version(1),
@@ -22,20 +23,21 @@ void  Strategy::setFrequency(Index f)  {   _Frequency = f;  }
 void  Strategy::setRebalanced(bool r)  {   _Rebalanced = r; }
 
 //
-TransactionWeight* Strategy::operator() (DataStruct* q)
-{
-    return &_Weight;
-}
+//TransactionWeight* Strategy::operator() (DataStruct* q, Predictor* p)
+//{
+//    throw()
+//    return &_Weight;
+//}
 
 //TransactionWeight* Strategy::operator() (DataQuery* q)
 //{
 //    return &_Weight;
 //}
 
-TransactionWeight* Strategy::compute_weight(DataStruct* q)
-{
-    return &_Weight;
-}
+//TransactionWeight* Strategy::compute_weight(DataStruct* q, Predictor* p)
+//{
+//    return &_Weight;
+//}
 
 //TransactionWeight* Strategy::compute_weight(DataQuery* q)
 //{

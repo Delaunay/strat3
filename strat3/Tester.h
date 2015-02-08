@@ -25,8 +25,11 @@ struct NodeTuple
         Portfolio*      portfolio;
         MarketEngine*   market;
         DataLog*        log;
-        //Predictor*      predictor;
+        Predictor*      predictor;
 };
+
+
+//struct TesterPrivate;
 
 class Tester
 {
@@ -45,12 +48,14 @@ class Tester
         void         setDataManager (DataManager* x, Key priceManager, Key priceMatrix);
         void         setStratWindow (int a);
         void         setDates       (Matrix Dates);
+        void         setSecurityDatabase(SecurityDatabase* sd);
 
         // Shortcut
         Strategy*    getStrategy    (Index k);
         Portfolio*   getPortfolio   (Index k);
         MarketEngine*getMarketEngine(Index k);
         DataLog*     getLog         (Index k);
+        SecurityDatabase* getSecurityDatabase();
 
         bool         shouldRun      (Index k);
         void         runOneStep     ();
@@ -68,6 +73,8 @@ class Tester
 
     protected:
 
+        //TesterPrivate* attr;
+
         // Dates
         Matrix  _Dates;
         bool    _UsingDates;
@@ -84,7 +91,7 @@ class Tester
         DataManager* _Data;
 
         std::vector<NodeTuple*> _Strategies;
-        std::vector<Predictor>  _Predictors;
+        std::vector<Predictor>  _GlobalPredictors;
         SecurityDatabase*       _SecurityDatabase;
 
 };

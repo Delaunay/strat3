@@ -15,6 +15,9 @@ class DataQuery
         Matrix middleRows(Key manager, Key matrix, int startRow, int nb);
 
         Matrix reverseMiddleRows(Key manager, Key matrix, int nb);
+
+        Matrix getAll(Key manager, Key matrix);
+
         int size();
         int cols(Key k, Key k2);
         int min();

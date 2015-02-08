@@ -28,6 +28,14 @@ this is made to rule out the possibility that the portfolio performance is a pro
 of luck and truly represent an economic reality
 
 
+
+currently Strat3 is working in modules with no mechanism to make sure all modules
+are instiantiated correctly which makes the use of strat3 pretty hard for
+non initiated people. This is why simplistic API is currently being developped
+handling all the obscure requirement a module can have.
+
+Security Name HTML report
+
 Issues
 ------
 

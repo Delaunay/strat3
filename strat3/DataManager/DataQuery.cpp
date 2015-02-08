@@ -38,6 +38,8 @@ Matrix DataQuery::reverseMiddleRows(Key manager, Key matrix, int nb)
                        ->middleRows(startRow, nb);
 }
 
+Matrix DataQuery::getAll(Key manager, Key matrix) {    return this->middleRows(manager, matrix, this->min(), this->max()); }
+
 int DataQuery::size() {    return _DataManager->size();    }
 int DataQuery::cols(Key k, Key k2) {    return _DataManager->matrixManager(k)->matrix(k2)->cols(); }
 int DataQuery::min()   {   return _RowMin; }

@@ -9,6 +9,8 @@
 #include "../Tester.h"
 #include "../smath.h"
 
+#include "../Security/Securities.h"
+
 #include "script.h"
 
 #include "../debug.h"
@@ -508,10 +510,16 @@ public:
             strat[i] = _Data->getStrategy(i)->title();
         }
 
-        for(int i = 0, n = _Data->getLog(0)->securityNumber(); i < n; i++)
-        {
-            sec[i] = Key("Sec") + std::to_string(i);
-        }
+        if (_Data->getSecurityDatabase() == 0)
+            for(int i = 0, n = _Data->getLog(0)->securityNumber(); i < n; i++)
+            {
+                sec[i] = Key("Sec") + std::to_string(i);
+            }
+        else
+            for(int i = 0, n = _Data->getSecurityDatabase()->size(); i < n; i++)
+            {
+                sec[i] = _Data->getSecurityDatabase()->ticker(i);
+            }
 
         generate_gp_script(strat, sec, tex, _Data->usingDates());
     }

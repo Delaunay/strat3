@@ -58,7 +58,7 @@ void TEXReport::disclaimer()
          "INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN "
          "CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) "
          "ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE "
-         "POSSIBILITY OF SUCH DAMAGE.\\n"
+         "POSSIBILITY OF SUCH DAMAGE.\n"
 
     "\\section{Report Disclaimer}\n"
 
@@ -74,7 +74,7 @@ void TEXReport::disclaimer()
         "INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN "
         "CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) "
         "ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE "
-        "POSSIBILITY OF SUCH DAMAGE.\\n"
+        "POSSIBILITY OF SUCH DAMAGE.\n"
     ;
 }
 
@@ -218,8 +218,8 @@ void TEXReport::strategies()
 
                  "\\begin{tabular}{|r|r|}\n"
                  "\\hline \n"
-                    "Frequency & " << _Data->_Data->getStrategy(i)->frequency() << "\\\\ \n"
-                    "Version  & " << _Data->_Data->getStrategy(i)->version() << "\\\\ \n"
+                    "Frequency & "  << _Data->_Data->getStrategy(i)->frequency() << "\\\\ \n"
+                    "Version  & "   << _Data->_Data->getStrategy(i)->version() << "\\\\ \n"
                     "Rebalanced & " << get_bool_as_string(_Data->_Data->getStrategy(i)->rebalanced()) << "\\\\ \n"
                  "\\hline \n"
                  "\\end{tabular}\n"
@@ -273,18 +273,29 @@ void TEXReport::data()
                      "\\ & Mean & Mean (Bought) & Mean (Sold) & St. Dev. & \\% Buy & \\% Sell \\\\ \n"
                      "\\hline\n";
 
-                     for(int i = 0, n = _Data->security_size(); i < n; i++)
-                         _file << "Sec" << std::to_string(i) << " & " <<
-                                  format_double(_Data->_HoldStat[k](DataAnalyser::Mean, i), 4)         << " & " <<
-                                  format_double(_Data->_HoldStat[k](DataAnalyser::MeanPositive, i), 2) << " & " <<
-                                  format_double(_Data->_HoldStat[k](DataAnalyser::MeanNegative, i), 2) << " & " <<
-                                  format_double(_Data->_HoldStat[k](DataAnalyser::SD, i), 2)           << " & " <<
-                                  format_double(_Data->_HoldStat[k](DataAnalyser::Positive, i) * 100.0/ m, 2) << " & " <<
-                                  format_double(_Data->_HoldStat[k](DataAnalyser::Negative, i) * 100.0/ m, 2) << " \\\\ \n";
+            // "Sec" << std::to_string(i)
+            if(_Data->_Data->getSecurityDatabase() != 0)
+                 for(int i = 0, n = _Data->security_size(); i < n; i++)
+                     _file <<  _Data->_Data->getSecurityDatabase()->ticker(i)    << " & " <<
+                              format_double(_Data->_HoldStat[k](DataAnalyser::Mean, i), 4)         << " & " <<
+                              format_double(_Data->_HoldStat[k](DataAnalyser::MeanPositive, i), 2) << " & " <<
+                              format_double(_Data->_HoldStat[k](DataAnalyser::MeanNegative, i), 2) << " & " <<
+                              format_double(_Data->_HoldStat[k](DataAnalyser::SD, i), 2)           << " & " <<
+                              format_double(_Data->_HoldStat[k](DataAnalyser::Positive, i) * 100.0/ m, 2) << " & " <<
+                              format_double(_Data->_HoldStat[k](DataAnalyser::Negative, i) * 100.0/ m, 2) << " \\\\ \n";
+            else
+                for(int i = 0, n = _Data->security_size(); i < n; i++)
+                    _file <<  "Sec" << std::to_string(i)    << " & " <<
+                             format_double(_Data->_HoldStat[k](DataAnalyser::Mean, i), 4)         << " & " <<
+                             format_double(_Data->_HoldStat[k](DataAnalyser::MeanPositive, i), 2) << " & " <<
+                             format_double(_Data->_HoldStat[k](DataAnalyser::MeanNegative, i), 2) << " & " <<
+                             format_double(_Data->_HoldStat[k](DataAnalyser::SD, i), 2)           << " & " <<
+                             format_double(_Data->_HoldStat[k](DataAnalyser::Positive, i) * 100.0/ m, 2) << " & " <<
+                             format_double(_Data->_HoldStat[k](DataAnalyser::Negative, i) * 100.0/ m, 2) << " \\\\ \n";
 
-                     _file << "\\hline\n"
-                     "\\end{tabular}\n"
-                     "\\end{center}\n";
+                 _file << "\\hline\n"
+                 "\\end{tabular}\n"
+                 "\\end{center}\n";
         }
 
         // =================================

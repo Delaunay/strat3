@@ -32,7 +32,7 @@ void VarianceMin::setWindow(int x)
     _Window = x;
 }
 
-TransactionWeight* VarianceMin::operator() (DataStruct* dq)
+TransactionWeight* VarianceMin::operator() (DataStruct* dq, Predictor* m)
 {
     // query data
     data = dq->dataManager->reverseMiddleRows(this->_FeatureManagerKey, this->_FeatureMatrixKey, _Window + 1);

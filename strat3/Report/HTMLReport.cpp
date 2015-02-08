@@ -105,6 +105,7 @@ void HTMLReport::overview()
 {
     Key title("Overview");
     Key graph("holding_ret.svg");
+    int m = _Data->size();
 
     _file <<
     "<h2 id='"<< title << "'>"<< title << "</h2>"
@@ -112,53 +113,35 @@ void HTMLReport::overview()
         "<div class='center-block'><embed src='graph/"<< graph <<"' type='image/svg+xml'></embed></div><br>"
 
         "<h3 id='Statistics'>Statistics</h3>"
+
         "<table class='table table-bordered table-condensed table-hover table-responsive'>"
             "<thead>"
-                "<tr>"
-                "<th> n = "<< _Data->obs() <<"</th>";
-
-            for(int i = 0; i < _Data->size(); i++)
-            _file << "<th>" << _Data->strategyName(i) << "</th>";
-
-       _file << "</tr>"
+                "<th> Strategies </th>"
+                "<th>Mean</th>"
+                "<th>St. Dev.</th>"
+                "<th>Sharp</th>"
+                "<th>Skew</th>"
+                "<th>Kurtosis</th>"
+                "<th>Positive</th>"
+                "<th>Negative</th>"
             "</thead>"
             "<tbody>";
 
-       _file << "<tr>"
-                    "<td> Mean*</td>";
-           for(int i = 0; i < _Data->size(); i++)
-                _file << "<td>" << trunc(_Data->_StatisticPoint(DataAnalyser::Mean, i) * 100.0 * 250.0, 2) << "</td>";
-       _file << "</tr>";
-       _file << "<tr>"
-                    "<td> Standard Deviation**</td>";
-           for(int i = 0; i < _Data->size(); i++)
-                _file << "<td>" << trunc(_Data->_StatisticPoint(DataAnalyser::SD, i) * sqrt(250.0) * 100.0, 2) << "</td>";
-       _file << "</tr>";
-       _file << "<tr>"
-                    "<td> Sharp</td>";
-           for(int i = 0; i < _Data->size(); i++)
-                _file << "<td>" << trunc(_Data->_StatisticPoint(DataAnalyser::Mean, i) * 250.0 / (_Data->_StatisticPoint(DataAnalyser::SD, i) * sqrt(250.0)), 2) << "</td>";
-       _file << "</tr>";
-       _file << "<tr>"
-                    "<td> Skew </td>";
-           for(int i = 0; i < _Data->size(); i++)
-                _file << "<td>" << trunc(_Data->_StatisticPoint(DataAnalyser::Skew, i), 4) << "</td>";
-       _file << "</tr>";
-       _file << "<tr>"
-                    "<td> Kurtosis </td>";
-           for(int i = 0; i < _Data->size(); i++)
-                _file << "<td>" <<  trunc(_Data->_StatisticPoint(DataAnalyser::Kurtosis, i), 2) << "</td>";
-       _file << "</tr>";
-       _file << "<tr>"
-                    "<td> Positive </td>";
-           for(int i = 0; i < _Data->size(); i++)
-                _file << "<td>" << _Data->_StatisticPoint(DataAnalyser::Positive, i) << "</td>";
-       _file << "</tr>";
-       _file << "<tr>"
-                    "<td> Negative </td>";
-           for(int i = 0; i < _Data->size(); i++)
-                _file << "<td>" << _Data->_StatisticPoint(DataAnalyser::Negative, i) << "</td>";
-       _file << "</tr>";
+
+        for (int i = 0; i < m; i++)
+        {
+            _file <<"<tr>"
+                        "<td>" << _Data->strategyName(i)                                                                    << "</td>"
+                        "<td>" << format_double(_Data->_StatisticPoint(DataAnalyser::Mean,     i) * 250.0 * 100.0, 2)       << "</td>"
+                        "<td>" << format_double(_Data->_StatisticPoint(DataAnalyser::SD,       i) * sqrt(250.0) * 100.0, 2) << "</td>"
+                        "<td>" << format_double(_Data->_StatisticPoint(DataAnalyser::Mean,     i) * 250.0 /
+                                               (_Data->_StatisticPoint(DataAnalyser::SD,       i) * sqrt(250.0)), 4)        << "</td>"
+                        "<td>" << format_double(_Data->_StatisticPoint(DataAnalyser::Skew,     i), 4)                       << "</td>"
+                        "<td>" << format_double(_Data->_StatisticPoint(DataAnalyser::Kurtosis, i), 2)                       << "</td>"
+                        "<td>" <<               _Data->_StatisticPoint(DataAnalyser::Positive, i)                           << "</td>"
+                        "<td>" <<               _Data->_StatisticPoint(DataAnalyser::Negative, i)                           << "</td>"
+                    "</tr>";
+        }
 
    _file << "</tbody>"
         "</table>"

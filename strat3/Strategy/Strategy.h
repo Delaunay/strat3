@@ -2,6 +2,7 @@
 #define STRAT3_STRATEGY_STRATEGY_HEADER
 
 #include "../DataManager/DataManager.h"
+#include "DataStruct.h"
 
 enum WeightType{
     TotalPercentage,
@@ -24,22 +25,6 @@ struct TransactionWeight
 
 class DataLog;
 class Predictor;
-class SecurityDatabase;
-
-// define what is available to each strategies
-struct DataStruct
-{
-public:
-    DataQuery* dataManager;
-
-    // TODO
-    // make logs available as const
-
-    std::vector<Predictor>* predictor;
-    SecurityDatabase*       securities;
-
-    unsigned int time;
-};
 
 /*!
  * \brief The Strategy class
@@ -54,13 +39,8 @@ class Strategy
         virtual ~Strategy()
         {}
 
-        // legacy
-        //virtual TransactionWeight* operator() (DataQuery*);
-        virtual TransactionWeight* operator() (DataStruct*);
-
-        // new
-        virtual TransactionWeight* compute_weight(DataStruct*);
-        //virtual TransactionWeight* compute_weight(DataQuery*);
+        virtual TransactionWeight* operator() (DataStruct* ds, Predictor* p = 0) = 0;
+        //virtual TransactionWeight* compute_weight(DataStruct* ds, Predictor* p = 0) = 0;
 
         //else
         virtual std::string &title();

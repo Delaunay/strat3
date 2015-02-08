@@ -42,6 +42,9 @@ void    Tester::setDataManager  (DataManager* x, Key priceManager, Key priceMatr
     _PriceMatrix  = priceMatrix;
 }
 
+void              Tester::setSecurityDatabase(SecurityDatabase* sd)  {   this->_SecurityDatabase = sd;   }
+SecurityDatabase* Tester::getSecurityDatabase()                      {   return this->_SecurityDatabase; }
+
 Strategy*    Tester::getStrategy    (Index k)   {   return _Strategies[k]->strat;  }
 Portfolio*   Tester::getPortfolio   (Index k)   {   return _Strategies[k]->portfolio;  }
 MarketEngine*Tester::getMarketEngine(Index k)   {   return _Strategies[k]->portfolio->marketEngine();  }
@@ -62,7 +65,7 @@ void Tester::runOneStep()
 
     DataStruct ds;
                ds.dataManager = &dq;
-               ds.predictor   = &this->_Predictors;
+               ds.predictors  = &this->_GlobalPredictors;
                ds.securities  = this->_SecurityDatabase;
 
     TransactionWeight*  w;

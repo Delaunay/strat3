@@ -11,7 +11,7 @@ public:
 
     ~MaximumDiversification();
 
-    TransactionWeight* operator() (DataStruct* dq);
+    TransactionWeight* operator() (DataStruct* dq, Predictor* m = 0);
 
 protected:
 

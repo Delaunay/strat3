@@ -41,12 +41,22 @@ public:
         _file <<
         "\\documentclass[11pt, openany]{book}\n"
         "\\usepackage[top=2.5cm, bottom=2.5cm, left=2.5cm, right=2.5cm]{geometry}\n"
-        "\\usepackage[colorlinks=true,linkcolor=blue]{hyperref}\n"
+        //"\\usepackage[colorlinks=true,linkcolor=blue]{hyperref}\n"
         "\\usepackage{amsmath}\n"
         "\\usepackage{amssymb}\n"
         "\\usepackage{graphicx}\n"
         "\\usepackage{color}\n"
         "\\usepackage{multicol}\n"
+        "\\usepackage[colorlinks=true,linkcolor=blue,\n"
+                     "bookmarks,\n"
+                     "bookmarksnumbered=true,\n"
+                     "pdftitle={"<< title <<"},\n"
+                     "pdfauthor={Pierre Delaunay},\n"
+                     "pdfsubject={Strat3},\n"
+                   // "pdfcreator={},\n"
+                   // "pdfkeywords={...}\n"
+                   "]{hyperref}\n"
+
         //"\\usepackage{lmodern}\n"
         "\\definecolor{linkcolour}{rgb}{0,0.2,0.6}\n"
         "%\\usepackage{multirow}\n\n"
@@ -61,8 +71,9 @@ public:
         //\SetWatermarkColor[gray]{0.5}
 
         "\\title{"<< title <<"}\n"
-        "\\author{Strat 3 Version: 0.0.0}\n\n"
 
+        "\\author{Strat 3 - Version: 0.0.0}\n\n"
+        "\\date{\\today}\n"
         "\\pagestyle{fancy}\n"
 
         //"\\cfoot{Title \\copyright Pierre Delaunay}\n"

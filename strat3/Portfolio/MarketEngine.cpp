@@ -1,5 +1,6 @@
 #include "MarketEngine.h"
 #include "Portfolio.h"
+#include "TransactionAnswer.h"
 
 MarketEngine::MarketEngine():
     _id(0)

@@ -1,5 +1,5 @@
-#ifndef STRAT3_TRANSACTION_HEADER
-#define STRAT3_TRANSACTION_HEADER
+#ifndef STRAT3_PORTFOLIO_TRANSACTION_HEADER
+#define STRAT3_PORTFOLIO_TRANSACTION_HEADER
 
 #include "../enum.h"
 
@@ -13,16 +13,16 @@ struct Transaction
 
         enum Field
         {
-            TickerIndex    = 0,
-            Size           = 1,
-            ExecutionField = 2,
-            ValidityField  = 3,
-            Price          = 4,
-            Option1        = 5,
-            Option2        = 6,
-            Date           = 7,
-            DisplayField   = 8,
-            CurrentDate    = 9,
+            TickerIndex    =  0,
+            Size           =  1,
+            ExecutionField =  2,
+            ValidityField  =  3,
+            Price          =  4,
+            Option1        =  5,
+            Option2        =  6,
+            Date           =  7,
+            DisplayField   =  8,
+            CurrentDate    =  9,
             ID             = 10,
         };
 
@@ -53,8 +53,8 @@ struct Transaction
         enum Execution
         {
             Market = 1,         // Buy/Sell at the current market price
-            Limit = 2,          // Buy(Sell) if the price drop(rise) below(above) a target price
-            Stop = 3,           // Buy(Sell) if the price rise(drop) above(below) a target price
+            Limit  = 2,         // Buy(Sell) if the price drop(rise) below(above) a target price
+            Stop   = 3,         // Buy(Sell) if the price rise(drop) above(below) a target price
             MKT = Market,
             LMT = Limit,
             STO = Stop
@@ -62,18 +62,18 @@ struct Transaction
 
         enum Validity
         {
-            GooDTillDate,
+            GoodTillDate,
             GoodOnDay,
             GoodTillCancelled,
             ImmediateOrCancel,
             GoodOnClose,
             GoodOnOpen,
 
-            FillOrKill = ImmediateOrCancel,
+            FillOrKill    = ImmediateOrCancel,
             MarketOnClose = GoodOnClose,
-            MarketOnOpen = GoodOnOpen,
+            MarketOnOpen  = GoodOnOpen,
 
-            GTD = GooDTillDate,
+            GTD = GoodTillDate,
             GOD = GoodOnDay,
             GTC = GoodTillCancelled,
             FOK = ImmediateOrCancel,

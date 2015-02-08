@@ -39,19 +39,19 @@ set terminal cairolatex eps size 16.59 cm,6.8 cm
 set key right
 
 set output "../gen/graph/Equity_holding_evol.tex" 
-plot "../gen/data/Equity_holding_evol.dat" using 1:4 title "Sec0", '' using 1:5 title "Sec1" 
+plot "../gen/data/Equity_holding_evol.dat" using 1:4 title "SPY", '' using 1:5 title "XBB" 
 
 set output "../gen/graph/EW_holding_evol.tex" 
-plot "../gen/data/EW_holding_evol.dat" using 1:4 title "Sec0", '' using 1:5 title "Sec1" 
+plot "../gen/data/EW_holding_evol.dat" using 1:4 title "SPY", '' using 1:5 title "XBB" 
 
 set output "../gen/graph/Debt_holding_evol.tex" 
-plot "../gen/data/Debt_holding_evol.dat" using 1:4 title "Sec0", '' using 1:5 title "Sec1" 
+plot "../gen/data/Debt_holding_evol.dat" using 1:4 title "SPY", '' using 1:5 title "XBB" 
 
 set output "../gen/graph/VarianceMin_holding_evol.tex" 
-plot "../gen/data/VarianceMin_holding_evol.dat" using 1:4 title "Sec0", '' using 1:5 title "Sec1" 
+plot "../gen/data/VarianceMin_holding_evol.dat" using 1:4 title "SPY", '' using 1:5 title "XBB" 
 
 set output "../gen/graph/MaxDiv_holding_evol.tex" 
-plot "../gen/data/MaxDiv_holding_evol.dat" using 1:4 title "Sec0", '' using 1:5 title "Sec1" 
+plot "../gen/data/MaxDiv_holding_evol.dat" using 1:4 title "SPY", '' using 1:5 title "XBB" 
 # ======================
 # Weight Target         
 # ======================
@@ -59,19 +59,19 @@ plot "../gen/data/MaxDiv_holding_evol.dat" using 1:4 title "Sec0", '' using 1:5 
 set key right
 
 set output "../gen/graph/Equity_weight_target.tex" 
-plot "../gen/data/Equity_weight_target.dat" using 1:(percent($4)) title "Sec0", '' using 1:(percent($5)) title "Sec1" 
+plot "../gen/data/Equity_weight_target.dat" using 1:(percent($4)) title "SPY", '' using 1:(percent($5)) title "XBB" 
 
 set output "../gen/graph/EW_weight_target.tex" 
-plot "../gen/data/EW_weight_target.dat" using 1:(percent($4)) title "Sec0", '' using 1:(percent($5)) title "Sec1" 
+plot "../gen/data/EW_weight_target.dat" using 1:(percent($4)) title "SPY", '' using 1:(percent($5)) title "XBB" 
 
 set output "../gen/graph/Debt_weight_target.tex" 
-plot "../gen/data/Debt_weight_target.dat" using 1:(percent($4)) title "Sec0", '' using 1:(percent($5)) title "Sec1" 
+plot "../gen/data/Debt_weight_target.dat" using 1:(percent($4)) title "SPY", '' using 1:(percent($5)) title "XBB" 
 
 set output "../gen/graph/VarianceMin_weight_target.tex" 
-plot "../gen/data/VarianceMin_weight_target.dat" using 1:(percent($4)) title "Sec0", '' using 1:(percent($5)) title "Sec1" 
+plot "../gen/data/VarianceMin_weight_target.dat" using 1:(percent($4)) title "SPY", '' using 1:(percent($5)) title "XBB" 
 
 set output "../gen/graph/MaxDiv_weight_target.tex" 
-plot "../gen/data/MaxDiv_weight_target.dat" using 1:(percent($4)) title "Sec0", '' using 1:(percent($5)) title "Sec1" 
+plot "../gen/data/MaxDiv_weight_target.dat" using 1:(percent($4)) title "SPY", '' using 1:(percent($5)) title "XBB" 
 # ======================
 # Holding var           
 # ======================
@@ -79,19 +79,19 @@ plot "../gen/data/MaxDiv_weight_target.dat" using 1:(percent($4)) title "Sec0", 
 set key right
 
 set output "../gen/graph/Equity_holding_var.tex" 
-plot "../gen/data/Equity_holding_var.dat" using 1:4 title "Sec0", '' using 1:5 title "Sec1" 
+plot "../gen/data/Equity_holding_var.dat" using 1:4 title "SPY", '' using 1:5 title "XBB" 
 
 set output "../gen/graph/EW_holding_var.tex" 
-plot "../gen/data/EW_holding_var.dat" using 1:4 title "Sec0", '' using 1:5 title "Sec1" 
+plot "../gen/data/EW_holding_var.dat" using 1:4 title "SPY", '' using 1:5 title "XBB" 
 
 set output "../gen/graph/Debt_holding_var.tex" 
-plot "../gen/data/Debt_holding_var.dat" using 1:4 title "Sec0", '' using 1:5 title "Sec1" 
+plot "../gen/data/Debt_holding_var.dat" using 1:4 title "SPY", '' using 1:5 title "XBB" 
 
 set output "../gen/graph/VarianceMin_holding_var.tex" 
-plot "../gen/data/VarianceMin_holding_var.dat" using 1:4 title "Sec0", '' using 1:5 title "Sec1" 
+plot "../gen/data/VarianceMin_holding_var.dat" using 1:4 title "SPY", '' using 1:5 title "XBB" 
 
 set output "../gen/graph/MaxDiv_holding_var.tex" 
-plot "../gen/data/MaxDiv_holding_var.dat" using 1:4 title "Sec0", '' using 1:5 title "Sec1" 
+plot "../gen/data/MaxDiv_holding_var.dat" using 1:4 title "SPY", '' using 1:5 title "XBB" 
 # ======================
 # Portfolio Values      
 # ======================

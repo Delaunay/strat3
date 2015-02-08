@@ -26,7 +26,7 @@ MaximumDiversification::~MaximumDiversification()
 {}
 
 
-TransactionWeight* MaximumDiversification::operator() (DataStruct* dq)
+TransactionWeight* MaximumDiversification::operator() (DataStruct* dq, Predictor* m)
 {
     data = dq->dataManager->reverseMiddleRows(this->_FeatureManagerKey, this->_FeatureMatrixKey, _Window + 1);
 

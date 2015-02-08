@@ -304,10 +304,16 @@ void generate_gp_script(const std::vector<std::string>& strat,
 std::string format_double(double x, int pre, int nb)
 {
     // %[flags][width][.precision][length]
-    std::string a("                ");
+    //std::string a("                ");
+    //  printf("%s \n", c);
+
     std::string format = "% #" + std::to_string(nb) + "." + std::to_string(pre) + "f";
 
-    sprintf(&a.at(0), format.c_str(), x);
+    // you should use c string because if you use C++ string
+    // sprintf add \0 which break everything in a file
+    char c[] = "                ";    // &a.at(0)
 
-    return a;
+    sprintf(c, format.c_str(), x);
+
+    return std::string(c);;
 }

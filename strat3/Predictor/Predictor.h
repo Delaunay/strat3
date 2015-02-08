@@ -15,14 +15,14 @@ struct DataStruct;
 class Predictor
 {
 public:
-    enum Fields
-    {
-        Covariance,
-        Returns,
-        ExpectedCovariance,
-        ExpectedReturns,
-        MAX
-    };
+//    enum Fields
+//    {
+//        Covariance,
+//        Returns,
+//        ExpectedCovariance,
+//        ExpectedReturns,
+//        MAX
+//    };
 
     Predictor()
     {}
@@ -40,6 +40,25 @@ protected:
     std::string       _Description;
     std::string       _Title;
 
+};
+
+class HistoricalCovariance : public Predictor
+{
+public:
+    HistoricalCovariance(Key managerKey, Key matrixkey, unsigned int ws = 20);
+
+    virtual void predict(DataStruct* dq);
+
+    unsigned int window_size;
+
+    Matrix covariance;  // cov
+    Matrix returns;     // ret
+    Matrix data;        // requested data
+
+protected:
+
+    Key               _FeatureManagerKey;
+    Key               _FeatureMatrixKey;
 };
 
 #endif

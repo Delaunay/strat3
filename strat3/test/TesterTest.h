@@ -20,7 +20,7 @@ class SingleSec : public Strategy
             _Version = 1;
         }
 
-        TransactionWeight* operator() (DataStruct* m)
+        TransactionWeight* operator() (DataStruct* m, Predictor* p = 0)
         {
             if (!_Set)
             {
@@ -50,7 +50,7 @@ class SingleSec2 : public Strategy
             _Version = 1;
         }
 
-        TransactionWeight* operator() (DataStruct* m)
+        TransactionWeight* operator() (DataStruct* m, Predictor* p = 0)
         {
             if (!_Set)
             {
@@ -68,6 +68,7 @@ class SingleSec2 : public Strategy
 };
 
 #include "../Strategy/MaximumDiversification.h"
+#include "../Security/Securities.h"
 
 // initialization
 Tester        test;
@@ -93,6 +94,9 @@ NodeTuple myStrat3;
 NodeTuple vm_nt;
 NodeTuple md_nt;
 
+SecurityDatabase sd;
+
+
 TEST(Tester, setup)
 {
     test.setStratWindow(21);
@@ -100,10 +104,15 @@ TEST(Tester, setup)
     data.addMatrixManager("price", &price, false);
     test.setDataManager(&data, "price", "price");
 
-    myStrat.strat       = &strat;
-    myStrat.portfolio   = &portfolio;
-    myStrat.log         = 0;
-    myStrat.market      = 0;
+    sd.add_security(0, "SPY", "ETF", "Equity", "USD", "CAD");
+    sd.add_security(1, "XBB", "ETF", "Bonds" , "CAD", "CAD");
+
+    test.setSecurityDatabase(&sd);
+
+    myStrat.strat        = &strat;
+    myStrat.portfolio    = &portfolio;
+    myStrat.log          = 0;
+    myStrat.market       = 0;
 
     myStrat2.strat       = &strat2;
     myStrat2.portfolio   = &portfolio2;
@@ -115,15 +124,15 @@ TEST(Tester, setup)
     myStrat3.log         = 0;
     myStrat3.market      = 0;
 
-    vm_nt.strat       = &vm;
-    vm_nt.portfolio   = &vmp;
-    vm_nt.log         = 0;
-    vm_nt.market      = 0;
+    vm_nt.strat          = &vm;
+    vm_nt.portfolio      = &vmp;
+    vm_nt.log            = 0;
+    vm_nt.market         = 0;
 
-    md_nt.strat       = &md;
-    md_nt.portfolio   = &mdp;
-    md_nt.log         = 0;
-    md_nt.market      = 0;
+    md_nt.strat          = &md;
+    md_nt.portfolio      = &mdp;
+    md_nt.log            = 0;
+    md_nt.market         = 0;
 
     test.addStrategy(&myStrat2);
     test.addStrategy(&myStrat);

@@ -27,6 +27,7 @@ public:
         Key title("Data");
         Key graph_1("_holding_evol.svg");
         Key graph_2("_weight_target.svg");
+        int m = _Data->obs();
 
         _file <<"<h2 id='"<< title << "'>"<< title <<"</h2>"
 
@@ -53,35 +54,49 @@ public:
                     "<h3 id='dto'>Transaction Order</h3>"
                     "<p class='text-justify'>Units of assets bought/sold</p>";
 
-                        for (int k = 0; k < _Data->size(); k++)
-                        {
+                    for (int k = 0; k < _Data->size(); k++)
+                    {
                         _file << "<h4>"<< _Data->strategyName(k) <<"</h4>"
-
                         "<table class='table table-bordered table-condensed table-hover table-responsive'>"
-                                "<thead>"
-                                    "<tr>"
-                                        "<th></th>";
-                                        for(int i = 0; i < _Data->security_size(); i++)
-                                            _file << "<th>Sec" << std::to_string(i) << "</th>";
+                            "<thead>"
+                                "<tr>"
+                                    "<th></th>"
+                                    "<th>Mean</th>"
+                                    "<th>Mean (Bought)</th>"
+                                    "<th>Mean (Sold)</th>"
+                                    "<th>St. Dev.</th>"
+                                    "<th>% Buy</th>"
+                                    "<th>% Sell</th>"
+                                "</tr>"
+                            "</thead>"
+                            "<tbody>";
 
-                           _file << "</tr>"
-                                "</thead>"
-                                    "<tr>"
-                                        "<td>Mean</td>";
-                                    for(int i = 0; i < _Data->security_size(); i++)
-                                        _file << "<td>" << _Data->_HoldStat[k](DataAnalyser::Mean, i) << "</td>";
+                        if (_Data->_Data->getSecurityDatabase() != 0)
+                            for(int i = 0; i < _Data->_Data->getSecurityDatabase()->size(); i++)
+                                _file << "<tr>"
+                                            "<td>" << _Data->_Data->getSecurityDatabase()->ticker(i)                              << "</td>" <<
+                                            "<td>" << format_double(_Data->_HoldStat[k](DataAnalyser::Mean, i), 4)                << "</td>" <<
+                                            "<td>" << format_double(_Data->_HoldStat[k](DataAnalyser::MeanPositive, i), 2)        << "</td>" <<
+                                            "<td>" << format_double(_Data->_HoldStat[k](DataAnalyser::MeanNegative, i), 2)        << "</td>" <<
+                                            "<td>" << format_double(_Data->_HoldStat[k](DataAnalyser::SD, i), 2)                  << "</td>" <<
+                                            "<td>" << format_double(_Data->_HoldStat[k](DataAnalyser::Positive, i) * 100.0/ m, 2) << "</td>" <<
+                                            "<td>" << format_double(_Data->_HoldStat[k](DataAnalyser::Negative, i) * 100.0/ m, 2) << "</td>"
+                                         "</tr>";
+                        else
+                            for(int i = 0; i < _Data->security_size(); i++)
+                                _file << "<tr>"
+                                            "<td>" << "Sec" << i                                                                  << "</td>" <<
+                                            "<td>" << format_double(_Data->_HoldStat[k](DataAnalyser::Mean, i), 4)                << "</td>" <<
+                                            "<td>" << format_double(_Data->_HoldStat[k](DataAnalyser::MeanPositive, i), 2)        << "</td>" <<
+                                            "<td>" << format_double(_Data->_HoldStat[k](DataAnalyser::MeanNegative, i), 2)        << "</td>" <<
+                                            "<td>" << format_double(_Data->_HoldStat[k](DataAnalyser::SD,       i), 2)            << "</td>" <<
+                                            "<td>" << format_double(_Data->_HoldStat[k](DataAnalyser::Positive, i) * 100.0/ m, 2) << "</td>" <<
+                                            "<td>" << format_double(_Data->_HoldStat[k](DataAnalyser::Negative, i) * 100.0/ m, 2) << "</td>"
+                                         "</tr>";
 
-                           _file << "</tr>"
-                                    "<tr>"
-                                    "<td>St. Dev.</td>";
-                                    for(int i = 0; i < _Data->security_size(); i++)
-                                        _file << "<td>" << _Data->_HoldStat[k](DataAnalyser::SD, i) << "</td>";
-                           _file << "</tr>"
-                                "<tbody>"
-
-                                "</tbody>"
-                            "</table>";
-                        }
+                        _file << "</tbody>"
+                        "</table>";
+                    }
 
                     _file <<
                     "<p class='pull-right'><button type='button' class='btn btn-default btn-sm'>Load Target Weight Log</button></p>"

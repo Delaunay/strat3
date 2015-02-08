@@ -1,19 +1,18 @@
-#ifndef STRAT3_MARKETENGINE_HEADER
-#define STRAT3_MARKETENGINE_HEADER
+#ifndef STRAT3_PORTFOLIO_MARKETENGINE_HEADER
+#define STRAT3_PORTFOLIO_MARKETENGINE_HEADER
 
 #include <algorithm>
 #include <vector>
 
 #include "Transaction.h"
-#include "TransactionAnswer.h"
 
 class MarketEngine
 {
     public:
         MarketEngine();
 
-        virtual int addTransaction(Transaction t);
-        virtual void marketOrder(Transaction* t);
+        virtual int  addTransaction(Transaction  t);
+        virtual void marketOrder   (Transaction* t);
 
         void print_book(std::ostream& out);
         void clearOrder();

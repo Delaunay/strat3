@@ -131,18 +131,15 @@ class SecurityDatabase
 
 #else
 #include <string>
-#include "enum.h"
+#include "../enum.h"
 
 class Security
 {
 public:
 
-    Security(Index id, std::string ticker, std::string type = "Equity",
-               std::string market = "Equity", std::string location = "USD",
-               std::string currency = "USD"):
-        ID(id), ticker(ticker), type(type), market(market),
-        location(location), currency(currency)
-    {}
+    Security(Index id, std::string ticker,      std::string type     = "Equity",
+               std::string market   = "Equity", std::string location = "USD",
+               std::string currency = "USD");
 
     Index       ID;
     std::string ticker;     // XBB      SPY
@@ -156,28 +153,23 @@ public:
 class SecurityDatabase
 {
 public:
-    SecurityDatabase()
-    {}
+    SecurityDatabase();
 
     void add_security(Index id, std::string ticker, std::string type,
                       std::string market = "", std::string location = "",
-                      std::string currency = "")
-    {
-        securities.push_back(Securities(id, ticker, type,
-                                        market, location, currency));
-    }
+                      std::string currency = "");
 
-    const Security& operator[] (Index id)
-    {
-        return securities[id];
-    }
 
-    const std::string ticker  (Index id)    {   return securities[id].ticker;   }
-    const std::string type    (Index id)    {   return securities[id].type;     }
-    const std::string market  (Index id)    {   return securities[id].market;   }
-    const std::string location(Index id)    {   return securities[id].location; }
-    const std::string currency(Index id)    {   return securities[id].currency; }
 
+    Index size();
+
+    const Security& operator[] (Index id);
+
+    const std::string ticker  (Index id);
+    const std::string type    (Index id);
+    const std::string market  (Index id);
+    const std::string location(Index id);
+    const std::string currency(Index id);
 
 protected:
     std::vector<Security> securities;
