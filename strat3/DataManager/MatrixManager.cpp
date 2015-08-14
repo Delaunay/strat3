@@ -1,7 +1,7 @@
 #include "MatrixManager.h"
 #include "MatrixQuery.h"
 
-#include "../Error/FileError.h"
+//#include "../Error/FileError.h"
 
 //#include <iostream>
 
@@ -124,7 +124,7 @@ void MatrixManager::writeBinary(Key k, FileName n, SaveOptions o)
     // open the file or create it
     FILE* file = fopen(n.c_str(), "wb+");
     if (file == NULL)
-        throw FileError;
+        throw "FileError";
 
     fwrite  (mn,    sizeof(int),  1,    file);  // Write the number of Matrix
     fwrite  (t,     sizeof(char), 255,  file);  // Write Matrix' Title
@@ -139,17 +139,18 @@ void MatrixManager::readBinary(FileName n)
     FILE* file = fopen(n.c_str(), "rb");
 
     if (file == NULL)
-        throw FileError;
+        throw "FileError";
 
     int  mn  [1] = { 0 };
     long size[2] = { 0, 0 };
 
-    Matrix* m = 0;
-
     // read the number of matrix saved inside the file
     size_t r = fread(mn, sizeof(int), 1, file);
     if (r != 1)
+    {
+        fclose(file);
         throw "Fucking Error";
+    }
 
     // load each matrix
     for (int i = 0; i < mn[0]; i++)
@@ -160,25 +161,37 @@ void MatrixManager::readBinary(FileName n)
         r = fread(title, sizeof(char), 255, file);
 
         if (r != 255)
+        {
+            fclose(file);
             throw "Fucking Error";
+        }
 
         r = fread(size, sizeof(long), 2, file);
         if (r != 2)
+        {
+            fclose(file);
             throw "Fucking Error";
+        }
 
         // BUG SOMEWHERE
         size[0] = std::max(size[0], long(1));
         size[1] = std::max(size[1], long(1));
 
         // allocate memory
-        m = new Matrix(Matrix::Zero(size[0], size[1]));
+        Matrix* m = new Matrix(Matrix::Zero(size[0], size[1]));
         _Matrix[Key(title)] = Element(m, true);
 
         // read data
         r = fread(&(*m)(0, 0), sizeof(double), size[0] * size[1], file);
+
         if (r != size[0] * size[1])
+        {
+            fclose(file);
             throw "Fucking Error";
+        }
     }
+
+    fclose(file);
 }
 
 void MatrixManager::writeCSV(Key k, FileName n, SaveOptions o)

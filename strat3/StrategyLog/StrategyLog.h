@@ -1,0 +1,241 @@
+#ifndef STRAT3_DATALOG_DATALOG_HEADER
+#define STRAT3_DATALOG_DATALOG_HEADER
+
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <vector>
+
+#include <stdio.h>
+#include <string>
+
+#include "../enum.h"
+
+#include <unordered_map>
+
+#include "../Struct/TransactionWeight.h"
+
+
+#define LOG_RAM 1
+
+
+class Transaction;
+//class TransactionWeight;
+class TransactionAnswer;
+
+#define RESERVE(name, size) df[name] = std::vector<double>();  df[name].reserve(size)
+
+
+/*!
+ * \brief The DataLog class
+ *
+ * for RAM save we use std::vector<double> since data are contiguous
+ * we can cast them into a Eigen::Matrix using Eigen::Map
+ * need to check pre allocation for better performance
+ *
+ * Real Time statistics will be called by Datalog
+ */
+/*! Save generated Data
+ *  \param name StrategyName filename
+ *  \param numsec Number of security used for matrix size
+ *  \param market engine might be use if it changes market
+ *  \param n size of entries for matrix n for memory pre allocation
+ */
+
+#define LOG_WARNING(x)
+
+
+class StrategyLog
+{
+    public:
+        typedef std::string StrategyName;
+        typedef std::string FieldName;
+        typedef std::vector<double> TimeSeries;
+
+        typedef std::unordered_map<FieldName, TimeSeries> DataFrame;
+        typedef std::pair<StrategyName, FieldName> Identifier;
+        typedef long unsigned int luint;
+
+        enum FieldValues
+        {
+            Time = 0,
+            Invested,
+            Cash,
+            Asset,
+            Liabilities,
+            Equity,
+            FieldValuesMax,
+        };
+
+        typedef Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> RowMajorMatrix;
+
+
+        // not exact
+        inline luint used_memory() const noexcept {   return _vsize * (3 * _nsecurity + 9);   }
+
+        void initialize(std::vector<StrategyName> v, uint nsec, uint v_size = 1000)
+        {
+            _nsecurity = nsec;
+            _vsize = v_size;
+
+            for(auto e:v)
+                _data[e] = build_standard_data_frame(nsec, v_size);
+        }
+
+        inline const std::vector<double>& time_serie(const Identifier& i)  {   return _data[i.first][i.second];   }
+        inline const std::vector<double>& time_serie(const StrategyName& s,
+                                              const FieldName& f)  {   return _data[s][f];   }
+
+
+        // return the holdings evolution of one particular security as a column
+        // not sure about stride value
+//        template<typename T>
+//        T get_holdings(const StrategyName& s, const uint& sec_index)
+//        {
+//            std::vector<double>& t = time_serie(s, "ps_holdings");
+//            return Eigen::Map<T>(t[sec_index], t.size() / (nsec + 1), 1, Eigen::Stride(0, _nsecurity));
+//        }
+
+
+        template<typename T>
+        T get_holdings(const StrategyName& s)
+        {
+            std::vector<double>& t = time_serie_mod(s, "ps_holdings");
+            return Eigen::Map<T>(t[0], t.size() / (_nsecurity + 1), _nsecurity + 1);
+        }
+
+        template<typename T>
+        T get_weights(const StrategyName& s)
+        {
+            std::vector<double>& t = time_serie_mod(s, "st_Weights");
+            return Eigen::Map<T>(t[0], t.size() / (_nsecurity + 2), _nsecurity + 2);
+        }
+
+        template<typename T>
+        T get_share(const StrategyName& s)
+        {
+            std::vector<double>& t = time_serie_mod(s, "to_share");
+            return Eigen::Map<T>(t[0], t.size() / (_nsecurity + 1), _nsecurity + 1);
+        }
+
+        // my_data = build_matrix({"Strategy", "pv_time"}, {"Strategy", "pv_invested"})
+        Matrix build_matrix(const std::vector<Identifier>& fields)
+        {
+            // build a vector which will be casted into a Matrix;
+            std::vector<double> v;
+            v.reserve(fields.size() * _vsize);
+
+            bool first = true;
+            uint v_size = 0;
+
+            for(auto e:fields)
+            {
+                std::vector<double>& t = time_serie_mod(e);
+
+                // Setup the default row size
+                if (first)
+                    v_size = t.size();
+                else
+                    // if the current time serie has a different number of row print a warning
+                    if (v_size != t.size())
+                        LOG_WARNING(e->first << " " << e->second << " Does not have the same amount of rows");
+
+                std::copy(t.begin(), t.end(), std::back_inserter(v));
+
+            }
+
+            return Eigen::Map<Matrix>(&v[0], _vsize, fields.size());
+        }
+
+        StrategyLog(){}
+        ~StrategyLog()
+        {}
+
+        inline const uint& security_number() const {    return _nsecurity;  }
+
+        void log_portfolio_state(const StrategyName& s, const double& time, const Matrix& state)
+        {
+            std::vector<double>& t = time_serie_mod(s, "ps_holdings");
+            t.push_back(time);
+
+            matrix_to_vector(state, t);
+        }
+
+        void log_transaction_weight(const StrategyName& s,const double& time, const TransactionWeight& tw)
+        {
+            std::vector<double>& t = time_serie_mod(s, "st_Weights");
+            t.push_back(time);
+            t.push_back(tw.type);
+
+            matrix_to_vector(tw.weight, t);
+        }
+
+        void log_portfolio_values(const StrategyName& s,
+                                  const double& time,  const double& invested,    const double& cash,
+                                  const double& asset, const double& liabilities, const double& equity)
+        {
+            time_serie_mod(s, "pv_time").push_back(time);
+            time_serie_mod(s, "pv_invested").push_back(invested);
+            time_serie_mod(s, "pv_cash").push_back(cash);
+            time_serie_mod(s, "pv_asset").push_back(asset);
+            time_serie_mod(s, "pv_liability").push_back(liabilities);
+            time_serie_mod(s, "pv_equity").push_back(equity);
+        }
+
+        void log_transaction_order    (const StrategyName& s,
+                                       const double& time, const Matrix& m)
+        {
+            std::vector<double>& t = time_serie_mod(s, "to_share");
+            t.push_back(time);
+
+            matrix_to_vector(m, t);
+        }
+
+        void matrix_to_vector(const Matrix& m, std::vector<double>& t)
+        {
+            const double* v = &m(0, 0);
+            for(uint i = 0, n = m.rows() * m.cols(); i < n; ++i)
+            {
+                t.push_back(*v);
+                ++v;
+            }
+        }
+
+private:
+        // non const function are private
+        inline std::vector<double>& time_serie_mod(const Identifier& i) {   return _data[i.first][i.second];   }
+        inline std::vector<double>& time_serie_mod(const StrategyName& s,
+                                              const FieldName& f) {   return _data[s][f];   }
+
+    protected:
+        uint _nsecurity;
+        uint _vsize;
+        std::unordered_map<StrategyName, DataFrame> _data;
+
+
+public:
+
+
+static DataFrame build_standard_data_frame(uint nsec, uint v_size = 1000, uint strat = 1)
+{
+    DataFrame df;
+    // We are using reserve() because we want to always use push_back and never []
+    // Portfolio values
+    RESERVE("pv_time", v_size);
+    RESERVE("pv_invested", v_size * strat);    // Net of investment value
+    RESERVE("pv_asset", v_size * strat);       // investment + cash
+    RESERVE("pv_liability", v_size * strat);   // Shorted Investment and Borrowed money
+    RESERVE("pv_equity", v_size * strat);      // Long Investement + positive cash
+    RESERVE("pv_cash", v_size * strat);
+
+    // portfolio state
+    RESERVE("ps_holdings", v_size * (nsec + 1) * strat);
+    RESERVE("st_Weights", v_size * (nsec + 2) * strat); // Strategy Target Weights
+    RESERVE("to_share", v_size * (nsec + 1) * strat);
+
+    return df;
+}
+};
+
+#endif
+
