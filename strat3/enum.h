@@ -14,6 +14,7 @@ typedef Eigen::Matrix<double, -1, -1>     Matrix;
 typedef Eigen::VectorXd     Column;
 typedef Eigen::RowVectorXd  Row;
 typedef unsigned int        Index;
+typedef Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> MatrixRowMajor;
 
 
 #endif

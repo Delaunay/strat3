@@ -1,8 +1,9 @@
 #include "Backtester.h"
 
 #include "../Struct/DataStruct.h"
-
 #include "../DataManager/MatrixManager.h"
+
+#include <iostream>
 
 namespace strat3{
 
@@ -20,12 +21,16 @@ void Backtester::run_one_step()
 
     TransactionWeight*  w;
 
+    Eigen::IOFormat fmt;
+
     for(Index k = 0, n = _strategies.size(); k < n; k++)
     {
        if (should_run(k))
        {
            // Compute Target owning
            w = (*get_strategy(k))(ds);
+
+           cout << w->weight.transpose().format(fmt) << "\n";
 
            // log current target
            log_weights(title(k), *w);
@@ -67,6 +72,12 @@ uint      Backtester::max_period    ()
     return _data->matrixManager(_price_manager)
                     ->matrix(_price_matrix)
                     ->rows() - _strat_window - 0;
+}
+
+uint Backtester::security_number()
+{
+    return  _data->matrixManager(_price_manager)
+            ->matrix(_price_matrix)->cols();
 }
 
 Row       Backtester::last_price    ()

@@ -4,7 +4,7 @@
 #include "../enum.h"
 #include "../Abstract/Portfolio.h"
 #include "../Abstract/Strategy.h"
-#include "../Abstract/StrategyLog.h"
+//#include "../Abstract/StrategyLog.h"
 
 #include "../DataManager/DataManager.h"
 #include "../StrategyLog/StrategyLog.h"
@@ -76,12 +76,23 @@ class Backtester
             _data(0)
         {}
 
+        void initialize()
+        {
+            std::vector<std::string> strat_vec;
+
+            for(int i = 0; i < _strategies.size(); ++i)
+                strat_vec.push_back(title(i));
+
+            _slog.initialize(strat_vec, security_number(), max_period());
+        }
+
+        uint     security_number();
         DataQuery make_query    ();
         uint      period_running();
         uint      max_period    ();
         Row       last_price    ();
         void      run_one_step  ();
-        void add_strategy    (NodeTuple* x);
+        void add_strategy    (NodeTuple *x);
         void set_data_manager (DataManager* x, Key priceManager, Key priceMatrix);
         bool         should_run      (Index k);
 
@@ -129,6 +140,11 @@ class Backtester
 
         inline void log_portfolio_values(const std::string& strat, const Matrix& price)
         {
+        }
+
+        inline StrategyLog& strategy_log()
+        {
+            return _slog;
         }
 
     protected:

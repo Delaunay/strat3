@@ -1,25 +1,25 @@
 #ifndef STRAT3_ABSTRACT_PORTFOLIO_HEADER
 #define STRAT3_ABSTRACT_PORTFOLIO_HEADER
 
+#include "Config.h"
+#include "../Struct/TransactionWeight.h"
 #include "../enum.h"
 
-#include "../Struct/TransactionWeight.h"
+class PLUGIN StrategyLog;
+class PLUGIN TransactionAnswer;
 
-class StrategyLog;
-class TransactionAnswer;
-
-
-void order(const TransactionWeight& tw, const Row& price, const Matrix& holding, Matrix& nbshare);
-
-class Portfolio
+class PLUGIN Portfolio
 {
     public:
         typedef Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> RowMajorMatrix;
 
-        Portfolio() {}
+        Portfolio():
+            _time(0), _cash(100)
+        {}
+
         ~Portfolio()    {}
 
-        virtual void clear_orders() = 0;
+        virtual void clear_orders(){}
         //virtual void transaction_answer(const TransactionAnswer& m) = 0;
 
         virtual Matrix transaction_weight(const uint& time, const Row& price, const TransactionWeight& tw)
@@ -59,8 +59,33 @@ class Portfolio
         // Compute the number of share we need to buy
         void order(const TransactionWeight& tw, const Row& price, Matrix& nbshare)  const
         {
-            ::order(tw, price, _state, nbshare);
+            order(tw, price, _state, nbshare);
         }
+
+        void order(const TransactionWeight& tw, const Row& price, const Matrix& holding, Matrix& nbshare) const
+        {
+            double val = asset(price);
+
+            switch(tw.type)
+            {
+                case TotalPercentage:
+                    nbshare = (tw.weight * val).cwiseQuotient(price.transpose()) - holding;
+                    break;
+                case DifferentialPercentage:
+                    nbshare = (tw.weight * val).cwiseQuotient(price.transpose());
+                    break;
+                case TotalShare:
+                    nbshare = tw.weight - holding;
+                    break;
+                case DifferentialShare:
+                    nbshare = tw.weight;
+                    break;
+                case NoTransaction:
+                    nbshare = Column::Zero(tw.weight.rows(), tw.weight.cols());
+                    break;
+            }
+        }
+
 
     protected:
 

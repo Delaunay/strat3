@@ -3,20 +3,10 @@
 
 #include <vector>
 #include "../enum.h"
-//#include "../Abstract/AbstractStrategy.h"
 
 class DataQuery;
 class SecurityDatabase;
 class Predictor;
-
-//struct MCBIRPStruct : public strat_init
-//{
-//    int simulation;
-//    double min;
-//    double max;
-//    int seed;
-//    bool fixed;
-//};
 
 
 // define what is available to each strategies

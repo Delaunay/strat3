@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+   <FileVersion major="1" minor="6" />
+   <Project>
+      <Option title="strat3" />
+      <Option makefile_is_custom="1" />
+      <Option compiler="gcc" />
+      <Option virtualFolders="CMake Files\;CMake Files\Abstract\;CMake Files\Struct\;CMake Files\Backtester\;CMake Files\StrategyLog\;" />
+      <Build>
+      <Target title="all">
+         <Option working_dir="/home/midgard/Dropbox/project/Strat3/build-linux" />
+         <Option type="4" />
+         <MakeCommands>
+            <Build command="/usr/bin/make -f &quot;/home/midgard/Dropbox/project/Strat3/build-linux/Makefile&quot;  VERBOSE=1 all" />
+            <CompileFile command="/usr/bin/make -f &quot;/home/midgard/Dropbox/project/Strat3/build-linux/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="/usr/bin/make -f &quot;/home/midgard/Dropbox/project/Strat3/build-linux/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="/usr/bin/make -f &quot;/home/midgard/Dropbox/project/Strat3/build-linux/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="StandardPortfolio">
+         <Option output="/home/midgard/Dropbox/project/Strat3/build-linux/bin/libStandardPortfolio.so" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="/home/midgard/Dropbox/project/Strat3/build-linux" />
+         <Option object_output="./" />
+         <Option type="3" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add directory="/home/midgard/Dropbox/project/Strat3/strat3/." />
+            <Add directory="/usr/include" />
+            <Add directory="/usr/include/c++/4.8" />
+            <Add directory="/usr/include/c++/4.8/backward" />
+            <Add directory="/usr/include/i386-linux-gnu" />
+            <Add directory="/usr/include/i386-linux-gnu/c++/4.8" />
+            <Add directory="/usr/lib/gcc/i686-linux-gnu/4.8/include" />
+            <Add directory="/usr/lib/gcc/i686-linux-gnu/4.8/include-fixed" />
+            <Add directory="/usr/local/include" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="/usr/bin/make -f &quot;/home/midgard/Dropbox/project/Strat3/build-linux/Makefile&quot;  VERBOSE=1 StandardPortfolio" />
+            <CompileFile command="/usr/bin/make -f &quot;/home/midgard/Dropbox/project/Strat3/build-linux/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="/usr/bin/make -f &quot;/home/midgard/Dropbox/project/Strat3/build-linux/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="/usr/bin/make -f &quot;/home/midgard/Dropbox/project/Strat3/build-linux/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="StandardPortfolio/fast">
+         <Option output="/home/midgard/Dropbox/project/Strat3/build-linux/bin/libStandardPortfolio.so" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="/home/midgard/Dropbox/project/Strat3/build-linux" />
+         <Option object_output="./" />
+         <Option type="3" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add directory="/home/midgard/Dropbox/project/Strat3/strat3/." />
+            <Add directory="/usr/include" />
+            <Add directory="/usr/include/c++/4.8" />
+            <Add directory="/usr/include/c++/4.8/backward" />
+            <Add directory="/usr/include/i386-linux-gnu" />
+            <Add directory="/usr/include/i386-linux-gnu/c++/4.8" />
+            <Add directory="/usr/lib/gcc/i686-linux-gnu/4.8/include" />
+            <Add directory="/usr/lib/gcc/i686-linux-gnu/4.8/include-fixed" />
+            <Add directory="/usr/local/include" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="/usr/bin/make -f &quot;/home/midgard/Dropbox/project/Strat3/build-linux/Makefile&quot;  VERBOSE=1 StandardPortfolio/fast" />
+            <CompileFile command="/usr/bin/make -f &quot;/home/midgard/Dropbox/project/Strat3/build-linux/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="/usr/bin/make -f &quot;/home/midgard/Dropbox/project/Strat3/build-linux/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="/usr/bin/make -f &quot;/home/midgard/Dropbox/project/Strat3/build-linux/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="edit_cache">
+         <Option working_dir="/home/midgard/Dropbox/project/Strat3/build-linux" />
+         <Option type="4" />
+         <MakeCommands>
+            <Build command="/usr/bin/make -f &quot;/home/midgard/Dropbox/project/Strat3/build-linux/Makefile&quot;  VERBOSE=1 edit_cache" />
+            <CompileFile command="/usr/bin/make -f &quot;/home/midgard/Dropbox/project/Strat3/build-linux/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="/usr/bin/make -f &quot;/home/midgard/Dropbox/project/Strat3/build-linux/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="/usr/bin/make -f &quot;/home/midgard/Dropbox/project/Strat3/build-linux/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="rebuild_cache">
+         <Option working_dir="/home/midgard/Dropbox/project/Strat3/build-linux" />
+         <Option type="4" />
+         <MakeCommands>
+            <Build command="/usr/bin/make -f &quot;/home/midgard/Dropbox/project/Strat3/build-linux/Makefile&quot;  VERBOSE=1 rebuild_cache" />
+            <CompileFile command="/usr/bin/make -f &quot;/home/midgard/Dropbox/project/Strat3/build-linux/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="/usr/bin/make -f &quot;/home/midgard/Dropbox/project/Strat3/build-linux/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="/usr/bin/make -f &quot;/home/midgard/Dropbox/project/Strat3/build-linux/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="StandardStrategy">
+         <Option output="/home/midgard/Dropbox/project/Strat3/build-linux/bin/libStandardStrategy.so" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="/home/midgard/Dropbox/project/Strat3/build-linux" />
+         <Option object_output="./" />
+         <Option type="3" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add directory="/home/midgard/Dropbox/project/Strat3/strat3/." />
+            <Add directory="/usr/include" />
+            <Add directory="/usr/include/c++/4.8" />
+            <Add directory="/usr/include/c++/4.8/backward" />
+            <Add directory="/usr/include/i386-linux-gnu" />
+            <Add directory="/usr/include/i386-linux-gnu/c++/4.8" />
+            <Add directory="/usr/lib/gcc/i686-linux-gnu/4.8/include" />
+            <Add directory="/usr/lib/gcc/i686-linux-gnu/4.8/include-fixed" />
+            <Add directory="/usr/local/include" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="/usr/bin/make -f &quot;/home/midgard/Dropbox/project/Strat3/build-linux/Makefile&quot;  VERBOSE=1 StandardStrategy" />
+            <CompileFile command="/usr/bin/make -f &quot;/home/midgard/Dropbox/project/Strat3/build-linux/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="/usr/bin/make -f &quot;/home/midgard/Dropbox/project/Strat3/build-linux/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="/usr/bin/make -f &quot;/home/midgard/Dropbox/project/Strat3/build-linux/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="StandardStrategy/fast">
+         <Option output="/home/midgard/Dropbox/project/Strat3/build-linux/bin/libStandardStrategy.so" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="/home/midgard/Dropbox/project/Strat3/build-linux" />
+         <Option object_output="./" />
+         <Option type="3" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add directory="/home/midgard/Dropbox/project/Strat3/strat3/." />
+            <Add directory="/usr/include" />
+            <Add directory="/usr/include/c++/4.8" />
+            <Add directory="/usr/include/c++/4.8/backward" />
+            <Add directory="/usr/include/i386-linux-gnu" />
+            <Add directory="/usr/include/i386-linux-gnu/c++/4.8" />
+            <Add directory="/usr/lib/gcc/i686-linux-gnu/4.8/include" />
+            <Add directory="/usr/lib/gcc/i686-linux-gnu/4.8/include-fixed" />
+            <Add directory="/usr/local/include" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="/usr/bin/make -f &quot;/home/midgard/Dropbox/project/Strat3/build-linux/Makefile&quot;  VERBOSE=1 StandardStrategy/fast" />
+            <CompileFile command="/usr/bin/make -f &quot;/home/midgard/Dropbox/project/Strat3/build-linux/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="/usr/bin/make -f &quot;/home/midgard/Dropbox/project/Strat3/build-linux/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="/usr/bin/make -f &quot;/home/midgard/Dropbox/project/Strat3/build-linux/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="backtester">
+         <Option output="/home/midgard/Dropbox/project/Strat3/build-linux/bin/backtester" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="/home/midgard/Dropbox/project/Strat3/build-linux/bin" />
+         <Option object_output="./" />
+         <Option type="1" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add directory="/home/midgard/Dropbox/project/Strat3/strat3/." />
+            <Add directory="/usr/include" />
+            <Add directory="/usr/include/c++/4.8" />
+            <Add directory="/usr/include/c++/4.8/backward" />
+            <Add directory="/usr/include/i386-linux-gnu" />
+            <Add directory="/usr/include/i386-linux-gnu/c++/4.8" />
+            <Add directory="/usr/lib/gcc/i686-linux-gnu/4.8/include" />
+            <Add directory="/usr/lib/gcc/i686-linux-gnu/4.8/include-fixed" />
+            <Add directory="/usr/local/include" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="/usr/bin/make -f &quot;/home/midgard/Dropbox/project/Strat3/build-linux/Backtester/Makefile&quot;  VERBOSE=1 backtester" />
+            <CompileFile command="/usr/bin/make -f &quot;/home/midgard/Dropbox/project/Strat3/build-linux/Backtester/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="/usr/bin/make -f &quot;/home/midgard/Dropbox/project/Strat3/build-linux/Backtester/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="/usr/bin/make -f &quot;/home/midgard/Dropbox/project/Strat3/build-linux/Backtester/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="backtester/fast">
+         <Option output="/home/midgard/Dropbox/project/Strat3/build-linux/bin/backtester" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="/home/midgard/Dropbox/project/Strat3/build-linux/bin" />
+         <Option object_output="./" />
+         <Option type="1" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add directory="/home/midgard/Dropbox/project/Strat3/strat3/." />
+            <Add directory="/usr/include" />
+            <Add directory="/usr/include/c++/4.8" />
+            <Add directory="/usr/include/c++/4.8/backward" />
+            <Add directory="/usr/include/i386-linux-gnu" />
+            <Add directory="/usr/include/i386-linux-gnu/c++/4.8" />
+            <Add directory="/usr/lib/gcc/i686-linux-gnu/4.8/include" />
+            <Add directory="/usr/lib/gcc/i686-linux-gnu/4.8/include-fixed" />
+            <Add directory="/usr/local/include" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="/usr/bin/make -f &quot;/home/midgard/Dropbox/project/Strat3/build-linux/Backtester/Makefile&quot;  VERBOSE=1 backtester/fast" />
+            <CompileFile command="/usr/bin/make -f &quot;/home/midgard/Dropbox/project/Strat3/build-linux/Backtester/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="/usr/bin/make -f &quot;/home/midgard/Dropbox/project/Strat3/build-linux/Backtester/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="/usr/bin/make -f &quot;/home/midgard/Dropbox/project/Strat3/build-linux/Backtester/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      </Build>
+      <Unit filename="/home/midgard/Dropbox/project/Strat3/strat3/Abstract/Portfolio.cpp">
+      </Unit>
+      <Unit filename="/home/midgard/Dropbox/project/Strat3/strat3/Abstract/Strategy.cpp">
+      </Unit>
+      <Unit filename="/home/midgard/Dropbox/project/Strat3/strat3/Backtester/Backtester.cpp">
+      </Unit>
+      <Unit filename="/home/midgard/Dropbox/project/Strat3/strat3/Backtester/DLLoader.cpp">
+      </Unit>
+      <Unit filename="/home/midgard/Dropbox/project/Strat3/strat3/Backtester/main.cpp">
+      </Unit>
+      <Unit filename="/home/midgard/Dropbox/project/Strat3/strat3/DataManager/Buffer.cpp">
+      </Unit>
+      <Unit filename="/home/midgard/Dropbox/project/Strat3/strat3/DataManager/DataManager.cpp">
+      </Unit>
+      <Unit filename="/home/midgard/Dropbox/project/Strat3/strat3/DataManager/DataQuery.cpp">
+      </Unit>
+      <Unit filename="/home/midgard/Dropbox/project/Strat3/strat3/DataManager/MatrixManager.cpp">
+      </Unit>
+      <Unit filename="/home/midgard/Dropbox/project/Strat3/strat3/DataManager/MatrixQuery.cpp">
+      </Unit>
+      <Unit filename="/home/midgard/Dropbox/project/Strat3/strat3/StrategyLog/StrategyLog.cpp">
+      </Unit>
+      <Unit filename="/home/midgard/Dropbox/project/Strat3/strat3/Struct/TransactionWeight.cpp">
+      </Unit>
+      <Unit filename="/home/midgard/Dropbox/project/Strat3/strat3/default/StandardPortfolio.cpp">
+      </Unit>
+      <Unit filename="/home/midgard/Dropbox/project/Strat3/strat3/default/StandardStrategy.cpp">
+      </Unit>
+      <Unit filename="/home/midgard/Dropbox/project/Strat3/strat3/Abstract/Portfolio.h">
+      </Unit>
+      <Unit filename="/home/midgard/Dropbox/project/Strat3/strat3/Abstract/Strategy.h">
+      </Unit>
+      <Unit filename="/home/midgard/Dropbox/project/Strat3/strat3/Backtester/Backtester.h">
+      </Unit>
+      <Unit filename="/home/midgard/Dropbox/project/Strat3/strat3/Backtester/DLLoader.h">
+      </Unit>
+      <Unit filename="/home/midgard/Dropbox/project/Strat3/strat3/Backtester/DynamicObject.h">
+      </Unit>
+      <Unit filename="/home/midgard/Dropbox/project/Strat3/strat3/Backtester/ErrorPolicy.h">
+      </Unit>
+      <Unit filename="/home/midgard/Dropbox/project/Strat3/strat3/Backtester/Pointer.h">
+      </Unit>
+      <Unit filename="/home/midgard/Dropbox/project/Strat3/strat3/DataManager/Buffer.h">
+      </Unit>
+      <Unit filename="/home/midgard/Dropbox/project/Strat3/strat3/DataManager/DataManager.h">
+      </Unit>
+      <Unit filename="/home/midgard/Dropbox/project/Strat3/strat3/DataManager/DataQuery.h">
+      </Unit>
+      <Unit filename="/home/midgard/Dropbox/project/Strat3/strat3/DataManager/MatrixManager.h">
+      </Unit>
+      <Unit filename="/home/midgard/Dropbox/project/Strat3/strat3/DataManager/MatrixQuery.h">
+      </Unit>
+      <Unit filename="/home/midgard/Dropbox/project/Strat3/strat3/StrategyLog/StrategyLog.h">
+      </Unit>
+      <Unit filename="/home/midgard/Dropbox/project/Strat3/strat3/Struct/DataStruct.h">
+      </Unit>
+      <Unit filename="/home/midgard/Dropbox/project/Strat3/strat3/Struct/TransactionAnswer.h">
+      </Unit>
+      <Unit filename="/home/midgard/Dropbox/project/Strat3/strat3/Struct/TransactionWeight.h">
+      </Unit>
+      <Unit filename="/home/midgard/Dropbox/project/Strat3/strat3/CMakeLists.txt">
+          <Option virtualFolder="CMake Files\" />
+      </Unit>
+      <Unit filename="/home/midgard/Dropbox/project/Strat3/strat3/Abstract/CMakeLists.txt">
+          <Option virtualFolder="CMake Files\Abstract\" />
+      </Unit>
+      <Unit filename="/home/midgard/Dropbox/project/Strat3/strat3/Struct/CMakeLists.txt">
+          <Option virtualFolder="CMake Files\Struct\" />
+      </Unit>
+      <Unit filename="/home/midgard/Dropbox/project/Strat3/strat3/Backtester/CMakeLists.txt">
+          <Option virtualFolder="CMake Files\Backtester\" />
+      </Unit>
+      <Unit filename="/home/midgard/Dropbox/project/Strat3/strat3/StrategyLog/CMakeLists.txt">
+          <Option virtualFolder="CMake Files\StrategyLog\" />
+      </Unit>
+   </Project>
+</CodeBlocks_project_file>

@@ -101,21 +101,28 @@ class StrategyLog
         T get_holdings(const StrategyName& s)
         {
             std::vector<double>& t = time_serie_mod(s, "ps_holdings");
-            return Eigen::Map<T>(t[0], t.size() / (_nsecurity + 1), _nsecurity + 1);
+            return Eigen::Map<T>(&t[0], t.size() / (_nsecurity + 1), _nsecurity + 1);
         }
 
         template<typename T>
         T get_weights(const StrategyName& s)
         {
-            std::vector<double>& t = time_serie_mod(s, "st_Weights");
-            return Eigen::Map<T>(t[0], t.size() / (_nsecurity + 2), _nsecurity + 2);
+            std::vector<double>& t = time_serie_mod(s, "st_weights");
+            return Eigen::Map<T>(&t[0], t.size() / (_nsecurity + 2), _nsecurity + 2);
         }
+
+//        template<typename T>
+//        T get_share(const StrategyName& s)
+//        {
+//            std::vector<double>& t = time_serie_mod(s, "to_share");
+//            return Eigen::Map<T>(&t[0], t.size() / (_nsecurity + 1), _nsecurity + 1);
+//        }
 
         template<typename T>
         T get_share(const StrategyName& s)
         {
             std::vector<double>& t = time_serie_mod(s, "to_share");
-            return Eigen::Map<T>(t[0], t.size() / (_nsecurity + 1), _nsecurity + 1);
+            return Eigen::Map<T>(&t[0], t.size() / (_nsecurity + 1), _nsecurity + 1);
         }
 
         // my_data = build_matrix({"Strategy", "pv_time"}, {"Strategy", "pv_invested"})
@@ -163,7 +170,7 @@ class StrategyLog
 
         void log_transaction_weight(const StrategyName& s,const double& time, const TransactionWeight& tw)
         {
-            std::vector<double>& t = time_serie_mod(s, "st_Weights");
+            std::vector<double>& t = time_serie_mod(s, "st_weights");
             t.push_back(time);
             t.push_back(tw.type);
 
@@ -201,6 +208,33 @@ class StrategyLog
             }
         }
 
+        void dump()
+        {
+            // Open files
+            std::fstream pv; pv.open("../pv.txt", std::ios::out);
+            std::fstream ps; ps.open("../ps.txt", std::ios::out);
+            std::fstream tw; tw.open("../tw.txt", std::ios::out);
+            std::fstream to; to.open("../to.txt", std::ios::out);
+
+            Eigen::IOFormat fmt;
+
+            // Portfolio Values
+            pv << build_matrix({{"EqualWeighted", "pv_time"}, {"EqualWeighted", "pv_invested"}});
+
+            // Portfolio State
+            ps << get_holdings<MatrixRowMajor>("EqualWeighted").format(fmt);
+
+            // Transaction weight
+            tw << get_weights<MatrixRowMajor>("EqualWeighted").format(fmt);
+
+            // Transaction Order
+            to << get_share<MatrixRowMajor>("EqualWeighted").format(fmt);
+
+            // close files
+            pv.close(); ps.close(); tw.close(); to.close();
+        }
+
+
 private:
         // non const function are private
         inline std::vector<double>& time_serie_mod(const Identifier& i) {   return _data[i.first][i.second];   }
@@ -230,7 +264,7 @@ static DataFrame build_standard_data_frame(uint nsec, uint v_size = 1000, uint s
 
     // portfolio state
     RESERVE("ps_holdings", v_size * (nsec + 1) * strat);
-    RESERVE("st_Weights", v_size * (nsec + 2) * strat); // Strategy Target Weights
+    RESERVE("st_weights", v_size * (nsec + 2) * strat); // Strategy Target Weights
     RESERVE("to_share", v_size * (nsec + 1) * strat);
 
     return df;

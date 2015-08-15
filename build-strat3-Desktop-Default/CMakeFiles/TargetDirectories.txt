@@ -1,5 +1,0 @@
-/home/midgard/Dropbox/project/Strat3/build-strat3-Desktop-Default/CMakeFiles/arbitrage.dir
-/home/midgard/Dropbox/project/Strat3/build-strat3-Desktop-Default/CMakeFiles/gtest.dir
-/home/midgard/Dropbox/project/Strat3/build-strat3-Desktop-Default/CMakeFiles/strat3.dir
-/home/midgard/Dropbox/project/Strat3/build-strat3-Desktop-Default/CMakeFiles/tests_cml.dir
-/home/midgard/Dropbox/project/Strat3/build-strat3-Desktop-Default/CMakeFiles/tests.dir

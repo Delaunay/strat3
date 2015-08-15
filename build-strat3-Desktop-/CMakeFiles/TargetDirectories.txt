@@ -1,1 +1,0 @@
-/home/midgard/Dropbox/project/Strat3/build-strat3-Desktop-/Backtester/CMakeFiles/backtester.dir

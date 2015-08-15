@@ -1,7 +1,9 @@
 SET(ABSTRACT_HEADER
     ../Abstract/Portfolio.h
     ../Abstract/Strategy.h
-    ../Abstract/StrategyLog.h
+    ../Abstract/Portfolio.cpp
+    ../Abstract/Strategy.cpp
+#    ../Abstract/StrategyLog.h
 #    ../Abstract/DataManager.h
 )
 

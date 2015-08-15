@@ -3,6 +3,8 @@
 
 #include <string>
 
+#include "Config.h"
+#include "../enum.h"
 #include "../Struct/TransactionWeight.h"
 
 class DataStruct;
@@ -12,11 +14,11 @@ class Strategy
 {
     public:
 
-        virtual TransactionWeight* operator() (DataStruct& ds) = 0;
+        virtual PLUGIN TransactionWeight* operator() (DataStruct& ds) = 0;
 
         void set_security_number(const uint& n){
             _nsecurity = n;
-            weight() = Column::Constant(_nsecurity, 1.0 / double(_nsecurity));
+            weight() = Matrix::Constant(_nsecurity, 1, 1.0 / double(_nsecurity));
         }
 
         const uint& nsecurity  () const {   return _nsecurity;      }
@@ -24,14 +26,14 @@ class Strategy
         WeightType& weight_type()       {   return _weight.type;    }
 
     // Public attributes
-        std::string title;
-        std::string description;
+        std::string title{"Empty Strategy"};
+        std::string description{"No Description"};
 
-        uint frequency;
-        bool rebalanced;
+        uint frequency{1};
+        bool rebalanced{true};
 
     // Need to use accessor
-    private:
+    protected:
         TransactionWeight _weight;
         uint _nsecurity;
 

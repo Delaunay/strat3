@@ -14,13 +14,9 @@ enum WeightType{
 struct TransactionWeight
 {
     public:
-        TransactionWeight():
-            type(TotalPercentage)
-        {}
-
+        TransactionWeight();
         Matrix     weight;
         WeightType type;
 };
-
 
 #endif
