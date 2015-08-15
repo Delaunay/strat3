@@ -1,3 +1,0 @@
-/home/midgard/Dropbox/project/Strat3/build-linux/CMakeFiles/StandardPortfolio.dir
-/home/midgard/Dropbox/project/Strat3/build-linux/CMakeFiles/StandardStrategy.dir
-/home/midgard/Dropbox/project/Strat3/build-linux/Backtester/CMakeFiles/backtester.dir

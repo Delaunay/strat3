@@ -1,1 +1,0 @@
-/usr/bin/c++  -fPIC  -std=c++11 -O1 -O2 -O3  -shared -Wl,-soname,libStandardPortfolio.so -o bin/libStandardPortfolio.so CMakeFiles/StandardPortfolio.dir/default/StandardPortfolio.cpp.o CMakeFiles/StandardPortfolio.dir/Struct/TransactionWeight.cpp.o 
