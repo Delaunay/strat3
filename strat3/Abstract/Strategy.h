@@ -7,7 +7,7 @@
 #include "../enum.h"
 #include "../Struct/TransactionWeight.h"
 
-class DataStruct;
+class PLUGIN  DataStruct;
 typedef unsigned int uint;
 
 class Strategy
@@ -16,9 +16,10 @@ class Strategy
 
         virtual PLUGIN TransactionWeight* operator() (DataStruct& ds) = 0;
 
-        void set_security_number(const uint& n){
-            _nsecurity = n;
-            weight() = Matrix::Constant(_nsecurity, 1, 1.0 / double(_nsecurity));
+        virtual void initialize(const uint& nsecurity, const uint& nstrat = 1, const void* user_data = 0)
+        {
+            _nsecurity = nsecurity;
+            weight() = Matrix::Constant(_nsecurity, nstrat, 1.0 / double(_nsecurity));
         }
 
         const uint& nsecurity  () const {   return _nsecurity;      }

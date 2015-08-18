@@ -3,6 +3,8 @@ SET(ABSTRACT_HEADER
     ../Abstract/Strategy.h
     ../Abstract/Portfolio.cpp
     ../Abstract/Strategy.cpp
+#    ../Abstract/SinglePortfolio.h
+#    ../Abstract/SinglePortfolio.cpp
 #    ../Abstract/StrategyLog.h
 #    ../Abstract/DataManager.h
 )
@@ -23,7 +25,7 @@ aux_source_directory(../DataManager/ DATAMANGER_SRC)
 aux_source_directory(../StrategyLog/ STRATEGYLOG_SRC)
 aux_source_directory(. BACKTEST_SRC)
 
-add_executable(backtester main.cpp
+add_library(backtest_library
     ${BACKTEST_SRC}
     ${BACKTEST_HDS}
     ${STRUCT_HEADER}
@@ -31,5 +33,9 @@ add_executable(backtester main.cpp
     ${DATAMANGER_SRC}
     ${STRATEGYLOG_SRC}
 )
-target_link_libraries(backtester -ldl)
+
+add_executable(backtester main.cpp)
+
+target_link_libraries(backtester backtest_library -ldl)
+
 

@@ -24,6 +24,8 @@ class MatrixManager
 
                 Matrix* m;
 
+                Matrix& matrix()    {   return (*m);    }
+
                 //! true if the matrix will be deleted by its parent.
                 bool    ownership;
         };
@@ -32,7 +34,7 @@ class MatrixManager
 
         ~MatrixManager();
 
-        void addMatrix(Key k, Matrix* m, bool owned = true);
+        void add_matrix(Key k, Matrix* m, bool owned = true);
         Matrix* matrix(Key k);
 
 
@@ -43,19 +45,19 @@ class MatrixManager
          *  @param o either Erase or Append
         */
         void save(Key k, FileName n, FileType t, SaveOptions o);
-        void saveAll(FileName n, FileType t, SaveOptions o);
+        void save_all(FileName n, FileType t, SaveOptions o);
 
         /*!
          * \brief load a matrix-like file in memory
          * \param n FileName
          * \param t FileType
          */
-        void load           (FileName n, FileType t);
-        void writeBinaryAll (FileName n, SaveOptions o);
-        void writeBinary    (Key k, FileName n, SaveOptions o);
-        void readBinary     (FileName n);
-        void writeCSV       (Key k, FileName n, SaveOptions o);
-        void writeCSVAll    (FileName n, SaveOptions o);
+        void load            (FileName n, FileType t);
+        void write_binary_all(FileName n, SaveOptions o);
+        void write_binary    (Key k, FileName n, SaveOptions o);
+        void read_binary     (FileName n);
+        void write_csv       (Key k, FileName n, SaveOptions o);
+        void write_csv_all   (FileName n, SaveOptions o);
 
         /*!
          * \brief readCSV
@@ -64,15 +66,13 @@ class MatrixManager
          * \param header
          * \param colsep
          */
-        void                readCSV (FileName n, Key key, bool header = false, const char* colsep = ",");
-        std::pair<int, int> readSize(std::ifstream* file, bool header = false, const char* colsep = ",");
+        void                read_csv (FileName n, Key key, bool header = false, const char* colsep = ",");
+        std::pair<int, int> read_size(std::ifstream* file, bool header = false, const char* colsep = ",");
 
         int         size();
-        MatrixQuery makeQuery(int min, int max);
+        MatrixQuery make_query(int min, int max);
 
-    protected:
-
-        std::unordered_map<Key, Element> _Matrix;
+        std::unordered_map<Key, Element> _matrix;
 };
 
 #endif

@@ -12,9 +12,9 @@ MatrixManager::MatrixManager()
 
 MatrixManager::~MatrixManager()
 {
-    std::unordered_map<Key, Element>::iterator i = _Matrix.begin();
+    std::unordered_map<Key, Element>::iterator i = _matrix.begin();
 
-    while(i != _Matrix.end())
+    while(i != _matrix.end())
     {
         if ( (*i).second.ownership == true )
             delete (*i).second.m;
@@ -23,23 +23,23 @@ MatrixManager::~MatrixManager()
     }
 }
 
-void MatrixManager::addMatrix(Key k, Matrix* m, bool owned)
+void MatrixManager::add_matrix(Key k, Matrix* m, bool owned)
 {
-    _Matrix[k] = Element(m, owned);
+    _matrix[k] = Element(m, owned);
 }
 
-Matrix* MatrixManager::matrix(Key k)    {   return _Matrix[k].m;   }
+Matrix* MatrixManager::matrix(Key k)    {   return _matrix[k].m;   }
 
 
-void MatrixManager::saveAll(FileName n, FileType t, SaveOptions o)
+void MatrixManager::save_all(FileName n, FileType t, SaveOptions o)
 {
     switch(t)
     {
         case Binary:
-            writeBinaryAll(n, o);
+            write_binary_all(n, o);
             return;
         case CSV:
-            writeCSVAll(n, o);
+            write_csv_all(n, o);
             return;
         default:
             return;
@@ -51,10 +51,10 @@ void MatrixManager::save(Key k, FileName n, FileType t, SaveOptions o)
     switch(t)
     {
         case Binary:
-            writeBinary(k, n, o);
+            write_binary(k, n, o);
             return;
         case CSV:
-            writeCSV(k, n, o);
+            write_csv(k, n, o);
             return;
         default:
             return;
@@ -66,7 +66,7 @@ void MatrixManager::load(FileName n, FileType t)
     switch(t)
     {
         case Binary:
-            readBinary(n);
+            read_binary(n);
             return;
         case CSV:
 //            readCSV(n);
@@ -76,10 +76,10 @@ void MatrixManager::load(FileName n, FileType t)
     }
 }
 
-void MatrixManager::writeBinaryAll(FileName n, SaveOptions o)
+void MatrixManager::write_binary_all(FileName n, SaveOptions o)
 {}
 
-void MatrixManager::writeBinary(Key k, FileName n, SaveOptions o)
+void MatrixManager::write_binary(Key k, FileName n, SaveOptions o)
 {
     // I have a problem with append
     // I need to open the file twice fseek is repporting an Error rewind() fail il I use only one file
@@ -134,7 +134,7 @@ void MatrixManager::writeBinary(Key k, FileName n, SaveOptions o)
     fclose(file);
 }
 
-void MatrixManager::readBinary(FileName n)
+void MatrixManager::read_binary(FileName n)
 {
     FILE* file = fopen(n.c_str(), "rb");
 
@@ -179,7 +179,7 @@ void MatrixManager::readBinary(FileName n)
 
         // allocate memory
         Matrix* m = new Matrix(Matrix::Zero(size[0], size[1]));
-        _Matrix[Key(title)] = Element(m, true);
+        _matrix[Key(title)] = Element(m, true);
 
         // read data
         r = fread(&(*m)(0, 0), sizeof(double), size[0] * size[1], file);
@@ -194,31 +194,31 @@ void MatrixManager::readBinary(FileName n)
     fclose(file);
 }
 
-void MatrixManager::writeCSV(Key k, FileName n, SaveOptions o)
+void MatrixManager::write_csv(Key k, FileName n, SaveOptions o)
 {}
 
-void MatrixManager::writeCSVAll(FileName n, SaveOptions o)
+void MatrixManager::write_csv_all(FileName n, SaveOptions o)
 {}
 
-int MatrixManager::size() { return _Matrix.size(); }
+int MatrixManager::size() { return _matrix.size(); }
 
-MatrixQuery MatrixManager::makeQuery(int min, int max)
+MatrixQuery MatrixManager::make_query(int min, int max)
 {
     return MatrixQuery(this, min, max);
 }
 
 
-void MatrixManager::readCSV        (FileName n, Key key, bool header, const char* colsep)
+void MatrixManager::read_csv        (FileName n, Key key, bool header, const char* colsep)
 {
     std::ifstream file(n.c_str(), std::ios::in);
 
     if (!file)
             throw "File does not exist";
 
-    std::pair<int, int> size = readSize(&file, header, colsep);
+    std::pair<int, int> size = read_size(&file, header, colsep);
 
     Matrix* A = new Matrix(Matrix::Zero(size.first, size.second));
-    addMatrix(key, A, true);
+    add_matrix(key, A, true);
 
     std::string line;
 
@@ -250,7 +250,7 @@ void MatrixManager::readCSV        (FileName n, Key key, bool header, const char
     file.close();
 }
 
-std::pair<int, int> MatrixManager::readSize(std::ifstream* file, bool header, const char* colsep)
+std::pair<int, int> MatrixManager::read_size(std::ifstream* file, bool header, const char* colsep)
 {
     std::string line;
     std::getline(*file, line);

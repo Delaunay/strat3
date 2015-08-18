@@ -1,28 +1,27 @@
 #ifndef STRAT3_TESTER_HEADER
 #define STRAT3_TESTER_HEADER
 
+#include<vector>
+
 #include "../enum.h"
 #include "../Abstract/Portfolio.h"
 #include "../Abstract/Strategy.h"
-//#include "../Abstract/StrategyLog.h"
-
-#include "../DataManager/DataManager.h"
+#include "../DataManager/MatrixManager.h"
+#include "../DataManager/MatrixQuery.h"
 #include "../StrategyLog/StrategyLog.h"
-
-#include "../DataManager/DataQuery.h"
 
 #include "DynamicObject.h"
 
-#include<vector>
 
 namespace strat3{
 
+using DynamicLoading::DynamicObject;
 
 // define dynamicly loaded Actor
 typedef DynamicObject<Strategy>     MStrategy;
 typedef DynamicObject<Portfolio>    MPortfolio;
 typedef DynamicObject<StrategyLog>  MStrategyLog;
-typedef DynamicObject<DataManager>  MDataManager;
+//typedef DynamicObject<DataManager>  MDataManager;
 
 //typedef DynamicObject<AbstractPredictor> MPredictor;
 //typedef DynamicObject<AbstractMarketEngine> MMarketEngine;
@@ -33,8 +32,7 @@ struct NodeTuple
     public:
         NodeTuple(MStrategy* s = 0, MPortfolio* p = 0/*, MMarketEngine* m = 0*/):
             _strat(s), _portfolio(p)//, market(m), log(0), predictor(0)
-        {
-        }
+        {}
 
         void load_strategy(const std::string& name)
         {
@@ -71,7 +69,7 @@ class Backtester
 {
     public:
         Backtester():
-            _price_manager(""), _price_matrix(""),
+            _price_matrix(""),
             _cash(1000), _time(0), _strat_window(1), _using_dates(false),
             _data(0)
         {}
@@ -86,22 +84,22 @@ class Backtester
             _slog.initialize(strat_vec, security_number(), max_period());
         }
 
-        uint     security_number();
-        DataQuery make_query    ();
-        uint      period_running();
-        uint      max_period    ();
-        Row       last_price    ();
-        void      run_one_step  ();
+        uint        security_number();
+        MatrixQuery make_query    ();
+        uint        period_running();
+        uint        max_period    ();
+        Row         last_price    ();
+        void        run_one_step  ();
         void add_strategy    (NodeTuple *x);
-        void set_data_manager (DataManager* x, Key priceManager, Key priceMatrix);
+        void set_data_manager (MatrixManager* x, Key priceMatrix);
         bool         should_run      (Index k);
 
         inline       uint    size         () const   {  return _strategies.size();  }
         inline const uint&   time         () const   {  return _time;               }
         inline const double& begin_cash   () const   {  return _cash;               }
         inline const uint&   strat_window () const   {  return _strat_window;       }
-        inline MStrategy&    get_strategy (uint k)  {  return _strategies[k]->strategy();       }
-        inline MPortfolio&   get_portfolio(uint k)  {  return _strategies[k]->portfolio();   }
+        inline MStrategy&    get_strategy (uint k)   {  return _strategies[k]->strategy();       }
+        inline MPortfolio&   get_portfolio(uint k)   {  return _strategies[k]->portfolio();   }
         inline Matrix&       dates        ()         {  return _dates;}
         inline bool&         using_dates  ()         {   return _using_dates;    }
         inline void      set_strat_window (const uint& a)
@@ -138,8 +136,9 @@ class Backtester
             _slog.log_transaction_order(strat, _time, orders);
         }
 
-        inline void log_portfolio_values(const std::string& strat, const Matrix& price)
+        inline void log_portfolio_values(const std::string& strat, const Matrix& invested, const Matrix& cash, const Matrix liab)
         {
+            _slog.log_portfolio_values(strat, _time, invested, cash, liab);
         }
 
         inline StrategyLog& strategy_log()
@@ -150,20 +149,19 @@ class Backtester
     protected:
 
         // Dates
-        Matrix _dates;
-        bool   _using_dates;
-        Key    _price_manager;
-        Key    _price_matrix;
-        double _cash;
-        uint   _time;
-        uint   _strat_window;
+        Matrix _dates;          // Dates
+        bool   _using_dates;    // if we are using dates
+        Key    _price_matrix;   // Matrix used for buy/sell
+        double _cash;           // Cash
+        uint   _time;           // Current time
+        uint   _strat_window;   // Minimum number of days
 
-        StrategyLog _slog;
+        StrategyLog _slog;      // Logged
 
-        DataManager* _data;
-        std::vector<NodeTuple*> _strategies;
-//        std::vector<Predictor>  _GlobalPredictors;
-//        MSecurityDatabase*      _SecurityDatabase;
+        MatrixManager* _data;   // Data needed
+
+        //DataManager* _data;
+        std::vector<NodeTuple*> _strategies;//  Strategies
 };
 }
 #endif

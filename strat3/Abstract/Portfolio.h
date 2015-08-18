@@ -8,14 +8,24 @@
 class PLUGIN StrategyLog;
 class PLUGIN TransactionAnswer;
 
+//
+//  Portfolio Track Asset Ownership
+//
 class PLUGIN Portfolio
 {
     public:
+        // m = number of Strategies
         typedef Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> RowMajorMatrix;
 
-        Portfolio():
-            _time(0), _cash(100)
-        {}
+        // Portfolio is init
+        Portfolio() = default;
+
+        virtual void initialize(double cash, const uint& nsecurity, const uint nstrategy = 1, const void* user_data = 0)
+        {
+            _nsecurity = nsecurity;
+            _cash = Matrix::Constant(1, nstrategy, cash);
+            _state = Matrix::Zero(nsecurity, nstrategy);
+        }
 
         ~Portfolio()    {}
 
@@ -31,29 +41,31 @@ class PLUGIN Portfolio
             return nbshare;
         }
 
-        virtual void transaction_answer(const Matrix& nbshare)
+        virtual inline void transaction_answer(const Matrix& nbshare, const Row& prices)
         {
+            // remove cash
+            _cash -= prices * nbshare;
+            // add shares
             _state += nbshare;
         }
 
         //virtual void logPortfolioFull(Index time, Row* price);
 
-        void set_cash(const double& cash)   {   _cash = cash;   }
-        void set_security_number(const uint& n){
-            _nsecurity = n;
-            _state = Column::Constant(_nsecurity, 1.0 / double(_nsecurity));
+        inline const Matrix& state() const           {   return _state; }
+
+        //                  invested = (1 x n) * (n x m) = (1 x m)
+        inline const Matrix& cash() const {   return _cash;   }
+        inline Matrix invested   (const Row& prices) const {    return (prices * _state); }
+        inline Matrix asset      (const Row& prices) const {    return (prices * _state) + _cash; }
+        inline Matrix equity     (const Row& prices) const {    return asset(prices) - liability(prices); }
+        inline Matrix liability  (const Row& prices) const
+        {
+            return _cash.cwiseProduct((_cash.array() < 0).cast<double>().matrix()) + shorted(prices);
         }
 
-        const Matrix& state() const           {   return _state; }
-
-        // All those must be matrices too
-        double  invested   (const Row& prices) const {    return (prices * _state)(0, 0); }
-        double  asset      (const Row& prices) const {    return (prices * _state)(0, 0) + _cash; }
-        double  equity     (const Row& prices) const {    return asset(prices) - liability(prices); }
-        double  liability  (const Row& prices) const
+        inline Matrix shorted(const Row& prices) const
         {
-            return std::min(_cash, 0.0) +
-                    (prices *(_state.array() * (_state.array() < 0).cast<double>()).matrix()).sum();
+            return (prices *(_state.array() * (_state.array() < 0).cast<double>()).matrix());
         }
 
         // Compute the number of share we need to buy
@@ -64,7 +76,7 @@ class PLUGIN Portfolio
 
         void order(const TransactionWeight& tw, const Row& price, const Matrix& holding, Matrix& nbshare) const
         {
-            double val = asset(price);
+            Matrix val = asset(price);
 
             switch(tw.type)
             {
@@ -81,7 +93,7 @@ class PLUGIN Portfolio
                     nbshare = tw.weight;
                     break;
                 case NoTransaction:
-                    nbshare = Column::Zero(tw.weight.rows(), tw.weight.cols());
+                    nbshare = Matrix::Zero(tw.weight.rows(), tw.weight.cols());
                     break;
             }
         }
@@ -90,7 +102,7 @@ class PLUGIN Portfolio
     protected:
 
         double        _time;
-        double        _cash;            // Cash must a Matrix
+        Matrix        _cash;            // Cash must a Matrix
         Matrix        _state;           // Hold number of shares
         uint          _nsecurity;       // Security
 };

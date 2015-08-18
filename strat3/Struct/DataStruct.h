@@ -4,7 +4,7 @@
 #include <vector>
 #include "../enum.h"
 
-class DataQuery;
+class MatrixQuery;
 class SecurityDatabase;
 class Predictor;
 
@@ -14,11 +14,11 @@ struct DataStruct
 {
 public:
 
-    DataStruct(const Key& m, const Key& mat):
-        managerKey(m), matrixKey(mat)
+    DataStruct(const Key& mat):
+        matrix_key(mat)
     {}
 
-    DataQuery* dataManager;
+    MatrixQuery* dataManager;
 
     // TODO
     // make logs available as const
@@ -32,8 +32,7 @@ public:
     // latest price are at the bottom row
     Matrix price(int window);
 
-    const Key& managerKey;
-    const Key& matrixKey;
+    const Key& matrix_key;
 };
 
 #endif

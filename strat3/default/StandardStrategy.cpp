@@ -11,7 +11,7 @@ public:
         this->title = "EqualWeighted";
     }
 
-     PLUGIN TransactionWeight* operator() (DataStruct& ds)
+    PLUGIN TransactionWeight* operator() (DataStruct& ds)
     {
         return &_weight;
     }

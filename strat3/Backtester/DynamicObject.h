@@ -1,19 +1,70 @@
-#ifndef STRAT3_BACKTESTER_COMPONENTS_HEADER
-#define STRAT3_BACKTESTER_COMPONENTS_HEADER
+#ifndef CXXMODULE_DYNMOD_HEADER
+#define CXXMODULE_DYNMOD_HEADER
 
-#include "DLLoader.h"
-#include "Pointer.h"
+#include "SharedLibrary.h"
 
-namespace strat3{
 
-//
-//  Represent an Object Dynamically loaded from a dll
-//  can be used as a pointer
-//
-//  When the copy constructor is used a new underlying object is created
-//  the new underlying object WILL NOT be copied using its copy constructor
-//  defined by the user.
-//
+namespace DynamicLoading{
+
+// default creator/destructor function name
+inline std::string& create_function_name()
+{
+    static std::string create = "create_object";
+    return create;
+}
+
+inline std::string& destroy_function_name()
+{
+    static std::string destroy = "destroy_object";
+    return destroy;
+}
+
+
+/*!
+ *  Represent an Object loaded from a Shared Library (dll).
+ *  The underlying object is accessed as if DynamicObject<> was
+ *  a pointer.
+ *
+ * Constraint
+ * ----------
+ *
+ *  You have to have implemented a create and destroy function
+ *  that allocate and desallocate the underlying object.
+ *
+ *  The create and destroy function default name are:
+ *      - create_object
+ *      - destroy_object
+ *
+ *  Those names can be overriden by calling
+ *      create_functio_name() = "my_create_function_name";
+ *      destroy_function_name() = "my_destroy_function_name";
+ *
+ *  You can also specify them during the DynamicObject creation
+ *
+ *      DynamicObject<BaseObject> dyn_object("./libSharedLib.so", "my_create", "my_destroy");
+ *
+ *  The assignment operatation is no allowed
+ *
+ * Usage
+ * -----
+ *
+ *  -*- Example 1 -*-
+ *
+ *  DynamicObject<BaseObject> dyn_object("./libSharedLib.so");
+ *
+ *  dyn_object->what_ever_function();
+ *
+ * -*- Example 2 -*-
+ *
+ *  SharedLibrary sl("./libSharedLib.so");
+ *
+ *  DynamicObject<BaseObject1> dyn_object1(sl);
+ *
+ *  DynamicObject<BaseObject2> dyn_object2(sl, "create2", "destroy2");
+ *
+ */
+//#include <functional>
+
 template<typename T>
 class DynamicObject
 {
@@ -21,57 +72,86 @@ public:
     typedef T* (*create)();
     typedef void (*destroy)(T*);
 
-    // Create a new Object keep DLLoader unique
-    DynamicObject(const DynamicObject& obj)
+    // load the dynamic library
+    DynamicObject(const std::string& path, const std::string& create_name = create_function_name(),
+                                           const std::string& destroy_name = destroy_function_name()):
+        _dynlib_ref(path), _internal_dyn_object(nullptr), _create(nullptr), _destroy(nullptr)
     {
-        this->_dynlib_ref = obj._dynlib_ref;
+        // Make Sure both function are defined
+        get_create_object(create_name);
+        get_destroy_object(destroy_name);
+
+        create_object();
+    }
+
+    // Create a DynamicObject based on an existing SharedLibrary
+    DynamicObject(const SharedLibrary& sl, const std::string& create_name = create_function_name(),
+                                           const std::string& destroy_name = destroy_function_name()):
+        _dynlib_ref(sl), _internal_dyn_object(nullptr), _create(nullptr), _destroy(nullptr)
+    {
+        // Make Sure both function are defined
+        get_create_object(create_name);
+        get_destroy_object(destroy_name);
+
+        create_object();
+    }
+
+    // Create a new Object || SharedLibray is kept unique
+    DynamicObject(const DynamicObject& obj):
+        _dynlib_ref(obj._dynlib_ref), _internal_dyn_object(nullptr), _create(nullptr), _destroy(nullptr)
+    {
+        _create = obj._create;      // We don't need to seek the function in the shared lib again
+        _destroy = obj._destroy;
 
         // create a new object
-        create fn = _dynlib_ref->get_function<create>("create_object");
-        STHROW(fn == 0, std::runtime_error, "'create_object' undefined");
-
-        _internal_dyn_object = fn();
-        STHROW(_internal_dyn_object == 0, std::runtime_error, "'create_object' call failure");
+        create_object();
     }
 
-    // I am not sure I am going to need this one
     DynamicObject& operator=(const DynamicObject& rhs) = delete;
 
-    // load the dynamic library
-    DynamicObject(const std::string& path):
-        _dynlib_ref(new DLLoader(path)), _internal_dyn_object(0)
-    {
-        create fn = _dynlib_ref->get_function<create>("create_object");
-        STHROW(fn == 0, std::runtime_error, "'create_object' undefined");
-
-        _internal_dyn_object = fn();
-        STHROW(_internal_dyn_object == 0, std::runtime_error, "'create_object' call failure");
-    }
-
-    // The object had to be loaded by the ctor
-    // no check needed
+    // The object had to be loaded by the ctor : no check needed
     inline T& operator* ()  {   return *_internal_dyn_object;   }
     inline T* operator->()  {   return _internal_dyn_object;    }
+
+    // return a new object instance
+    inline DynamicObject new_object()   {   return DynamicObject(*this);    }
 
     ~DynamicObject()
     {
         if (_internal_dyn_object)
-        {
-            destroy fn = _dynlib_ref->get_function<destroy>("destroy_object");
-            STHROW(fn == 0, std::runtime_error, "'destroy_object' undefined");
-            fn(_internal_dyn_object);
-        }
+            _destroy(_internal_dyn_object);
     }
 
-    operator bool() const
+    inline SharedLibrary& shared_library() {   return _dynlib_ref; }
+    inline operator bool() const {   return _internal_dyn_object;    }
+
+private:
+
+    void get_create_object(const std::string& fname)
     {
-        return _internal_dyn_object;
+        _create = _dynlib_ref.get_function_nocheck<create>(fname);
+        THROW(_create == 0, std::runtime_error, "create method is undefined");
+    }
+
+    void get_destroy_object(const std::string& fname)
+    {
+        _destroy = _dynlib_ref.get_function_nocheck<destroy>(fname);
+        THROW(_destroy == 0, std::runtime_error, "destroy method is undefined");
+    }
+
+    void create_object()
+    {
+        _internal_dyn_object = _create();
+        THROW(_internal_dyn_object == 0, std::runtime_error, "create method call failure");
     }
 
 private:
-    Pointer<DLLoader> _dynlib_ref;
+    SharedLibrary _dynlib_ref;
     T* _internal_dyn_object;
-};
 
+    create _create;
+    destroy _destroy;
+};
 }
+
 #endif

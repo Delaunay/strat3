@@ -1,28 +1,28 @@
-#ifndef STRAT3_BACKTESTER_ERRORPOLICY_HEADER
-#define STRAT3_BACKTESTER_ERRORPOLICY_HEADER
+#ifndef DYNAMICLOADING_ERRORPOLICY_HEADER
+#define DYNAMICLOADING_ERRORPOLICY_HEADER
 
-// Error Handling
-#ifndef STRAT3_THROW
-#   define STRAT3_THROW 0
+// default: assert
+#ifndef DYNAMICLOADING_THROW
+#   define DYNAMICLOADING_THROW 0
 #endif
 
-#ifndef STRAT3_NDEBUG
-#   define STRAT3_NDEBUG 0
+#ifndef DYNAMICLOADING_NDEBUG
+#   define DYNAMICLOADING_NDEBUG 0
 #endif
 
-#if STRAT3_NDEBUG
-#   define SASSERT(x)
+#if DYNAMICLOADING_NDEBUG
+#   define ASSERT(x)
 #else
 #   include <cassert>
-#   define SASSERT(x) assert(x)
+#   define ASSERT(x) assert(x)
 #endif
 
-#if STRAT3_THROW
-#   define STHROW(predicate, error, message) if((predicate)) throw error(message)
-#elif !STRAT3_NDEBUG
-#   define STHROW(predicate, error, message) assert(!(predicate) && message)
+#if DYNAMICLOADING_THROW
+#   define THROW(predicate, error, message) if((predicate)) throw error(message)
+#elif !DYNAMICLOADING_NDEBUG
+#   define THROW(predicate, error, message) assert(!(predicate) && message)
 #else
-#   define STHROW(predicate, error, message)
+#   define THROW(predicate, error, message)
 #endif
 
 #endif

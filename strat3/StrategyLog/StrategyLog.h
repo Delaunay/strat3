@@ -1,18 +1,13 @@
 #ifndef STRAT3_DATALOG_DATALOG_HEADER
 #define STRAT3_DATALOG_DATALOG_HEADER
 
-#include <iostream>
 #include <fstream>
 #include <sstream>
 #include <vector>
-
-#include <stdio.h>
 #include <string>
-
-#include "../enum.h"
-
 #include <unordered_map>
 
+#include "../enum.h"
 #include "../Struct/TransactionWeight.h"
 
 
@@ -131,8 +126,6 @@ class StrategyLog
             // build a vector which will be casted into a Matrix;
             std::vector<double> v;
             v.reserve(fields.size() * _vsize);
-
-            bool first = true;
             uint v_size = 0;
 
             for(auto e:fields)
@@ -140,18 +133,18 @@ class StrategyLog
                 std::vector<double>& t = time_serie_mod(e);
 
                 // Setup the default row size
-                if (first)
-                    v_size = t.size();
-                else
-                    // if the current time serie has a different number of row print a warning
-                    if (v_size != t.size())
-                        LOG_WARNING(e->first << " " << e->second << " Does not have the same amount of rows");
 
-                std::copy(t.begin(), t.end(), std::back_inserter(v));
+                v_size = std::max(t.size(), v_size);
+
+                // if the current time serie has a different number of row print a warning
+                if (v_size != t.size())
+                    LOG_WARNING(e->first << " " << e->second << " Does not have the same amount of rows");
+
+                std::copy(t.begin(), t.begin() + t.size(), std::back_inserter(v));
 
             }
 
-            return Eigen::Map<Matrix>(&v[0], _vsize, fields.size());
+            return Eigen::Map<Matrix>(&v[0], v_size, fields.size());
         }
 
         StrategyLog(){}
@@ -178,15 +171,34 @@ class StrategyLog
         }
 
         void log_portfolio_values(const StrategyName& s,
-                                  const double& time,  const double& invested,    const double& cash,
-                                  const double& asset, const double& liabilities, const double& equity)
+                                  const double& time,  const double& invested, const double& cash,const double& liabilities)
         {
+            double asset = invested + cash;
             time_serie_mod(s, "pv_time").push_back(time);
             time_serie_mod(s, "pv_invested").push_back(invested);
             time_serie_mod(s, "pv_cash").push_back(cash);
             time_serie_mod(s, "pv_asset").push_back(asset);
             time_serie_mod(s, "pv_liability").push_back(liabilities);
-            time_serie_mod(s, "pv_equity").push_back(equity);
+            time_serie_mod(s, "pv_equity").push_back(asset - liabilities);
+        }
+
+
+        void log_portfolio_values(const StrategyName& s,
+                                  const double& time,  const Matrix& invested, const Matrix& cash,const Matrix& liabilities)
+        {
+
+            time_serie_mod(s, "pv_time").push_back(time);
+
+            Matrix asset = invested + cash;
+
+            for(int i = 0, n = invested.cols(); i < n; ++i)
+            {
+                time_serie_mod(s, "pv_invested").push_back(invested(0, i));
+                time_serie_mod(s, "pv_cash").push_back(cash(0, i));
+                time_serie_mod(s, "pv_liability").push_back(liabilities(0, i));
+                time_serie_mod(s, "pv_asset").push_back(asset(0, i));
+                time_serie_mod(s, "pv_equity").push_back(asset(0, i) - liabilities(0, i));
+            }
         }
 
         void log_transaction_order    (const StrategyName& s,
@@ -201,10 +213,9 @@ class StrategyLog
         void matrix_to_vector(const Matrix& m, std::vector<double>& t)
         {
             const double* v = &m(0, 0);
-            for(uint i = 0, n = m.rows() * m.cols(); i < n; ++i)
+            for(uint i = 0, n = m.rows() * m.cols(); i < n; ++i, ++v)
             {
                 t.push_back(*v);
-                ++v;
             }
         }
 
@@ -219,7 +230,11 @@ class StrategyLog
             Eigen::IOFormat fmt;
 
             // Portfolio Values
-            pv << build_matrix({{"EqualWeighted", "pv_time"}, {"EqualWeighted", "pv_invested"}});
+            pv << "time, invested, cash, liability\n"
+               << build_matrix({{"EqualWeighted", "pv_time"},
+                                {"EqualWeighted", "pv_invested"},
+                                {"EqualWeighted", "pv_cash"},
+                                {"EqualWeighted", "pv_liability"}});
 
             // Portfolio State
             ps << get_holdings<MatrixRowMajor>("EqualWeighted").format(fmt);

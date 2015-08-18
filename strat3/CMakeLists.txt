@@ -21,9 +21,7 @@ add_subdirectory(Abstract)
 add_subdirectory(Struct)
 add_subdirectory(Backtester)
 add_subdirectory(StrategyLog)
-
-#aux_source_directory(Struct
-#    STRUCT_SRC)
+add_subdirectory(GUI)
 
 SET(STRUCT_SRC
     Struct/DataStruct.h
