@@ -11,10 +11,13 @@ enum WeightType{
     NoTransaction
 };
 
-struct TransactionWeight
+struct BT_EXPORT TransactionWeight
 {
     public:
-        TransactionWeight();
+        TransactionWeight::TransactionWeight():
+            type(TotalPercentage)
+        {}
+
         Matrix     weight;
         WeightType type;
 };

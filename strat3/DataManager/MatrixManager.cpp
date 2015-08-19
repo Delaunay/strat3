@@ -200,7 +200,7 @@ void MatrixManager::write_csv(Key k, FileName n, SaveOptions o)
 void MatrixManager::write_csv_all(FileName n, SaveOptions o)
 {}
 
-int MatrixManager::size() { return _matrix.size(); }
+uint MatrixManager::size() { return _matrix.size(); }
 
 MatrixQuery MatrixManager::make_query(int min, int max)
 {

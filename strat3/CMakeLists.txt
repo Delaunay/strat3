@@ -1,10 +1,10 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8.0)
 PROJECT(strat3)
 
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -O1 -O2 -O3")
+#SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -O1 -O2 -O3")
 
-SET(CMAKE_RELEASE_POSTFIX "")
-SET(CMAKE_DEBUG_POSTFIX "-debug")
+#SET(CMAKE_RELEASE_POSTFIX "")
+#SET(CMAKE_DEBUG_POSTFIX "-debug")
 SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
@@ -25,6 +25,9 @@ add_subdirectory(StrategyLog)
 add_subdirectory(GUI)
 add_subdirectory(cml)
 add_subdirectory(graphics)
+add_subdirectory(default)
+add_subdirectory(DataManager)
+add_subdirectory(Log)
 
 # does not work
 #SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
@@ -32,17 +35,9 @@ add_subdirectory(graphics)
 # I should copy Struct and Abstract source files into a public header
 SET(STRUCT_SRC
     Struct/DataStruct.h
+    Struct/DataStruct.cpp
     Struct/TransactionAnswer.h
     Struct/TransactionWeight.h
     Struct/TransactionWeight.cpp
 )
 
-add_library(StandardStrategy SHARED
-    default/StandardStrategy.cpp
-    ${STRUCT_SRC}
-)
-
-add_library(StandardPortfolio SHARED
-    default/StandardPortfolio.cpp
-    ${STRUCT_SRC}
-)

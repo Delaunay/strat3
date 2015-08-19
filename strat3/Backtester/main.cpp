@@ -32,13 +32,12 @@ int main()
     Backtester bt;
 
     // Create New Strategy
-
-    NodeTuple strat;
-
     cout << "DLL loading\n";
 
-    strat.load_portfolio(name_fix("StandardPortfolio-debug"));
-    strat.load_strategy(name_fix("StandardStrategy-debug"));
+    NodeTuple strat;
+    strat.load_portfolio(name_fix("StandardPortfolio"));
+    strat.load_strategy(name_fix("StandardStrategy"));
+//    strat.load_strategy(name_fix("MovingAverageStrategy"));
 
     bt.add_strategy(&strat);
 
@@ -62,16 +61,20 @@ int main()
     strat.portfolio()->initialize(1000, m.cols());
     strat.strategy()->initialize(m.cols());
 
+    bt.set_strat_window(251);
     bt.initialize();
 
     // Run simulation
     for(int i = 0, n = bt.max_period(); i < n; ++i)
         bt.run_one_step();
 
-//    cout << "Data Dump\n";
-    bt.strategy_log().dump();
+    std::cout << "BT Finished" <<std::endl;
 
     std::cout << bt.strategy_log().security_number() << "\n";
+
+
+//    cout << "Data Dump\n";
+    bt.strategy_log().dump();
 
 //    const std::vector<double>& v = bt.strategy_log().time_serie({"EqualWeighted", "st_weights"});
 

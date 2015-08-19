@@ -1,108 +1,143 @@
-////////////////////////////////////////////////////////////
-// Headers
-////////////////////////////////////////////////////////////
 #include <SFML/Window.hpp>
-#include <SFML/OpenGL.hpp>
+#include <SFML/Graphics.hpp>
+
+#include <random>
+#include <vector>
+#include <cmath>
+
+#include <iostream>
+
+#include "Painter.h"
+
+using namespace std;
+typedef unsigned int uint;
 
 
-////////////////////////////////////////////////////////////
-/// Entry point of application
-///
-/// \return Application exit code
-///
-////////////////////////////////////////////////////////////
+template<typename T>
+vector<T> make_random(size_t n, T min = 0, T max = 1)
+{
+    std::mt19937 eng;   eng.seed(20);
+
+    std::uniform_real<T> r(min, max);
+
+    vector<T> ref(n);
+    for(auto& x : ref) x = r(eng);
+    return ref;
+}
+
+template<typename T>
+vector<T> lin_space(size_t n, T min = 0, T max = 1)
+{
+    vector<T> ref(n);
+    double dt = (max - min) / (n - 1.f);
+
+    if (min > max)
+        dt = (min - max) / (n - 1.f);
+
+    for(int i = 0; i < n; ++i)
+        ref[i] = min + i * dt;
+
+    return ref;
+}
+
+namespace axes{
+    struct X {};
+    struct Y {};
+}
+
+
+template<typename T/*, typename T1*/>
+struct Scale{
+    Scale() = default;
+
+    Scale(T min_, T max_):
+        min(min_), max(max_)
+    {
+        if (min > max){
+            max = min_;
+            min = max_;
+        }
+    }
+
+    T operator() (const T& val, sf::Uint32 width) { return x(val, width);   }
+
+    T x(const T& val, sf::Uint32 width) {   return val * (width / (max - min) - min);   }
+    T y(const T& val, sf::Uint32 height){   return height - val * height / (max - min); }
+
+    T min{0};
+    T max{1};
+};
+
+
+template<typename T>
+void draw_line(const vector<T>& v, sf::RenderWindow& rw)
+{
+    Painter l;
+
+    sf::Vector2u size = rw.getSize();
+    auto minmax = std::minmax_element(v.begin(), v.end());
+
+    Scale<float> y((*minmax.first), (*minmax.second));
+    Scale<float> x(0, v.size());
+
+    sf::Vector2f p1 = {x.x(0, size.x), y.y(v[0], size.y)};
+    sf::Vector2f p2;
+
+    for(int i = 1, n = v.size(); i < n; i++)
+    {
+        p2 = {x.x(i, size.x), y.y(v[i], size.y)};
+
+        rw.draw(l.line(p1, p2));
+
+        p1 = p2;
+    }
+}
+
+
+template<typename T>
+void draw_line(const vector<T>& vx, const vector<T>& vy, sf::RenderWindow& rw)
+{
+    Painter l;
+
+    sf::Vector2u size = rw.getSize();
+
+    auto xminmax = std::minmax_element(vx.begin(), vx.end());
+    auto yminmax = std::minmax_element(vy.begin(), vy.end());
+
+    Scale<float> x((*xminmax.first), (*xminmax.second));
+    Scale<float> y((*yminmax.first), (*yminmax.second));
+
+    sf::Vector2f p1 = {x.x(vx[0], size.x), y.y(vy[0], size.y)};
+    sf::Vector2f p2;
+
+    for(int i = 1, n = vx.size(); i < n; i++)
+    {
+        p2 = {x.x(vx[i], size.x), y.y(vy[i], size.y)};
+
+        rw.draw(l.line(p1, p2));
+
+        p1 = p2;
+    }
+}
+
+
 int main()
 {
     // Request a 24-bits depth buffer when creating the window
     sf::ContextSettings contextSettings;
     contextSettings.depthBits = 24;
+    contextSettings.antialiasingLevel = 8;
 
     // Create the main window
-    sf::Window window(sf::VideoMode(640, 480), "SFML window with OpenGL", sf::Style::Default, contextSettings);
+    sf::RenderWindow window(sf::VideoMode(640, 480), "SFML window with OpenGL", sf::Style::Default, contextSettings);
+    window.setVerticalSyncEnabled(true);
 
-    // Make it the active window for OpenGL calls
-    window.setActive();
+    sf::CircleShape c(2, 10);
 
-    // Set the color and depth clear values
-    glClearDepth(1.f);
-    glClearColor(0.f, 0.f, 0.f, 1.f);
+    vector<float> xvec = make_random<float>(50, 0, 20);
+    vector<float> yvec = make_random<float>(50, 0, 20);
 
-    // Enable Z-buffer read and write
-    glEnable(GL_DEPTH_TEST);
-    glDepthMask(GL_TRUE);
-
-    // Disable lighting and texturing
-    glDisable(GL_LIGHTING);
-    glDisable(GL_TEXTURE_2D);
-
-    // Configure the viewport (the same size as the window)
-    glViewport(0, 0, window.getSize().x, window.getSize().y);
-
-    // Setup a perspective projection
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    GLfloat ratio = static_cast<float>(window.getSize().x) / window.getSize().y;
-    glFrustum(-ratio, ratio, -1.f, 1.f, 1.f, 500.f);
-
-    // Define a 3D cube (6 faces made of 2 triangles composed by 3 vertices)
-    GLfloat cube[] =
-    {
-        // positions    // colors (r, g, b, a)
-        -50, -50, -50,  0, 0, 1, 1,
-        -50,  50, -50,  0, 0, 1, 1,
-        -50, -50,  50,  0, 0, 1, 1,
-        -50, -50,  50,  0, 0, 1, 1,
-        -50,  50, -50,  0, 0, 1, 1,
-        -50,  50,  50,  0, 0, 1, 1,
-
-         50, -50, -50,  0, 1, 0, 1,
-         50,  50, -50,  0, 1, 0, 1,
-         50, -50,  50,  0, 1, 0, 1,
-         50, -50,  50,  0, 1, 0, 1,
-         50,  50, -50,  0, 1, 0, 1,
-         50,  50,  50,  0, 1, 0, 1,
-
-        -50, -50, -50,  1, 0, 0, 1,
-         50, -50, -50,  1, 0, 0, 1,
-        -50, -50,  50,  1, 0, 0, 1,
-        -50, -50,  50,  1, 0, 0, 1,
-         50, -50, -50,  1, 0, 0, 1,
-         50, -50,  50,  1, 0, 0, 1,
-
-        -50,  50, -50,  0, 1, 1, 1,
-         50,  50, -50,  0, 1, 1, 1,
-        -50,  50,  50,  0, 1, 1, 1,
-        -50,  50,  50,  0, 1, 1, 1,
-         50,  50, -50,  0, 1, 1, 1,
-         50,  50,  50,  0, 1, 1, 1,
-
-        -50, -50, -50,  1, 0, 1, 1,
-         50, -50, -50,  1, 0, 1, 1,
-        -50,  50, -50,  1, 0, 1, 1,
-        -50,  50, -50,  1, 0, 1, 1,
-         50, -50, -50,  1, 0, 1, 1,
-         50,  50, -50,  1, 0, 1, 1,
-
-        -50, -50,  50,  1, 1, 0, 1,
-         50, -50,  50,  1, 1, 0, 1,
-        -50,  50,  50,  1, 1, 0, 1,
-        -50,  50,  50,  1, 1, 0, 1,
-         50, -50,  50,  1, 1, 0, 1,
-         50,  50,  50,  1, 1, 0, 1,
-    };
-
-    // Enable position and color vertex components
-    glEnableClientState(GL_VERTEX_ARRAY);
-    glEnableClientState(GL_COLOR_ARRAY);
-    glVertexPointer(3, GL_FLOAT, 7 * sizeof(GLfloat), cube);
-    glColorPointer(4, GL_FLOAT, 7 * sizeof(GLfloat), cube + 3);
-
-    // Disable normal and texture coordinates vertex components
-    glDisableClientState(GL_NORMAL_ARRAY);
-    glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-
-    // Create a clock for measuring the time elapsed
-    sf::Clock clock;
+    std::sort(xvec.begin(), xvec.end());
 
     // Start the game loop
     while (window.isOpen())
@@ -118,29 +153,13 @@ int main()
             // Escape key: exit
             if ((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::Escape))
                 window.close();
-
-            // Resize event: adjust the viewport
-            if (event.type == sf::Event::Resized)
-                glViewport(0, 0, event.size.width, event.size.height);
         }
 
-        // Clear the color and depth buffers
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        // Apply some transformations to rotate the cube
-        glMatrixMode(GL_MODELVIEW);
-        glLoadIdentity();
-        glTranslatef(0.f, 0.f, -200.f);
-        glRotatef(clock.getElapsedTime().asSeconds() * 50, 1.f, 0.f, 0.f);
-        glRotatef(clock.getElapsedTime().asSeconds() * 30, 0.f, 1.f, 0.f);
-        glRotatef(clock.getElapsedTime().asSeconds() * 90, 0.f, 0.f, 1.f);
-
-        // Draw the cube
-        glDrawArrays(GL_TRIANGLES, 0, 36);
+        draw_line(xvec, yvec, window);
 
         // Finally, display the rendered frame on screen
         window.display();
     }
 
-    return EXIT_SUCCESS;
+    return 0;
 }

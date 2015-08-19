@@ -3,7 +3,7 @@
 
 #include "../enum.h"
 
-struct TransactionAnswer
+struct BT_EXPORT TransactionAnswer
 {
     public:
         // required for fixed size matrix

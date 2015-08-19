@@ -11,9 +11,9 @@ public:
         this->title = "EqualWeighted";
     }
 
-    TransactionWeight* operator() (DataStruct& ds)
+    const TransactionWeight* operator() (const DataStruct& ds)
     {
-        return &_weight;
+        return &tw();
     }
 
 };

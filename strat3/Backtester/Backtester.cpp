@@ -15,11 +15,11 @@ void Backtester::run_one_step()
     // Making public data available
     DataStruct ds(_price_matrix);
 
-          ds.dataManager = &dq;
+          ds.data_manager = &dq;
           //ds.predictors  = &this->_GlobalPredictors;
           //ds.securities  = this->_SecurityDatabase;
 
-    TransactionWeight*  w;
+    const TransactionWeight*  w;
 
     Eigen::IOFormat fmt;
 
@@ -37,6 +37,7 @@ void Backtester::run_one_step()
            Matrix orders = get_portfolio(k)->transaction_weight(_time, lp, *w);
 
            log_orders(title(k), orders);
+
            // update portfolio state
            get_portfolio(k)->transaction_answer(orders, lp);
 
@@ -70,7 +71,7 @@ uint      Backtester::period_running() const
 uint      Backtester::max_period    () const
 {
     return _data->matrix(_price_matrix)
-                ->rows() - _strat_window - 0;
+                ->rows() - _strat_window - 1;
 }
 
 uint Backtester::security_number() const

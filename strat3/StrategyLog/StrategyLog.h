@@ -9,7 +9,7 @@
 
 #include "../enum.h"
 #include "../Struct/TransactionWeight.h"
-
+#include "../Log/Log.h"
 
 #define LOG_RAM 1
 
@@ -141,8 +141,9 @@ class StrategyLog
                 v_size = std::max((uint) t.size(), (uint) v_size);
 
                 // if the current time serie has a different number of row print a warning
-                if (v_size != t.size())
+                if (v_size != t.size()){
                     LOG_WARNING(e->first << " " << e->second << " Does not have the same amount of rows");
+                }
 
                 std::copy(t.begin(), t.begin() + t.size(), std::back_inserter(v));
 
@@ -226,31 +227,35 @@ class StrategyLog
         void dump()
         {
             // Open files
-            std::fstream pv; pv.open("../pv.txt", std::ios::out);
-            std::fstream ps; ps.open("../ps.txt", std::ios::out);
-            std::fstream tw; tw.open("../tw.txt", std::ios::out);
-            std::fstream to; to.open("../to.txt", std::ios::out);
+            for(auto& i:_data){
+                add_trace("LOAD FILES");
+                std::fstream pv; pv.open("../pv" + i.first + ".txt", std::ios::out);
+                std::fstream ps; ps.open("../ps" + i.first + ".txt", std::ios::out);
+                std::fstream tw; tw.open("../tw" + i.first + ".txt", std::ios::out);
+                std::fstream to; to.open("../to" + i.first + ".txt", std::ios::out);
 
-            Eigen::IOFormat fmt;
+                Eigen::IOFormat fmt;
 
-            // Portfolio Values
-            pv << "time, invested, cash, liability\n"
-               << build_matrix({{"EqualWeighted", "pv_time"},
-                                {"EqualWeighted", "pv_invested"},
-                                {"EqualWeighted", "pv_cash"},
-                                {"EqualWeighted", "pv_liability"}});
+                add_trace("SAVE PORTFOLIOVALUES");
+                // Portfolio Values
+                pv << "time, invested, cash, liability\n"
+                   << build_matrix({{i.first, "pv_time"},
+                                    {i.first, "pv_invested"},
+                                    {i.first, "pv_cash"},
+                                    {i.first, "pv_liability"}});
 
-            // Portfolio State
-            ps << get_holdings<MatrixRowMajor>("EqualWeighted").format(fmt);
+                // Portfolio State
+                ps << get_holdings<MatrixRowMajor>(i.first).format(fmt);
 
-            // Transaction weight
-            tw << get_weights<MatrixRowMajor>("EqualWeighted").format(fmt);
+                // Transaction weight
+                tw << get_weights<MatrixRowMajor>(i.first).format(fmt);
 
-            // Transaction Order
-            to << get_share<MatrixRowMajor>("EqualWeighted").format(fmt);
+                // Transaction Order
+                to << get_share<MatrixRowMajor>(i.first).format(fmt);
 
-            // close files
-            pv.close(); ps.close(); tw.close(); to.close();
+                // close files
+                pv.close(); ps.close(); tw.close(); to.close();
+            }
         }
 
 

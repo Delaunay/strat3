@@ -82,6 +82,9 @@ class Backtester
                 strat_vec.push_back(title(i));
 
             _slog.initialize(strat_vec, security_number(), max_period());
+
+//            for(auto& i:_strategies)
+//                i->strategy().initialize(security_number());
         }
 
         void        run_one_step   ();
@@ -103,7 +106,7 @@ class Backtester
         inline bool&         using_dates  ()         {  return _using_dates;    }
         inline void      set_strat_window (const uint& a)
         {
-            assert(_time != 0 && "Modifying Configuration during Simulation");
+           // assert(_time != 0 && "Modifying Configuration during Simulation");
             _strat_window = a;
         }
 

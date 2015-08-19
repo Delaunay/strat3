@@ -7,6 +7,11 @@
 #include <Eigen/dense>
 #endif
 
+#ifdef __linux__
+#   define PLUGIN_EXPORT __attribute__ ((visibility ("default")))
+#else
+#   define BT_EXPORT __declspec(dllexport)
+#endif
 
 typedef unsigned int        uint;
 typedef std::string         Key;
