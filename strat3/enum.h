@@ -8,6 +8,7 @@
 #endif
 
 
+typedef unsigned int        uint;
 typedef std::string         Key;
 typedef std::string         FileName;
 typedef Eigen::Matrix<double, -1, -1>     Matrix;

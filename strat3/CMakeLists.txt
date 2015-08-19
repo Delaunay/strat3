@@ -15,6 +15,7 @@ SET(STRAT3_VERSION_PATCH 0)
 SET(STRAT3_VERSION
     ${STRAT3_VERSION_MAJOR}.${STRAT3_VERSION_MINOR}.${STRAT3_VERSION_PATCH})
 
+INCLUDE_DIRECTORIES(C:/Users/pastafarian/Dropbox/libraries/include)
 INCLUDE_DIRECTORIES(.)
 
 add_subdirectory(Abstract)
@@ -22,7 +23,13 @@ add_subdirectory(Struct)
 add_subdirectory(Backtester)
 add_subdirectory(StrategyLog)
 add_subdirectory(GUI)
+add_subdirectory(cml)
+add_subdirectory(graphics)
 
+# does not work
+#SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
+
+# I should copy Struct and Abstract source files into a public header
 SET(STRUCT_SRC
     Struct/DataStruct.h
     Struct/TransactionAnswer.h

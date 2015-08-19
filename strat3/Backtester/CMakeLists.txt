@@ -13,6 +13,7 @@ SET(STRUCT_HEADER
     ../Struct/DataStruct.h
     ../Struct/TransactionAnswer.h
     ../Struct/TransactionWeight.h
+    ../Struct/TransactionWeight.cpp
 )
 
 SET(BACKTEST_HDS

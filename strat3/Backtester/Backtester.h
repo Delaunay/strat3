@@ -70,7 +70,7 @@ class Backtester
     public:
         Backtester():
             _price_matrix(""),
-            _cash(1000), _time(0), _strat_window(1), _using_dates(false),
+            /*_cash(1000),*/ _time(0), _strat_window(1), _using_dates(false),
             _data(0)
         {}
 
@@ -84,24 +84,23 @@ class Backtester
             _slog.initialize(strat_vec, security_number(), max_period());
         }
 
-        uint        security_number();
-        MatrixQuery make_query    ();
-        uint        period_running();
-        uint        max_period    ();
-        Row         last_price    ();
-        void        run_one_step  ();
-        void add_strategy    (NodeTuple *x);
+        void        run_one_step   ();
+        MatrixQuery make_query     ();
+        uint        period_running () const;
+        uint        max_period     () const;
+        uint        security_number() const;
+        const Row   last_price     () const;
+        bool        should_run    (Index k);
+        void add_strategy     (NodeTuple *x);
         void set_data_manager (MatrixManager* x, Key priceMatrix);
-        bool         should_run      (Index k);
 
         inline       uint    size         () const   {  return _strategies.size();  }
         inline const uint&   time         () const   {  return _time;               }
-        inline const double& begin_cash   () const   {  return _cash;               }
         inline const uint&   strat_window () const   {  return _strat_window;       }
         inline MStrategy&    get_strategy (uint k)   {  return _strategies[k]->strategy();       }
         inline MPortfolio&   get_portfolio(uint k)   {  return _strategies[k]->portfolio();   }
         inline Matrix&       dates        ()         {  return _dates;}
-        inline bool&         using_dates  ()         {   return _using_dates;    }
+        inline bool&         using_dates  ()         {  return _using_dates;    }
         inline void      set_strat_window (const uint& a)
         {
             assert(_time != 0 && "Modifying Configuration during Simulation");
@@ -146,13 +145,18 @@ class Backtester
             return _slog;
         }
 
+        // Print Current setup
+        void print_config(std::ostream& out)
+        {
+            out << "Not Implemented";
+        }
+
     protected:
 
         // Dates
         Matrix _dates;          // Dates
         bool   _using_dates;    // if we are using dates
         Key    _price_matrix;   // Matrix used for buy/sell
-        double _cash;           // Cash
         uint   _time;           // Current time
         uint   _strat_window;   // Minimum number of days
 

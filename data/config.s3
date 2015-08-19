@@ -1,0 +1,35 @@
+Strategies:{
+    MyStrategy:{
+        strategy:{
+            file: "./libStandardPortfolio.so"
+            init_struct: None
+            window: 10
+            frequency: 2
+            rebalanced: true 
+        }
+        portfolio:{
+            file: "./libStandardStrategy.so"
+            init_struct: None
+            cash:1000
+        }
+    }
+}
+
+Backtest:{
+    data: {
+        price:{
+             file: "data.csv"
+            type: csv
+        }
+    }
+    dates: nothing
+    
+    run: all
+}
+
+Report:{
+    type: pdf
+    email: myemail@email.com
+    extended: true
+    all_in_one: true
+}

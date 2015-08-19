@@ -38,7 +38,11 @@ class TransactionAnswer;
  */
 
 #define LOG_WARNING(x)
-
+#ifdef __linux__
+#   define NOEXCEPT noexcept
+#else
+#   define NOEXCEPT
+#endif
 
 class StrategyLog
 {
@@ -66,7 +70,7 @@ class StrategyLog
 
 
         // not exact
-        inline luint used_memory() const noexcept {   return _vsize * (3 * _nsecurity + 9);   }
+        inline luint used_memory() const NOEXCEPT {   return _vsize * (3 * _nsecurity + 9);   }
 
         void initialize(std::vector<StrategyName> v, uint nsec, uint v_size = 1000)
         {
@@ -134,7 +138,7 @@ class StrategyLog
 
                 // Setup the default row size
 
-                v_size = std::max(t.size(), v_size);
+                v_size = std::max((uint) t.size(), (uint) v_size);
 
                 // if the current time serie has a different number of row print a warning
                 if (v_size != t.size())

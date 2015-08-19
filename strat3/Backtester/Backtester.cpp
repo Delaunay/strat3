@@ -61,24 +61,24 @@ MatrixQuery Backtester::make_query    ()
     return _data->make_query(0, _strat_window + _time);
 }
 
-uint      Backtester::period_running()
+uint      Backtester::period_running() const
 {
     return _data->matrix(_price_matrix)
                 ->rows() - _strat_window - _time;
 }
 
-uint      Backtester::max_period    ()
+uint      Backtester::max_period    () const
 {
     return _data->matrix(_price_matrix)
                 ->rows() - _strat_window - 0;
 }
 
-uint Backtester::security_number()
+uint Backtester::security_number() const
 {
     return  _data->matrix(_price_matrix)->cols();
 }
 
-Row       Backtester::last_price    ()
+const Row       Backtester::last_price    () const
 {
     return _data->matrix(_price_matrix)
                 ->row(_time + _strat_window);

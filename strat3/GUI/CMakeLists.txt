@@ -1,3 +1,7 @@
+IF(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
+
+ELSE(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
+
 # Qt Setup
 #--------------
 
@@ -21,3 +25,5 @@ aux_source_directory(. GUI_SRC)
 LINK_DIRECTORIES(${PROJECT_BINARY_DIR})
 ADD_EXECUTABLE(strat3-gui ${GUI_SRC})
 target_link_libraries(strat3-gui Qt5::Widgets backtest_library )
+
+ENDIF(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")

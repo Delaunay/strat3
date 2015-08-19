@@ -5,6 +5,25 @@
 
 #include <iostream>
 
+//#ifdef __linux__
+//#   define name_fix(path, name) "./" + string(path) + "lib" + string(name) + ".so"
+//#else
+//#   define name_fix(path, name) "./" + string(path) + string(name) + ".dll"
+//#endif
+
+
+
+std::string name_fix(const std::string& name, const std::string& path ="./")
+{
+#ifdef __linux__
+    return path + "lib" + name + ".so";
+#else
+    return path + name + ".dll";
+#endif
+}
+
+
+
 using namespace strat3;
 using std::cout;
 
@@ -18,10 +37,13 @@ int main()
 
     cout << "DLL loading\n";
 
-    strat.load_portfolio("./libStandardPortfolio.so");
-    strat.load_strategy("./libStandardStrategy.so");
+    strat.load_portfolio(name_fix("StandardPortfolio-debug"));
+    strat.load_strategy(name_fix("StandardStrategy-debug"));
 
     bt.add_strategy(&strat);
+
+    cout << "DLL loaded\n";
+    cout << "File Reading\n";
 
     // load data
     CSVReader csv_dat("../../data/data.csv");

@@ -5,6 +5,7 @@
 #include <vector>
 #include <iostream>
 #include <cstdlib>
+#include <algorithm>
 
 #include "../enum.h"
 
@@ -45,9 +46,9 @@ public:
     void skip_row()
     {
         int v = get_token();
-
-        while(v != tok_newline)
+        while(v != tok_newline && v != tok_eof){
             v = get_token();
+        }
     }
 
     template<typename T> T get_eigen3(bool header =true)
@@ -82,25 +83,22 @@ public:
     int get_token()
     {
         static char c = ' ';
-        static bool empty_line = true;
 
         if (c == EOF)
             return tok_eof;
 
-        if (c == '\n' && !empty_line){
+        if (c == '\n'){
             _row++;
-            _max_col = std::max(_max_col, _col);
+            _max_col = _max_col > _col ? _max_col : _col; // std::max(_max_col, _col);
             _col = 0;
-            empty_line = true;
             c = nextc();
             return tok_newline;
         }
 
-        while(isspace(c))
+        while(isspace(c) && c != '\n')
             c = nextc();
 
         _value = "";
-        empty_line = false;
         while(!isspace(c) && c != separator()[0])
         {
             _value += c;
@@ -110,7 +108,9 @@ public:
         if (c == separator()[0])
             _col++;
 
-        c = nextc();
+        if (c != '\n')
+            c = nextc();
+
         return tok_value;
     }
 

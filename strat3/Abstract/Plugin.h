@@ -1,16 +1,35 @@
 #ifndef PLUGIN_LIBRARY_HEADER
 #define PLUGIN_LIBRARY_HEADER
 
+// This header should be (does not have to be) included by people implementing the plugin
+// It only makes sure users will be implementing the create and destroy function
+// with the correct setup (they must be externed "C" and have the PLUGIN_EXPORT macro)
+// they can modify the create/destroy function name by defining:
+// - DYN_CREATE_OBJ
+// - DYN_DESTROY_OBJ
+// before including this file
+
 #ifdef __linux__
-#   define DLLEXP
+#   define PLUGIN_EXPORT __attribute__ ((visibility ("default")))
 #else
-#   define DLLEXP __declspec(dllexport)
+//#   ifdef NEW_PLUGIN
+//#       define PLUGIN_EXPORT __declspec(dllimport)
+//#   else
+#       define PLUGIN_EXPORT __declspec(dllexport)
+//#   endif
+#endif
+
+#ifndef DYN_CREATE_OBJ
+#define DYN_CREATE_OBJ create_object
+#endif
+
+#ifndef DYN_DESTROY_OBJ
+#define DYN_DESTROY_OBJ destroy_object
 #endif
 
 extern "C"{
-    DLLEXP void* create_object();
-    DLLEXP void destroy_object(void* o);
+    PLUGIN_EXPORT void* DYN_CREATE_OBJ();
+    PLUGIN_EXPORT void DYN_DESTROY_OBJ(void* o);
 }
 
 #endif
-

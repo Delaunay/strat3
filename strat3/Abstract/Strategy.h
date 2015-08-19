@@ -3,18 +3,22 @@
 
 #include <string>
 
-#include "Config.h"
+#include "Plugin.h"
 #include "../enum.h"
 #include "../Struct/TransactionWeight.h"
 
-class PLUGIN  DataStruct;
+
+class PLUGIN_EXPORT  DataStruct;
 typedef unsigned int uint;
 
-class Strategy
+class PLUGIN_EXPORT Strategy
 {
     public:
+        Strategy():
+            title("Empty Strategy"), description("No Description")
+        {}
 
-        virtual PLUGIN TransactionWeight* operator() (DataStruct& ds) = 0;
+        virtual TransactionWeight* operator() (DataStruct& ds) = 0;
 
         virtual void initialize(const uint& nsecurity, const uint& nstrat = 1, const void* user_data = 0)
         {
@@ -27,8 +31,8 @@ class Strategy
         WeightType& weight_type()       {   return _weight.type;    }
 
     // Public attributes
-        std::string title{"Empty Strategy"};
-        std::string description{"No Description"};
+        std::string title;
+        std::string description;
 
         uint frequency{1};
         bool rebalanced{true};

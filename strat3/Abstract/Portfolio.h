@@ -1,17 +1,17 @@
 #ifndef STRAT3_ABSTRACT_PORTFOLIO_HEADER
 #define STRAT3_ABSTRACT_PORTFOLIO_HEADER
 
-#include "Config.h"
+#include "Plugin.h"
 #include "../Struct/TransactionWeight.h"
 #include "../enum.h"
 
-class PLUGIN StrategyLog;
-class PLUGIN TransactionAnswer;
+class PLUGIN_EXPORT StrategyLog;
+class PLUGIN_EXPORT TransactionAnswer;
 
 //
 //  Portfolio Track Asset Ownership
 //
-class PLUGIN Portfolio
+class PLUGIN_EXPORT Portfolio
 {
     public:
         // m = number of Strategies
@@ -29,9 +29,10 @@ class PLUGIN Portfolio
 
         ~Portfolio()    {}
 
+        // remove all pending orders: currently useless
         virtual void clear_orders(){}
-        //virtual void transaction_answer(const TransactionAnswer& m) = 0;
 
+        // processing transaction weight
         virtual Matrix transaction_weight(const uint& time, const Row& price, const TransactionWeight& tw)
         {
             Matrix nbshare(_state.rows(), _state.cols());
@@ -41,20 +42,7 @@ class PLUGIN Portfolio
             return nbshare;
         }
 
-        virtual inline void transaction_answer(const Matrix& nbshare, const Row& prices)
-        {
-            // remove cash
-            _cash -= prices * nbshare;
-            // add shares
-            _state += nbshare;
-        }
-
-        //virtual void logPortfolioFull(Index time, Row* price);
-
-        inline const Matrix& state() const           {   return _state; }
-
         //                  invested = (1 x n) * (n x m) = (1 x m)
-        inline const Matrix& cash() const {   return _cash;   }
         inline Matrix invested   (const Row& prices) const {    return (prices * _state); }
         inline Matrix asset      (const Row& prices) const {    return (prices * _state) + _cash; }
         inline Matrix equity     (const Row& prices) const {    return asset(prices) - liability(prices); }
@@ -98,13 +86,28 @@ class PLUGIN Portfolio
             }
         }
 
+        // not virtual users cannot modify _state and _cash
+        // this one should be server side
+        // _cash and _state should be server side hum...
+        inline void transaction_answer(const Matrix& nbshare, const Row& prices)
+        {
+            // remove cash
+            _cash -= prices * nbshare;
+            // add shares
+            _state += nbshare;
+        }
 
-    protected:
+        // users cannot modify the state and cash
+        inline const Matrix& state() const {   return _state;   }
+        inline const Matrix& cash () const {   return _cash;    }
+        inline const double& time()  const {   return _time;    }
+        inline const uint&   number_security() const  { return _nsecurity;    }
 
+    private:    // replicated variable
         double        _time;
+        uint          _nsecurity;       // Security
         Matrix        _cash;            // Cash must a Matrix
         Matrix        _state;           // Hold number of shares
-        uint          _nsecurity;       // Security
 };
 
 #endif

@@ -1,7 +1,7 @@
+#define NEW_PLUGIN
 #include "Abstract/Strategy.h"
-#include "Abstract/Plugin.h"
 
-class SStrategy : public Strategy
+class PLUGIN_EXPORT SStrategy : public Strategy
 {
 
 public:
@@ -11,7 +11,7 @@ public:
         this->title = "EqualWeighted";
     }
 
-    PLUGIN TransactionWeight* operator() (DataStruct& ds)
+    TransactionWeight* operator() (DataStruct& ds)
     {
         return &_weight;
     }

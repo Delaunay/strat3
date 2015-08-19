@@ -1,5 +1,5 @@
+#define NEW_PLUGIN
 #include "Abstract/Portfolio.h"
-#include "Abstract/Plugin.h"
 
 class SPortfolio : public Portfolio
 {
