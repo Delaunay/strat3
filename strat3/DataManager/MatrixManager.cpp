@@ -12,23 +12,23 @@ MatrixManager::MatrixManager()
 
 MatrixManager::~MatrixManager()
 {
-    std::unordered_map<Key, Element>::iterator i = _matrix.begin();
+//    std::unordered_map<Key, Matrix>::iterator i = _matrix.begin();
 
-    while(i != _matrix.end())
-    {
-        if ( (*i).second.ownership == true )
-            delete (*i).second.m;
+//    while(i != _matrix.end())
+//    {
+//        if ( (*i).second.ownership == true )
+//            delete (*i).second.m;
 
-        i++;
-    }
+//        i++;
+//    }
 }
 
-void MatrixManager::add_matrix(Key k, Matrix* m, bool owned)
+void MatrixManager::add_matrix(Key k, Matrix m)
 {
-    _matrix[k] = Element(m, owned);
+    _matrix[k] = m;
 }
 
-Matrix* MatrixManager::matrix(Key k)    {   return _matrix[k].m;   }
+Matrix* MatrixManager::matrix(Key k)    {   return &_matrix[k];   }
 
 
 void MatrixManager::save_all(FileName n, FileType t, SaveOptions o)
@@ -178,11 +178,11 @@ void MatrixManager::read_binary(FileName n)
         size[1] = std::max(size[1], long(1));
 
         // allocate memory
-        Matrix* m = new Matrix(Matrix::Zero(size[0], size[1]));
-        _matrix[Key(title)] = Element(m, true);
+        Matrix m = Matrix(Matrix::Zero(size[0], size[1]));
+        _matrix[Key(title)] = std::move(m);
 
         // read data
-        r = fread(&(*m)(0, 0), sizeof(double), size[0] * size[1], file);
+        r = fread(&(m)(0, 0), sizeof(double), size[0] * size[1], file);
 
         if (r != size[0] * size[1])
         {
@@ -217,8 +217,8 @@ void MatrixManager::read_csv        (FileName n, Key key, bool header, const cha
 
     std::pair<int, int> size = read_size(&file, header, colsep);
 
-    Matrix* A = new Matrix(Matrix::Zero(size.first, size.second));
-    add_matrix(key, A, true);
+    Matrix A = Matrix(Matrix::Zero(size.first, size.second));
+    add_matrix(key, std::move(A));
 
     std::string line;
 
@@ -241,9 +241,9 @@ void MatrixManager::read_csv        (FileName n, Key key, bool header, const cha
         for (int i = 0; i < size.second; i++)
         {
             if (i < size.second - 1)
-                ss >> (*A)(j, i) >> c;
+                ss >> (A)(j, i) >> c;
             else
-                ss >> (*A)(j, i);
+                ss >> (A)(j, i);
         }
     }
 

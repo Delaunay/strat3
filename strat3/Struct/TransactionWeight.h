@@ -14,7 +14,7 @@ enum WeightType{
 struct BT_EXPORT TransactionWeight
 {
     public:
-        TransactionWeight::TransactionWeight():
+        TransactionWeight():
             type(TotalPercentage)
         {}
 

@@ -2,6 +2,7 @@
 #define STRAT3_ABSTRACT_PORTFOLIO_HEADER
 
 #include "Plugin.h"
+#include "Types.h"
 #include "../Struct/TransactionWeight.h"
 #include "../enum.h"
 
@@ -14,6 +15,8 @@ class PLUGIN_EXPORT TransactionAnswer;
 class PLUGIN_EXPORT Portfolio
 {
     public:
+        virtual const int get_type()    {   return strat3::PORTFOLIO_TYPE;  }
+
         // m = number of Strategies
         typedef Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> RowMajorMatrix;
 

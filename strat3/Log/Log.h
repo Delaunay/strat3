@@ -8,7 +8,7 @@
 //
 //  Debuging log
 //
-#define add_trace(msg) (Trace::instance()).add(__FILE__, __FUNCTION__, __LINE__, msg)
+#define ADD_TRACE(msg) (Trace::instance()).add(__FILE__, __FUNCTION__, __LINE__, msg)
 
 class Trace
 {
@@ -51,7 +51,7 @@ public:
 
         void print(std::ostream& os)
         {
-            os << line << "\t" << clean_path(file) << " " << func << "\t:" << msg << std::endl;
+            os << "[" << line << "]  " << msg << "\n    => Function: " << func << std::endl;
         }
     };
 

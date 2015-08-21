@@ -15,26 +15,26 @@ class MatrixQuery;
 class BT_EXPORT MatrixManager
 {
     public:
-        struct Element
-        {
-            public:
-                Element(Matrix* m = 0, bool o = true):
-                    m(m), ownership(o)
-                {}
+//        struct Element
+//        {
+//            public:
+//                Element(Matrix* m = 0, bool o = true):
+//                    m(m), ownership(o)
+//                {}
 
-                Matrix* m;
+//                Matrix* m;
 
-                Matrix& matrix()    {   return (*m);    }
+//                Matrix& matrix()    {   return (*m);    }
 
-                //! true if the matrix will be deleted by its parent.
-                bool    ownership;
-        };
+//                //! true if the matrix will be deleted by its parent.
+//                bool    ownership;
+//        };
 
         MatrixManager();
 
         ~MatrixManager();
 
-        void add_matrix(Key k, Matrix* m, bool owned = true);
+        void add_matrix(Key k, Matrix m);
         Matrix* matrix(Key k);
 
 
@@ -72,7 +72,7 @@ class BT_EXPORT MatrixManager
         uint         size();
         MatrixQuery make_query(int min, int max);
 
-        std::unordered_map<Key, Element> _matrix;
+        std::unordered_map<Key, Matrix> _matrix;
 };
 
 #include <iostream>
@@ -82,7 +82,7 @@ class BT_EXPORT MatrixManager
 class BT_EXPORT MatrixQuery
 {
     public:
-        MatrixQuery::MatrixQuery(MatrixManager* dm, const int& row_min, const int& row_max):
+        MatrixQuery(MatrixManager* dm, const int& row_min, const int& row_max):
             _manager(dm), _row_max(row_max), _row_min(row_min)
         {
             if (row_min > row_max)

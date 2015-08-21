@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 
+#include "Types.h"
 #include "Plugin.h"
 #include "../enum.h"
 #include "../Struct/TransactionWeight.h"
@@ -14,6 +15,8 @@ typedef unsigned int uint;
 class PLUGIN_EXPORT Strategy
 {
     public:
+        virtual const int get_type()    {   return strat3::STRATEGY_TYPE;  }
+
         Strategy():
             title("Empty Strategy"), description("No Description")
         {}

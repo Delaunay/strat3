@@ -13,6 +13,7 @@
 
 
 
+
 std::string name_fix(const std::string& name, const std::string& path ="./")
 {
 #ifdef __linux__
@@ -37,6 +38,7 @@ int main()
     NodeTuple strat;
     strat.load_portfolio(name_fix("StandardPortfolio"));
     strat.load_strategy(name_fix("StandardStrategy"));
+
 //    strat.load_strategy(name_fix("MovingAverageStrategy"));
 
     bt.add_strategy(&strat);
@@ -50,7 +52,7 @@ int main()
     Matrix m = csv_dat.get_eigen3<MatrixRowMajor>();
 
     MatrixManager mm;
-    mm.add_matrix("price", &m, false);
+    mm.add_matrix("price", std::move(m));
 
     Eigen::IOFormat fmt;
     cout << m.topRows(5).format(fmt) << "\n";

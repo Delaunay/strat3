@@ -1,5 +1,5 @@
-#find_package(OpenGL REQUIRED)
-#include_directories(${OPENGL_INCLUDE_DIR})
+find_package(OpenGL REQUIRED)
+include_directories(${OPENGL_INCLUDE_DIR})
 
 SET(SFML_STATIC_LIBRARIES TRUE)
 
@@ -16,5 +16,5 @@ INCLUDE_DIRECTORIES(C:/Users/pastafarian/Downloads/SFML-2.3.1/include)
 
 aux_source_directory(. GRAPHICS_SRC)
 
-add_executable(graphs main.cpp ${GRAPHICS_SRC})
-target_link_libraries(graphs ${SFML_LIBRARIES} ${SFML_DEPENDENCIES})
+#add_executable(graphs main.cpp ${GRAPHICS_SRC})
+#target_link_libraries(graphs ${SFML_LIBRARIES} ${SFML_DEPENDENCIES})

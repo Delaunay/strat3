@@ -1,5 +1,5 @@
-#ifndef STRAT3_DATALOG_DATALOG_HEADER
-#define STRAT3_DATALOG_DATALOG_HEADER
+#ifndef STRAT3_STRATEGYLOG_STRATEGYLOG_HEADER
+#define STRAT3_STRATEGYLOG_STRATEGYLOG_HEADER
 
 #include <fstream>
 #include <sstream>
@@ -228,7 +228,7 @@ class StrategyLog
         {
             // Open files
             for(auto& i:_data){
-                add_trace("LOAD FILES");
+                ADD_TRACE("LOAD FILES");
                 std::fstream pv; pv.open("../pv" + i.first + ".txt", std::ios::out);
                 std::fstream ps; ps.open("../ps" + i.first + ".txt", std::ios::out);
                 std::fstream tw; tw.open("../tw" + i.first + ".txt", std::ios::out);
@@ -236,7 +236,7 @@ class StrategyLog
 
                 Eigen::IOFormat fmt;
 
-                add_trace("SAVE PORTFOLIOVALUES");
+                ADD_TRACE("SAVE PORTFOLIOVALUES");
                 // Portfolio Values
                 pv << "time, invested, cash, liability\n"
                    << build_matrix({{i.first, "pv_time"},

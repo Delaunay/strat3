@@ -1,5 +1,6 @@
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
+#include <SFML/OpenGL.hpp>
 
 #include <random>
 #include <vector>
@@ -16,12 +17,13 @@ typedef unsigned int uint;
 template<typename T>
 vector<T> make_random(size_t n, T min = 0, T max = 1)
 {
-    std::mt19937 eng;   eng.seed(20);
+//    std::mt19937 eng;   eng.seed(20);
 
-    std::uniform_real<T> r(min, max);
+//    std::uniform_real<T> r(min, max);
+
 
     vector<T> ref(n);
-    for(auto& x : ref) x = r(eng);
+    for(auto& x : ref) x = std::rand(); //r(eng);
     return ref;
 }
 
@@ -44,6 +46,9 @@ namespace axes{
     struct X {};
     struct Y {};
 }
+
+
+
 
 
 template<typename T/*, typename T1*/>
@@ -74,7 +79,9 @@ void draw_line(const vector<T>& v, sf::RenderWindow& rw)
 {
     Painter l;
 
-    sf::Vector2u size = rw.getSize();
+    sf::Vector2f size = rw.getView().getSize();
+    //sf::Vector2u size = rw.getSize();
+
     auto minmax = std::minmax_element(v.begin(), v.end());
 
     Scale<float> y((*minmax.first), (*minmax.second));
@@ -99,7 +106,8 @@ void draw_line(const vector<T>& vx, const vector<T>& vy, sf::RenderWindow& rw)
 {
     Painter l;
 
-    sf::Vector2u size = rw.getSize();
+    sf::Vector2f size = rw.getView().getSize();
+    //sf::Vector2u size = rw.getSize();
 
     auto xminmax = std::minmax_element(vx.begin(), vx.end());
     auto yminmax = std::minmax_element(vy.begin(), vy.end());
@@ -120,7 +128,6 @@ void draw_line(const vector<T>& vx, const vector<T>& vy, sf::RenderWindow& rw)
     }
 }
 
-
 int main()
 {
     // Request a 24-bits depth buffer when creating the window
@@ -131,8 +138,13 @@ int main()
     // Create the main window
     sf::RenderWindow window(sf::VideoMode(640, 480), "SFML window with OpenGL", sf::Style::Default, contextSettings);
     window.setVerticalSyncEnabled(true);
+    window.setActive();
 
-    sf::CircleShape c(2, 10);
+    sf::View v(sf::FloatRect(0, 0, 640, 480));
+    v.setViewport(sf::FloatRect(0, 0, 1, 1));
+    window.setView(v);
+
+//    sf::CircleShape c(2, 10);
 
     vector<float> xvec = make_random<float>(50, 0, 20);
     vector<float> yvec = make_random<float>(50, 0, 20);
@@ -153,6 +165,11 @@ int main()
             // Escape key: exit
             if ((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::Escape))
                 window.close();
+
+            // Resize event: adjust the viewport
+            if (event.type == sf::Event::Resized){
+                v.reset(sf::FloatRect(0, 0, event.size.width, event.size.height));
+            }
         }
 
         draw_line(xvec, yvec, window);

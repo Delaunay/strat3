@@ -1,7 +1,7 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8.0)
 PROJECT(strat3)
 
-#SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -O1 -O2 -O3")
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
 #SET(CMAKE_RELEASE_POSTFIX "")
 #SET(CMAKE_DEBUG_POSTFIX "-debug")
@@ -32,6 +32,8 @@ add_subdirectory(Log)
 # does not work
 #SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 
+# add sqlite source
+
 # I should copy Struct and Abstract source files into a public header
 SET(STRUCT_SRC
     Struct/DataStruct.h
@@ -40,4 +42,12 @@ SET(STRUCT_SRC
     Struct/TransactionWeight.h
     Struct/TransactionWeight.cpp
 )
+
+SET(SQLITE_SRC C:/sqlite/sqlite3.c)
+INCLUDE_DIRECTORIES(C:/sqlite/)
+
+SET(BOOST_ROOT C:/Boost/)
+SET(BOOST_LIBRARYDIR C:/Boost/lib64-msvc-12.0)
+
+FIND_PACKAGE(Boost)
 

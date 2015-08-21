@@ -56,8 +56,6 @@ struct NodeTuple
         MStrategy& strategy() { return *_strat;}
         MPortfolio& portfolio() { return *_portfolio;}
 
-private:
-
         MStrategy*       _strat;
         MPortfolio*      _portfolio;
 //        MMarketEngine*   market;
@@ -83,8 +81,10 @@ class Backtester
 
             _slog.initialize(strat_vec, security_number(), max_period());
 
-//            for(auto& i:_strategies)
-//                i->strategy().initialize(security_number());
+            for(auto& i:_strategies)
+            {
+                _strat_window = i->strategy()->strategy_window > _strat_window ? i->strategy()->strategy_window : _strat_window;
+            }
         }
 
         void        run_one_step   ();
