@@ -28,6 +28,7 @@ add_subdirectory(graphics)
 add_subdirectory(default)
 add_subdirectory(DataManager)
 add_subdirectory(Log)
+add_subdirectory(Report)
 
 # does not work
 #SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")

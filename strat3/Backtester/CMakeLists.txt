@@ -18,12 +18,14 @@ SET(BACKTEST_HDS
 #aux_source_directory(../DataManager/ DATAMANGER_SRC)
 aux_source_directory(../StrategyLog/ STRATEGYLOG_SRC)
 aux_source_directory(. BACKTEST_SRC)
+aux_source_directory(../Report/ REPORT_SRC)
 
 add_library(backtest_library
     ${BACKTEST_SRC}
     ${BACKTEST_HDS}
     ${ABSTRACT_HEADER}
     ${STRATEGYLOG_SRC}
+    ${REPORT_SRC}
 )
 
 add_executable(backtester main.cpp)

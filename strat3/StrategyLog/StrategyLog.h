@@ -72,13 +72,15 @@ class StrategyLog
         // not exact
         inline luint used_memory() const NOEXCEPT {   return _vsize * (3 * _nsecurity + 9);   }
 
-        void initialize(std::vector<StrategyName> v, uint nsec, uint v_size = 1000)
+        void initialize(const std::vector<StrategyName>& v, uint nsec, uint v_size = 1000)
         {
             _nsecurity = nsec;
             _vsize = v_size;
 
             for(auto e:v)
                 _data[e] = build_standard_data_frame(nsec, v_size);
+
+            _strategy_names = &v;
         }
 
         inline const std::vector<double>& time_serie(const Identifier& i)  {   return _data[i.first][i.second];   }
@@ -94,6 +96,20 @@ class StrategyLog
 //            std::vector<double>& t = time_serie(s, "ps_holdings");
 //            return Eigen::Map<T>(t[sec_index], t.size() / (nsec + 1), 1, Eigen::Stride(0, _nsecurity));
 //        }
+
+        template<typename T>
+        T get_matrix(const std::string& dfname, const std::string& matrix_name,
+                     uint rows, uint cols)
+        {
+            return Eigen::Map<T>(&time_serie_mod(dfname, matrix_name)[0], rows, cols);
+        }
+
+        template<typename T>
+        const T get_matrix(const std::string& dfname, const std::string& matrix_name,
+                     uint rows, uint cols) const
+        {
+            return Eigen::Map<const T>(&time_serie(dfname, matrix_name)[0], rows, cols);
+        }
 
 
         template<typename T>
@@ -146,13 +162,14 @@ class StrategyLog
                 }
 
                 std::copy(t.begin(), t.begin() + t.size(), std::back_inserter(v));
-
             }
-
             return Eigen::Map<Matrix>(&v[0], v_size, fields.size());
         }
 
-        StrategyLog(){}
+        StrategyLog():
+            _strategy_names(nullptr)
+        {}
+
         ~StrategyLog()
         {}
 
@@ -182,8 +199,9 @@ class StrategyLog
             time_serie_mod(s, "pv_time").push_back(time);
             time_serie_mod(s, "pv_invested").push_back(invested);
             time_serie_mod(s, "pv_cash").push_back(cash);
-            time_serie_mod(s, "pv_asset").push_back(asset);
             time_serie_mod(s, "pv_liability").push_back(liabilities);
+
+            time_serie_mod(s, "pv_asset").push_back(asset);
             time_serie_mod(s, "pv_equity").push_back(asset - liabilities);
         }
 
@@ -191,7 +209,6 @@ class StrategyLog
         void log_portfolio_values(const StrategyName& s,
                                   const double& time,  const Matrix& invested, const Matrix& cash,const Matrix& liabilities)
         {
-
             time_serie_mod(s, "pv_time").push_back(time);
 
             Matrix asset = invested + cash;
@@ -201,6 +218,7 @@ class StrategyLog
                 time_serie_mod(s, "pv_invested").push_back(invested(0, i));
                 time_serie_mod(s, "pv_cash").push_back(cash(0, i));
                 time_serie_mod(s, "pv_liability").push_back(liabilities(0, i));
+
                 time_serie_mod(s, "pv_asset").push_back(asset(0, i));
                 time_serie_mod(s, "pv_equity").push_back(asset(0, i) - liabilities(0, i));
             }
@@ -227,37 +245,56 @@ class StrategyLog
         void dump()
         {
             // Open files
-            for(auto& i:_data){
-                ADD_TRACE("LOAD FILES");
-                std::fstream pv; pv.open("../pv" + i.first + ".txt", std::ios::out);
-                std::fstream ps; ps.open("../ps" + i.first + ".txt", std::ios::out);
-                std::fstream tw; tw.open("../tw" + i.first + ".txt", std::ios::out);
-                std::fstream to; to.open("../to" + i.first + ".txt", std::ios::out);
+            if (_strategy_names)
+            {
+                for(auto& i:*_strategy_names){
+                    ADD_TRACE("LOAD FILES");
+                    std::fstream pv; pv.open("../pv" + i + ".txt", std::ios::out);
+                    std::fstream ps; ps.open("../ps" + i + ".txt", std::ios::out);
+                    std::fstream tw; tw.open("../tw" + i + ".txt", std::ios::out);
+                    std::fstream to; to.open("../to" + i + ".txt", std::ios::out);
 
-                Eigen::IOFormat fmt;
+                    Eigen::IOFormat fmt;
 
-                ADD_TRACE("SAVE PORTFOLIOVALUES");
-                // Portfolio Values
-                pv << "time, invested, cash, liability\n"
-                   << build_matrix({{i.first, "pv_time"},
-                                    {i.first, "pv_invested"},
-                                    {i.first, "pv_cash"},
-                                    {i.first, "pv_liability"}});
+                    ADD_TRACE("SAVE PORTFOLIOVALUES");
+                    // Portfolio Values
+                    pv << "time, invested, cash, liability\n"
+                       << build_matrix({{i, "pv_time"},
+                                        {i, "pv_invested"},
+                                        {i, "pv_cash"},
+                                        {i, "pv_liability"}});
 
-                // Portfolio State
-                ps << get_holdings<MatrixRowMajor>(i.first).format(fmt);
+                    // Portfolio State
+                    ps << get_holdings<MatrixRowMajor>(i).format(fmt);
 
-                // Transaction weight
-                tw << get_weights<MatrixRowMajor>(i.first).format(fmt);
+                    // Transaction weight
+                    tw << get_weights<MatrixRowMajor>(i).format(fmt);
 
-                // Transaction Order
-                to << get_share<MatrixRowMajor>(i.first).format(fmt);
+                    // Transaction Order
+                    to << get_share<MatrixRowMajor>(i).format(fmt);
 
-                // close files
-                pv.close(); ps.close(); tw.close(); to.close();
+                    // close files
+                    pv.close(); ps.close(); tw.close(); to.close();
+                }
             }
         }
 
+        void add_data_frame(const StrategyName& name, DataFrame& df) {   _data[name] = df;   }
+
+        // compute the max size
+        uint size()
+        {
+            uint s = 0;
+
+            for(auto& el:_data)
+                s = s > el.second["pv_time"].size() ? s: el.second["pv_time"].size();
+
+            return s;
+        }
+
+        DataFrame& df(const std::string& name) {   return _data[name]; }
+
+        const std::vector<StrategyName>& strategy_names()    {   return *_strategy_names; }
 
 private:
         // non const function are private
@@ -269,7 +306,7 @@ private:
         uint _nsecurity;
         uint _vsize;
         std::unordered_map<StrategyName, DataFrame> _data;
-
+        const std::vector<StrategyName>* _strategy_names;
 
 public:
 

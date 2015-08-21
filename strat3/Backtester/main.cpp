@@ -2,6 +2,7 @@
 #include "DataManager/MatrixManager.h"
 #include "Backtester/Backtester.h"
 #include "DataManager/Buffer.h"
+#include "Report/Latex.h"
 
 #include <iostream>
 
@@ -74,19 +75,11 @@ int main()
 
     std::cout << bt.strategy_log().security_number() << "\n";
 
-
-//    cout << "Data Dump\n";
     bt.strategy_log().dump();
 
-//    const std::vector<double>& v = bt.strategy_log().time_serie({"EqualWeighted", "st_weights"});
+    Latex ltx("report.tex", bt.strategy_name(), bt.strategy_log());
 
-//    for(int i = 0; i < v.size(); ++i)
-//    {
-//        std::cout << v[i] << "\t";
-
-//        if ((i + 1) % 7 == 0)
-//            std::cout << "\n";
-//    }
+    ltx.compute_stuff();
 
     return 0;
 }

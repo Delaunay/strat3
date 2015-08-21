@@ -74,12 +74,12 @@ class Backtester
 
         void initialize()
         {
-            std::vector<std::string> strat_vec;
+            _strat_name = std::vector<std::string>();
 
             for(int i = 0; i < _strategies.size(); ++i)
-                strat_vec.push_back(title(i));
+                _strat_name.push_back(title(i));
 
-            _slog.initialize(strat_vec, security_number(), max_period());
+            _slog.initialize(_strat_name, security_number(), max_period());
 
             for(auto& i:_strategies)
             {
@@ -87,6 +87,7 @@ class Backtester
             }
         }
 
+        const std::vector<std::string>& strategy_name() {  return _strat_name; }
         void        run_one_step   ();
         MatrixQuery make_query     ();
         uint        period_running () const;
@@ -169,6 +170,7 @@ class Backtester
 
         //DataManager* _data;
         std::vector<NodeTuple*> _strategies;//  Strategies
+        std::vector<std::string> _strat_name;
 };
 }
 #endif
