@@ -66,11 +66,15 @@ int main()
 
     std::cout << "BT Finished" <<std::endl;
 
-    std::cout << bt.strategy_log().security_number() << "\n";
+    uint n_sec = bt.strategy_log().security_number();
+
+    std::vector<std::string> security_names;
+    for(int i = 0; i < n_sec; ++i)
+        security_names.push_back("Sec" + std::to_string(i));
 
     bt.strategy_log().dump();
 
-    DataAnalyzer ltx(bt.strategy_name(), bt.strategy_log());
+    DataAnalyzer ltx(bt.strategy_name(), security_names, bt.strategy_log());
 
     ltx.compute_statistics();
 

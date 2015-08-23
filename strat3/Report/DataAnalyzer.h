@@ -35,8 +35,9 @@ Matrix frequency(const Matrix& x, uint bucket, bool percentage);
 class DataAnalyzer
 {
 public:
-    DataAnalyzer(const std::vector<std::string>& sn, StrategyLog& l):
-        log(l), _strategy_names(sn), days(log.size()), n_strat(strategy_names().size())
+    DataAnalyzer(const std::vector<std::string>& sn, const std::vector<std::string>& sec, StrategyLog& l):
+        log(l), _strategy_names(sn), days(log.size()), n_strat(strategy_names().size()),
+        df(log.add_data_frame("Statistics")), n_sec(sec.size()), _sec_names(sec)
     {}
 
     // somehow DataFrame is bugging and MatrixMap does not modify the underlying
@@ -50,14 +51,19 @@ public:
     CLASS_GLOBAL(returns,   "returns",   days - 1,  n_strat)
 
     CLASS_GLOBAL(means,     "means",      1, n_strat)
+    CLASS_GLOBAL(count,     "count",      1, n_strat)
     CLASS_GLOBAL(pos_means, "pos_means",  1, n_strat)
     CLASS_GLOBAL(neg_means, "neg_means",  1, n_strat)
+    CLASS_GLOBAL(pos_count, "pos_count",  1, n_strat)
+    CLASS_GLOBAL(neg_count, "neg_count",  1, n_strat)
     CLASS_GLOBAL(stdev,     "stdev",      1, n_strat)
     CLASS_GLOBAL(pos_stdev, "pos_stdev",  1, n_strat)
     CLASS_GLOBAL(neg_stdev, "neg_stdev",  1, n_strat)
     CLASS_GLOBAL(variance,  "variance",   1, n_strat)
     CLASS_GLOBAL(kurtosis,  "kurtosis",   1, n_strat)
     CLASS_GLOBAL(skewness,  "skewness",   1, n_strat)
+    CLASS_GLOBAL(vol_mean,  "vol_mean",   1, n_strat)
+    CLASS_GLOBAL(vol_stdev, "vol_stdev",  1, n_strat)
 
     CLASS_GLOBAL(return_distri, "return_distri", (uint) sqrt(returns().rows()), n_strat + 2)
 
@@ -69,18 +75,23 @@ public:
     void compute_hpr(MatrixMap& daily_returns, uint window=20);
     void compute_point_statistics();
     void compute_return_distribution();
+    void compute_volatility_stats();
+    void compute_transaction_order_statistics();
 
     void compute_statistics();
 
     const std::vector<std::string>& strategy_names() {  return _strategy_names; }
+    const std::vector<std::string>& security_names() {  return _sec_names; }
 
 private:
     StrategyLog& log;
     const std::vector<std::string>& _strategy_names;
+    const std::vector<std::string>& _sec_names;
 
     uint days;
     uint n_strat;
-    DataFrame df;
+    uint n_sec;
+    DataFrame& df;
 };
 
 }

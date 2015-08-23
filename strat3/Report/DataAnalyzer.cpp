@@ -34,8 +34,6 @@ Matrix frequency(const Matrix& x, uint bucket, bool percentage)
     // Sorting
      Matrix temp = sort(x);
 
-//     std::cout << bucket << std::endl;
-
     // Counting
      for (uint k = 0, m = x.cols(); k < m; ++k)
      {
@@ -72,30 +70,19 @@ Matrix frequency(const Matrix& x, uint bucket, bool percentage)
     return freq;
 }
 
-
-//for (int i = 0, n = x.rows(); i < n; i++)
-//{
-//    min = temp(i, j);
-
-//    for (int k = i; k < n; k++)
-//        if (min > temp(k, j))
-//        {
-//            buf = temp(k, j);
-//            temp(k, j) = min;
-//            temp(i, j) = buf;
-//            min = buf;
-//        }
-//}
-
 void DataAnalyzer::dump()
 {
     ADD_TRACE("Dumping Statistics");
     std::fstream file;
     Eigen::IOFormat fmt;
     std::string header;
+    std::string sec_header;
 
     for (auto& i:strategy_names())
-        header += i;
+        header += i + " ";
+
+    for (auto& i:security_names())
+        sec_header += i + " ";
 
     // Dump Assets
     // ===============
@@ -144,18 +131,42 @@ void DataAnalyzer::dump()
 
     file.open("../statistics.txt", std::ios::out);
 
-    file << "          "  << header       << "\n" <<
-            "means     "  << means()      << "\n" <<
-            "pos_means "  << pos_means()  << "\n" <<
-            "neg_means "  << neg_means()  << "\n" <<
-            "stdev     "  << stdev()      << "\n" <<
-            "pos_stdev "  << pos_stdev()  << "\n" <<
-            "neg_stdev "  << neg_stdev()  << "\n" <<
-            "variance  "  << variance()   << "\n" <<
-            "kurtosis  "  << kurtosis()   << "\n" <<
-            "skewness  "  << skewness()   << "\n";
+    file << "          "  << header       << "\n"
+            "means     "  << means()      << "\n"
+            "pos_means "  << pos_means()  << "\n"
+            "neg_means "  << neg_means()  << "\n"
+            "stdev     "  << stdev()      << "\n"
+            "pos_stdev "  << pos_stdev()  << "\n"
+            "neg_stdev "  << neg_stdev()  << "\n"
+            "variance  "  << variance()   << "\n"
+            "kurtosis  "  << kurtosis()   << "\n"
+            "skewness  "  << skewness()   << "\n"
+            "vol_mean  "  << vol_mean()   << "\n"
+            "vol_stdev "  << vol_stdev()  << "\n"
+            "count     "  << count()      << "\n"
+            "pos_count "  << pos_count()  << "\n"
+            "neg_count "  << neg_count()  << "\n";
 
     file.close();
+
+    // Dump Transaction Order
+    // ======================
+
+    for(const std::string& el:strategy_names())
+    {
+        file.open(std::string("../to_statistics" + el + ".txt").c_str(), std::ios::out);
+
+        file <<  "             " << sec_header << "\n"
+                 "to_mean      " << log.get_matrix<Matrix>(el, "to_mean",      1, n_sec) << "\n"
+                 "to_count     " << log.get_matrix<Matrix>(el, "to_count",     1, n_sec) << "\n"
+                 "to_stdev     " << log.get_matrix<Matrix>(el, "to_stdev",     1, n_sec) << "\n"
+                 "to_pos_mean  " << log.get_matrix<Matrix>(el, "to_pos_mean",  1, n_sec) << "\n"
+                 "to_neg_mean  " << log.get_matrix<Matrix>(el, "to_neg_mean",  1, n_sec) << "\n"
+                 "to_pos_count " << log.get_matrix<Matrix>(el, "to_pos_count", 1, n_sec) << "\n"
+                 "to_neg_count " << log.get_matrix<Matrix>(el, "to_neg_count", 1, n_sec) << "\n";
+
+        file.close();
+    }
 }
 
 void DataAnalyzer::compute_assets()
@@ -229,6 +240,26 @@ void DataAnalyzer::compute_statistics()
     // Point Statistics
     // ===================
     compute_point_statistics();
+
+    // Volatility Stats
+    // ===================
+    compute_volatility_stats();
+
+    // Transaction Order
+    // ===================
+    compute_transaction_order_statistics();
+}
+
+void DataAnalyzer::compute_volatility_stats()
+{
+    allocate(df, "vol_mean",  n_strat);
+    allocate(df, "vol_stdev", n_strat);
+
+    SimpleMeanVarianceVisitor vmv(n_strat);
+    mov_stdev().visit(vmv);
+
+    vol_mean() = vmv.get_means();
+    vol_stdev() = vmv.get_sd();
 }
 
 void DataAnalyzer::compute_return_distribution()
@@ -240,10 +271,13 @@ void DataAnalyzer::compute_return_distribution()
 
 void DataAnalyzer::compute_point_statistics()
 {
-    allocate(df, "means"  ,         n_strat);
+    allocate(df, "means",           n_strat);
+    allocate(df, "count",           n_strat);
     allocate(df, "stdev",           n_strat);
     allocate(df, "neg_means",       n_strat);
     allocate(df, "neg_stdev",       n_strat);
+    allocate(df, "neg_count",       n_strat);
+    allocate(df, "pos_count",       n_strat);
     allocate(df, "pos_means",       n_strat);
     allocate(df, "pos_stdev",       n_strat);
     allocate(df, "variance",        n_strat);
@@ -261,6 +295,10 @@ void DataAnalyzer::compute_point_statistics()
     pos_means() = vmv.positive.get_means();
     pos_stdev() = vmv.positive.get_sd();
 
+    count()     = vmv.usual.get_count();
+    pos_count() = vmv.positive.get_count();
+    neg_count() = vmv.negative.get_count();
+
     allocate(df, "kurtosis",        n_strat);
     allocate(df, "skewness",        n_strat);
 
@@ -269,6 +307,36 @@ void DataAnalyzer::compute_point_statistics()
 
     kurtosis() = vsk.get_kurtosis();
     skewness() = vsk.get_skew();
+}
+
+void DataAnalyzer::compute_transaction_order_statistics()
+{
+    for(const std::string& el:strategy_names())
+    {
+        // Get Strategy DataFrame
+        DataFrame& sdf = log.df(el);
+
+        allocate(sdf, "to_mean",        n_sec);
+        allocate(sdf, "to_count",       n_sec);
+        allocate(sdf, "to_stdev",       n_sec);
+        allocate(sdf, "to_pos_mean",    n_sec);
+        allocate(sdf, "to_neg_mean",    n_sec);
+        allocate(sdf, "to_pos_count",   n_sec);
+        allocate(sdf, "to_neg_count",   n_sec);
+
+        MatrixRMMap to = log.get_share<MatrixRowMajor>(el);
+
+        MeanVarianceVisitor vmv(n_sec);
+        to.rightCols(to.cols() - 1).visit(vmv);
+
+        log.get_matrix<Matrix>(el, "to_mean",      1, n_sec) = vmv.usual.get_means().transpose();
+        log.get_matrix<Matrix>(el, "to_count",     1, n_sec) = vmv.usual.get_count().transpose();
+        log.get_matrix<Matrix>(el, "to_stdev",     1, n_sec) = vmv.usual.get_sd().transpose();
+        log.get_matrix<Matrix>(el, "to_pos_mean",  1, n_sec) = vmv.positive.get_means().transpose();
+        log.get_matrix<Matrix>(el, "to_neg_mean",  1, n_sec) = vmv.negative.get_means().transpose();
+        log.get_matrix<Matrix>(el, "to_pos_count", 1, n_sec) = vmv.positive.get_count().transpose();
+        log.get_matrix<Matrix>(el, "to_neg_count", 1, n_sec) = vmv.negative.get_count().transpose();
+    }
 }
 
 }

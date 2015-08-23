@@ -44,6 +44,7 @@ public:
     Matrix get_means()      {   return e0 + sum_mean / element;                          }
     Matrix get_variance()   {   return  (sum_std - sum_mean.pow(2.0) / element) / element;         }
     Matrix get_sd()         {   return ((sum_std - sum_mean.pow(2.0) / element) / element).sqrt(); }
+    Matrix get_count()      {   return element; }
 
     int  size;
     ARow sum_std;

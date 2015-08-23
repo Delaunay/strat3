@@ -117,7 +117,7 @@ class StrategyLog
 //        }
 
         template<typename T>
-        T get_matrix(const std::string& dfname, const std::string& matrix_name,
+        Eigen::Map<T> get_matrix(const std::string& dfname, const std::string& matrix_name,
                      uint rows, uint cols)
         {
             return Eigen::Map<T>(&time_serie_mod(dfname, matrix_name)[0], rows, cols);
@@ -132,14 +132,14 @@ class StrategyLog
 //        }
 
         template<typename T>
-        T get_holdings(const StrategyName& s)
+        Eigen::Map<T> get_holdings(const StrategyName& s)
         {
             std::vector<double>& t = time_serie_mod(s, "ps_holdings");
             return Eigen::Map<T>(&t[0], t.size() / (_nsecurity + 1), _nsecurity + 1);
         }
 
         template<typename T>
-        T get_weights(const StrategyName& s)
+        Eigen::Map<T> get_weights(const StrategyName& s)
         {
             std::vector<double>& t = time_serie_mod(s, "st_weights");
             return Eigen::Map<T>(&t[0], t.size() / (_nsecurity + 2), _nsecurity + 2);
@@ -153,14 +153,14 @@ class StrategyLog
 //        }
 
         template<typename T>
-        T get_share(const StrategyName& s)
+        Eigen::Map<T> get_share(const StrategyName& s)
         {
             std::vector<double>& t = time_serie_mod(s, "to_share");
             return Eigen::Map<T>(&t[0], t.size() / (_nsecurity + 1), _nsecurity + 1);
         }
 
         // my_data = build_matrix({"Strategy", "pv_time"}, {"Strategy", "pv_invested"})
-        Matrix build_matrix(const std::vector<Identifier>& fields)
+        Eigen::Map<Matrix> build_matrix(const std::vector<Identifier>& fields)
         {
             // build a vector which will be casted into a Matrix;
             std::vector<double> v;

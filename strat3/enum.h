@@ -21,7 +21,9 @@ typedef Eigen::VectorXd     Column;
 typedef Eigen::RowVectorXd  Row;
 typedef unsigned int        Index;
 typedef Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> MatrixRowMajor;
+typedef Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> MatrixRM;
 typedef Eigen::Map<Matrix> MatrixMap;
+typedef Eigen::Map<MatrixRM> MatrixRMMap;
 typedef Eigen::Map<const Matrix> ConstMatrixMap;
 
 #endif
