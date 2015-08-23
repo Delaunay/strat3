@@ -77,7 +77,9 @@ class Backtester
             _strat_name = std::vector<std::string>();
 
             for(int i = 0; i < _strategies.size(); ++i)
+            {
                 _strat_name.push_back(title(i));
+            }
 
             _slog.initialize(_strat_name, security_number(), max_period());
 

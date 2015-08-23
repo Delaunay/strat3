@@ -1,3 +1,6 @@
+#ifndef STRAT3_GRAPHICS_PAINTER_HEADER
+#define STRAT3_GRAPHICS_PAINTER_HEADER
+
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 
@@ -6,7 +9,7 @@
 //printf("%f %f %f %f\n", b.left, b.top, b.width, b.height);
 
 namespace constant{
-    const float& pi()   {   static float p = 3.14f; return p; }
+    const float& pi();
 }
 
 class Painter
@@ -50,7 +53,7 @@ public:
         return point(x1.x, x1.y, r);
     }
 
-    sf::RectangleShape point(const float& x1, const float& y1, const float& r = 0)
+    sf::RectangleShape& point(const float& x1, const float& y1, const float& r = 0)
     {
         _RectBrush.setSize({_LineTickness, _LineTickness});
         _RectBrush.setRotation(r);
@@ -61,7 +64,7 @@ public:
         return _RectBrush;
     }
 
-    sf::RectangleShape point(const sf::Vector2f& x1)
+    sf::RectangleShape& point(const sf::Vector2f& x1)
     {
         return point(x1.x, x1.y);
     }
@@ -84,7 +87,7 @@ public:
         return line(x1.x, x1.y, x2.x, x2.y);
     }
 
-    sf::RectangleShape line(const float& x1, const float& y1, const float& x2, const float& y2)
+    sf::RectangleShape& line(const float& x1, const float& y1, const float& x2, const float& y2)
     {
         const float hh = (y2 - y1),
                     length = sqrt(hh * hh + (x2 - x1) * (x2 - x1));
@@ -96,7 +99,7 @@ public:
         return _RectBrush;
     }
 
-    sf::RectangleShape line(const sf::Vector2f& x1, const sf::Vector2f& x2)
+    sf::RectangleShape& line(const sf::Vector2f& x1, const sf::Vector2f& x2)
     {
         return line(x1.x, x1.y, x2.x, x2.y);
     }
@@ -134,3 +137,5 @@ private:
     float _LineTickness{1};
 
 };
+
+#endif

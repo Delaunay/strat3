@@ -1,9 +1,13 @@
 #ifndef STRAT3_GRAPHICS_CHART_HEADER
 #define STRAT3_GRAPHICS_CHART_HEADER
 
+#include <memory>
 #include <vector>
 #include <string>
 #include <SFML/Graphics.hpp>
+
+#include "Shapes.h"
+
 
 // Global Font
 sf::Font& font()
@@ -32,6 +36,7 @@ enum Align
     AlignCenter = AlignHCenter | AlignVCenter,
     CustomAlign = 20
 };
+
 
 class ChartElement
 {
@@ -79,13 +84,42 @@ public:
     }
 
     sf::FloatRect margin;
-
-protected:
-
     sf::FloatRect size;
     ChartElement* _parent{nullptr};
 };
 
+class ChartGraphics : public ChartElement
+{
+public:
+    ChartGraphics(ChartElement* p = nullptr, sf::FloatRect rect_):
+        ChartElement(p), size(rect_)
+    {}
+
+    template<typename T>
+    int add_line(const std::vector<T>& vx, const std::vector<T>& vy)
+    {
+        items.push_back(draw_line(vx, vy, rect));
+        return items.size() - 1;
+    }
+
+    template<typename T>
+    int add_points(const std::vector<T>& vx, const std::vector<T>& vy)
+    {
+         items.push_back(draw_points(vx, vy, rect));
+         return items.size() - 1;
+    }
+
+    void draw(sf::RenderWindow& rw)
+    {
+        for(auto& i:items)
+            i.draw(rw);
+    }
+
+protected:
+
+    sf::FloatRect   rect;
+    std::vector<std::unique_ptr<GraphicItem> > items;
+};
 
 
 class ChartText : public ChartElement
@@ -141,6 +175,7 @@ public:
 
     // maximum 4 = most of time 2
     std::vector<ScaleLabel*> scale_label;
+
     Legend   * legend{nullptr};
     ChartText* title{nullptr};
 };
@@ -185,7 +220,12 @@ public:
 
     void draw(sf::RenderWindow& rw)
     {
+        rw.draw(name);
 
+        line.setPosition(40, 0);
+        line.setSize({1, 100});
+
+        rw.draw(line);
     }
 
     sf::Text name;

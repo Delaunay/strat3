@@ -16,5 +16,11 @@ INCLUDE_DIRECTORIES(C:/Users/pastafarian/Downloads/SFML-2.3.1/include)
 
 aux_source_directory(. GRAPHICS_SRC)
 
-add_executable(graphs main.cpp ${GRAPHICS_SRC})
-target_link_libraries(graphs ${SFML_LIBRARIES} ${SFML_DEPENDENCIES})
+SET(GRPH_HDS
+    utility.h
+    Scale.h
+    Shapes.h
+)
+
+#add_executable(graphs main.cpp ${GRAPHICS_SRC} ${GRPH_HDS})
+#target_link_libraries(graphs ${SFML_LIBRARIES} ${SFML_DEPENDENCIES})

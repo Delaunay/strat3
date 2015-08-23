@@ -2,28 +2,21 @@
 #include "DataManager/MatrixManager.h"
 #include "Backtester/Backtester.h"
 #include "DataManager/Buffer.h"
-#include "Report/Latex.h"
+#include "Report/DataAnalyzer.h"
 
 #include <iostream>
 
-//#ifdef __linux__
-//#   define name_fix(path, name) "./" + string(path) + "lib" + string(name) + ".so"
-//#else
-//#   define name_fix(path, name) "./" + string(path) + string(name) + ".dll"
-//#endif
-
-
-
-
+// "./" make the prog seek the dll in the exe folder
 std::string name_fix(const std::string& name, const std::string& path ="./")
 {
 #ifdef __linux__
     return path + "lib" + name + ".so";
+#elif __MINGW32__
+    return path + "lib" + name + ".dll";
 #else
     return path + name + ".dll";
 #endif
 }
-
 
 
 using namespace strat3;
@@ -77,9 +70,11 @@ int main()
 
     bt.strategy_log().dump();
 
-    Latex ltx("report.tex", bt.strategy_name(), bt.strategy_log());
+    DataAnalyzer ltx(bt.strategy_name(), bt.strategy_log());
 
-    ltx.compute_stuff();
+    ltx.compute_statistics();
+
+    ltx.dump();
 
     return 0;
 }

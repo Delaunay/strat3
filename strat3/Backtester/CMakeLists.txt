@@ -13,6 +13,7 @@ SET(BACKTEST_HDS
     DynamicObject.h
     Pointer.h
     ErrorPolicy.h
+    ../Report/visitor.h
 )
 
 #aux_source_directory(../DataManager/ DATAMANGER_SRC)

@@ -1,5 +1,5 @@
-#ifndef REPORT_HTML_HEADER
-#define REPORT_HTML_HEADER
+#ifndef STRAT3_REPORT_HTML_HEADER
+#define STRAT3_REPORT_HTML_HEADER
 
 #include "Report.h"
 

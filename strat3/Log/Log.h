@@ -33,7 +33,11 @@ public:
 
     static const std::string& path()
     {
+#ifdef __MINGW32__
+        static const std::string s = std::string(__FILE__).substr(0, std::string(__FILE__).size() - 20);
+#else
         static const std::string s = std::string(__FILE__).substr(0, std::string(__FILE__).size() - 10);
+#endif
         return s;
     }
 
@@ -51,7 +55,8 @@ public:
 
         void print(std::ostream& os)
         {
-            os << "[" << line << "]  " << msg << "\n    => Function: " << func << std::endl;
+            os << "[" << line << "]  " << msg << "\n    => Function: " << func <<
+                                                 "\n    =>     File: " << clean_path(file) << std::endl;
         }
     };
 

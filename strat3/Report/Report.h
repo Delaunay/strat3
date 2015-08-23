@@ -1,5 +1,5 @@
-#ifndef REPORT_REPORT_HEADER
-#define REPORT_REPORT_HEADER
+#ifndef STRAT3_REPORT_REPORT_HEADER
+#define STRAT3_REPORT_REPORT_HEADER
 
 #include "StrategyLog/StrategyLog.h"
 

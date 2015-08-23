@@ -18,7 +18,6 @@ class Transaction;
 //class TransactionWeight;
 class TransactionAnswer;
 
-#define RESERVE(name, size) df[name] = std::vector<double>();  df[name].reserve(size)
 
 
 /*!
@@ -44,17 +43,36 @@ class TransactionAnswer;
 #   define NOEXCEPT
 #endif
 
+typedef std::string StrategyName;
+typedef std::string FieldName;
+typedef std::vector<double> TimeSeries;
+
+typedef std::unordered_map<FieldName, TimeSeries> DataFrame;
+typedef std::pair<StrategyName, FieldName> Identifier;
+typedef long unsigned int luint;
+
+
+inline void reserve(DataFrame& df, std::string name, uint n)
+{
+    df[name] = std::vector<double>();
+    df[name].reserve(n);
+}
+
+inline void allocate(DataFrame& df, std::string name, uint n)
+{
+    df[name] = std::vector<double>(n);
+}
+
+inline void matrix_to_vector(Matrix& m, std::vector<double>& v)
+{
+    double* ptr = &m(0, 0);
+    uint n = m.rows() * m.cols();
+    std::copy(ptr, ptr + n, std::back_inserter(v));
+}
+
 class StrategyLog
 {
     public:
-        typedef std::string StrategyName;
-        typedef std::string FieldName;
-        typedef std::vector<double> TimeSeries;
-
-        typedef std::unordered_map<FieldName, TimeSeries> DataFrame;
-        typedef std::pair<StrategyName, FieldName> Identifier;
-        typedef long unsigned int luint;
-
         enum FieldValues
         {
             Time = 0,
@@ -77,15 +95,16 @@ class StrategyLog
             _nsecurity = nsec;
             _vsize = v_size;
 
-            for(auto e:v)
-                _data[e] = build_standard_data_frame(nsec, v_size);
+            for(auto e:v){
+                build_standard_data_frame(add_data_frame(e), nsec, v_size);
+            }
 
             _strategy_names = &v;
         }
 
         inline const std::vector<double>& time_serie(const Identifier& i)  {   return _data[i.first][i.second];   }
-        inline const std::vector<double>& time_serie(const StrategyName& s,
-                                              const FieldName& f)  {   return _data[s][f];   }
+        inline const std::vector<double>& time_serie(const std::string& s,
+                                              const std::string& f)  {   return _data[s][f];   }
 
 
         // return the holdings evolution of one particular security as a column
@@ -104,13 +123,13 @@ class StrategyLog
             return Eigen::Map<T>(&time_serie_mod(dfname, matrix_name)[0], rows, cols);
         }
 
-        template<typename T>
-        const T get_matrix(const std::string& dfname, const std::string& matrix_name,
-                     uint rows, uint cols) const
-        {
-            return Eigen::Map<const T>(&time_serie(dfname, matrix_name)[0], rows, cols);
-        }
-
+//        template<typename T>
+//        const T get_matrix(const std::string& dfname, const std::string& matrix_name,
+//                     uint rows, uint cols)
+//        {
+//            return Eigen::Map<T>(_data[dfname][matrix_name], rows, cols);
+//            //return Eigen::Map<const T>(&time_serie(dfname, matrix_name)[0], rows, cols);
+//        }
 
         template<typename T>
         T get_holdings(const StrategyName& s)
@@ -247,31 +266,36 @@ class StrategyLog
             // Open files
             if (_strategy_names)
             {
-                for(auto& i:*_strategy_names){
+                // I had some trouble with MinGW and C++11 ranges
+                const std::vector<std::string>& sn = *_strategy_names;
+
+                //for(const std::string& i:sn){
+                for(int i = 0, n = sn.size(); i < n; ++i)
+                {
                     ADD_TRACE("LOAD FILES");
-                    std::fstream pv; pv.open("../pv" + i + ".txt", std::ios::out);
-                    std::fstream ps; ps.open("../ps" + i + ".txt", std::ios::out);
-                    std::fstream tw; tw.open("../tw" + i + ".txt", std::ios::out);
-                    std::fstream to; to.open("../to" + i + ".txt", std::ios::out);
+                    std::fstream pv; pv.open("../pv" + sn[i] + ".txt", std::ios::out);
+                    std::fstream ps; ps.open("../ps" + sn[i] + ".txt", std::ios::out);
+                    std::fstream tw; tw.open("../tw" + sn[i] + ".txt", std::ios::out);
+                    std::fstream to; to.open("../to" + sn[i] + ".txt", std::ios::out);
 
                     Eigen::IOFormat fmt;
 
                     ADD_TRACE("SAVE PORTFOLIOVALUES");
                     // Portfolio Values
                     pv << "time, invested, cash, liability\n"
-                       << build_matrix({{i, "pv_time"},
-                                        {i, "pv_invested"},
-                                        {i, "pv_cash"},
-                                        {i, "pv_liability"}});
+                       << build_matrix({{sn[i], "pv_time"},
+                                        {sn[i], "pv_invested"},
+                                        {sn[i], "pv_cash"},
+                                        {sn[i], "pv_liability"}});
 
                     // Portfolio State
-                    ps << get_holdings<MatrixRowMajor>(i).format(fmt);
+                    ps << get_holdings<MatrixRowMajor>(sn[i]).format(fmt);
 
                     // Transaction weight
-                    tw << get_weights<MatrixRowMajor>(i).format(fmt);
+                    tw << get_weights<MatrixRowMajor>(sn[i]).format(fmt);
 
                     // Transaction Order
-                    to << get_share<MatrixRowMajor>(i).format(fmt);
+                    to << get_share<MatrixRowMajor>(sn[i]).format(fmt);
 
                     // close files
                     pv.close(); ps.close(); tw.close(); to.close();
@@ -279,7 +303,12 @@ class StrategyLog
             }
         }
 
-        void add_data_frame(const StrategyName& name, DataFrame& df) {   _data[name] = df;   }
+        DataFrame& add_data_frame(const StrategyName& name)
+        {
+            _data[name] = DataFrame();
+            return _data[name];
+        }
+
 
         // compute the max size
         uint size()
@@ -311,24 +340,22 @@ private:
 public:
 
 
-static DataFrame build_standard_data_frame(uint nsec, uint v_size = 1000, uint strat = 1)
+static void build_standard_data_frame(DataFrame& df, uint nsec, uint v_size = 1000, uint strat = 1)
 {
-    DataFrame df;
     // We are using reserve() because we want to always use push_back and never []
     // Portfolio values
-    RESERVE("pv_time", v_size);
-    RESERVE("pv_invested", v_size * strat);    // Net of investment value
-    RESERVE("pv_asset", v_size * strat);       // investment + cash
-    RESERVE("pv_liability", v_size * strat);   // Shorted Investment and Borrowed money
-    RESERVE("pv_equity", v_size * strat);      // Long Investement + positive cash
-    RESERVE("pv_cash", v_size * strat);
+    reserve(df, "pv_time", v_size);
+    reserve(df, "pv_invested", v_size * strat);    // Net of investment value
+    reserve(df, "pv_asset", v_size * strat);       // investment + cash
+    reserve(df, "pv_liability", v_size * strat);   // Shorted Investment and Borrowed money
+    reserve(df, "pv_equity", v_size * strat);      // Long Investement + positive cash
+    reserve(df, "pv_cash", v_size * strat);
 
     // portfolio state
-    RESERVE("ps_holdings", v_size * (nsec + 1) * strat);
-    RESERVE("st_weights", v_size * (nsec + 2) * strat); // Strategy Target Weights
-    RESERVE("to_share", v_size * (nsec + 1) * strat);
+    reserve(df, "ps_holdings", v_size * (nsec + 1) * strat);
+    reserve(df, "st_weights", v_size * (nsec + 2) * strat); // Strategy Target Weights
+    reserve(df, "to_share", v_size * (nsec + 1) * strat);
 
-    return df;
 }
 };
 
