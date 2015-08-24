@@ -74,7 +74,7 @@ void DataAnalyzer::dump()
 {
     ADD_TRACE("Dumping Statistics");
     std::fstream file;
-    Eigen::IOFormat fmt;
+    Eigen::IOFormat fmt(Eigen::StreamPrecision, Eigen::DontAlignCols);
     std::string header;
     std::string sec_header;
 
@@ -88,42 +88,42 @@ void DataAnalyzer::dump()
     // ===============
 
     file.open("../assets.txt", std::ios::out);
-    file << header << "\n" << assets().format(fmt);
+    file << "#" << header << "\n" << assets().format(fmt);
     file.close();
 
     // Dump Returns
     // ===============
 
     file.open("../returns.txt", std::ios::out);
-    file << header << "\n" << returns().format(fmt);
+    file << "#" << header << "\n" << returns().format(fmt);
     file.close();
 
     // Dump Hpr
     // ===============
 
     file.open("../hpr.txt", std::ios::out);
-    file << header << "\n" << hpr().format(fmt);
+    file << "#" << header << "\n" << hpr().format(fmt);
     file.close();
 
     // Dump Drawdown
     // ===============
 
     file.open("../drawdown.txt", std::ios::out);
-    file << header << "\n" << hpr().format(fmt);
+    file << "#" << header << "\n" << hpr().format(fmt);
     file.close();
 
     // Dump Mov Stdev
     // ===============
 
     file.open("../mov_stdev.txt", std::ios::out);
-    file << header << "\n" << mov_stdev().format(fmt);
+    file << "#" << header << "\n" << mov_stdev().format(fmt);
     file.close();
 
     // Dump ret distri
     // ===============
 
     file.open("../ret_distri.txt", std::ios::out);
-    file << "min   max  " << header << "\n" << return_distri().format(fmt);
+    file << "#min   max  " << header << "\n" << return_distri().format(fmt);
     file.close();
 
     // Dump Statistc Points
@@ -131,7 +131,7 @@ void DataAnalyzer::dump()
 
     file.open("../statistics.txt", std::ios::out);
 
-    file << "          "  << header       << "\n"
+    file << "#name     "  << header       << "\n"
             "means     "  << means()      << "\n"
             "pos_means "  << pos_means()  << "\n"
             "neg_means "  << neg_means()  << "\n"
@@ -156,7 +156,7 @@ void DataAnalyzer::dump()
     {
         file.open(std::string("../to_statistics" + el + ".txt").c_str(), std::ios::out);
 
-        file <<  "             " << sec_header << "\n"
+        file <<  "#name        " << sec_header << "\n"
                  "to_mean      " << log.get_matrix<Matrix>(el, "to_mean",      1, n_sec) << "\n"
                  "to_count     " << log.get_matrix<Matrix>(el, "to_count",     1, n_sec) << "\n"
                  "to_stdev     " << log.get_matrix<Matrix>(el, "to_stdev",     1, n_sec) << "\n"

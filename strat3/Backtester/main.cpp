@@ -3,6 +3,7 @@
 #include "Backtester/Backtester.h"
 #include "DataManager/Buffer.h"
 #include "Report/DataAnalyzer.h"
+#include "Report/Latex.h"
 
 #include <iostream>
 
@@ -74,11 +75,14 @@ int main()
 
     bt.strategy_log().dump();
 
-    DataAnalyzer ltx(bt.strategy_name(), security_names, bt.strategy_log());
+    DataAnalyzer da(bt.strategy_name(), security_names, bt.strategy_log());
 
-    ltx.compute_statistics();
+    da.compute_statistics();
+    da.dump();
 
-    ltx.dump();
+    Latex ltx("../Report.tex", da, bt);
+
+    ltx.body();
 
     return 0;
 }

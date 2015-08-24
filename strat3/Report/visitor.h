@@ -92,12 +92,8 @@ struct MeanVarianceVisitor
     void init(const double& x, Index i, Index j)
     {
         usual.init(x, i, j);
-
-        // do not need e0 to be possitive or neg
-//        if (x < 0)
-            negative.init(x, i, j);
-//        else
-            positive.init(x, i, j);
+        negative.init(x, i, j);
+        positive.init(x, i, j);
     }
 
     void operator() (const double& x, Index i, Index j)
@@ -105,42 +101,14 @@ struct MeanVarianceVisitor
         usual(x, i, j);
 
         if (x < 0)
-        {
             negative(x, i, j);
-        }
         else
-        {
             positive(x, i, j);
-        }
     }
 
     SimpleMeanVarianceVisitor usual;
     SimpleMeanVarianceVisitor negative;
     SimpleMeanVarianceVisitor positive;
 };
-
-
-//struct MovingStandardDeviation
-//{
-//    MovingStandardDeviation(uint window, uint cols):
-//        window(window), cols(cols), data(Matrix::Zero(window, cols))
-//    {}
-
-//    void init(const double& x, Index i, Index j)
-//    {
-//       data(i, j) = x;
-//    }
-
-//    void operator() (const double& x, Index i, Index j)
-//    {
-//        data(i % window, j) = x;
-//        (*moving_std)(i, j) = sqrt(data.col(j).cwiseProduct(data.col(j)).mean() - pow(data.col(j).mean(), 2));
-//    }
-
-//    uint window;
-//    uint cols;
-//    Matrix data;
-
-//};
 
 #endif

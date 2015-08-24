@@ -8,8 +8,8 @@ namespace strat3{
 class HTML : public Report
 {
 public:
-    HTML(const std::string& file_name, const std::vector<std::string>& strategy_names, StrategyLog* l):
-        Report(file_name, sn, l)
+    HTML(const std::string& file_name, DataAnalyzer& da):
+        Report(file_name, da)
     {}
 
     void head               () {}

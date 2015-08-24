@@ -13,11 +13,8 @@
 
 #define LOG_RAM 1
 
-
 class Transaction;
-//class TransactionWeight;
 class TransactionAnswer;
-
 
 
 /*!
@@ -160,7 +157,8 @@ class StrategyLog
         }
 
         // my_data = build_matrix({"Strategy", "pv_time"}, {"Strategy", "pv_invested"})
-        Eigen::Map<Matrix> build_matrix(const std::vector<Identifier>& fields)
+        // we need to make 2 copies
+        Matrix build_matrix(const std::vector<Identifier>& fields)
         {
             // build a vector which will be casted into a Matrix;
             std::vector<double> v;
@@ -182,6 +180,7 @@ class StrategyLog
 
                 std::copy(t.begin(), t.begin() + t.size(), std::back_inserter(v));
             }
+
             return Eigen::Map<Matrix>(&v[0], v_size, fields.size());
         }
 
@@ -232,7 +231,7 @@ class StrategyLog
 
             Matrix asset = invested + cash;
 
-            for(int i = 0, n = invested.cols(); i < n; ++i)
+            for(uint i = 0, n = invested.cols(); i < n; ++i)
             {
                 time_serie_mod(s, "pv_invested").push_back(invested(0, i));
                 time_serie_mod(s, "pv_cash").push_back(cash(0, i));
@@ -266,27 +265,28 @@ class StrategyLog
             // Open files
             if (_strategy_names)
             {
+                Eigen::IOFormat fmt(Eigen::StreamPrecision, Eigen::DontAlignCols);
+
                 // I had some trouble with MinGW and C++11 ranges
                 const std::vector<std::string>& sn = *_strategy_names;
 
                 //for(const std::string& i:sn){
-                for(int i = 0, n = sn.size(); i < n; ++i)
+                for(uint i = 0, n = sn.size(); i < n; ++i)
                 {
                     ADD_TRACE("LOAD FILES");
-                    std::fstream pv; pv.open("../pv" + sn[i] + ".txt", std::ios::out);
-                    std::fstream ps; ps.open("../ps" + sn[i] + ".txt", std::ios::out);
-                    std::fstream tw; tw.open("../tw" + sn[i] + ".txt", std::ios::out);
-                    std::fstream to; to.open("../to" + sn[i] + ".txt", std::ios::out);
-
-                    Eigen::IOFormat fmt;
+                    std::fstream pv; pv.open("../" + sn[i] + "_pv.txt", std::ios::out);
+                    std::fstream ps; ps.open("../" + sn[i] + "_ps.txt", std::ios::out);
+                    std::fstream tw; tw.open("../" + sn[i] + "_tw.txt", std::ios::out);
+                    std::fstream to; to.open("../" + sn[i] + "_to.txt", std::ios::out);
 
                     ADD_TRACE("SAVE PORTFOLIOVALUES");
+
                     // Portfolio Values
-                    pv << "time, invested, cash, liability\n"
+                    pv << "#time invested cash liability\n"
                        << build_matrix({{sn[i], "pv_time"},
                                         {sn[i], "pv_invested"},
                                         {sn[i], "pv_cash"},
-                                        {sn[i], "pv_liability"}});
+                                        {sn[i], "pv_liability"}}).format(fmt);
 
                     // Portfolio State
                     ps << get_holdings<MatrixRowMajor>(sn[i]).format(fmt);

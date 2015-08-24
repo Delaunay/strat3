@@ -1,21 +1,24 @@
 #ifndef STRAT3_REPORT_REPORT_HEADER
 #define STRAT3_REPORT_REPORT_HEADER
 
-#include "StrategyLog/StrategyLog.h"
+//#include "DataAnalyzer.h"
+
+
 
 namespace strat3{
+
+class DataAnalyzer;
+class Backtester;
 
 class Report
 {
 public:
-    Report(const std::string& file_name,
-           const std::vector<std::string>& strategy_names,
-           StrategyLog& l):
-        log(l), _strategy_names(strategy_names)
+    Report(DataAnalyzer& da_, Backtester& bt_):
+        da(da_), bt(bt_)
     {}
 
-    virtual void head()= 0;
-    virtual void foot() = 0;
+    virtual void head(){}
+    virtual void foot(){}
 
     virtual void generate()
     {
@@ -33,16 +36,16 @@ public:
         foot();
     }
 
-    virtual void table_of_content   () = 0;
-    virtual void disclaimer         () = 0;
-    virtual void overview           () = 0;
-    virtual void risk               () = 0;
-    virtual void strategies         () = 0;
+    virtual void table_of_content   () {}
+    virtual void disclaimer         () {}
+    virtual void overview           () {}
+    virtual void risk               () {}
+    virtual void strategies         () {}
 
-    virtual void portfolio_value    () = 0;
-    virtual void holdings           () = 0;
-    virtual void transaction_order  () = 0;
-    virtual void target_weight      () = 0;
+    virtual void portfolio_value    () {}
+    virtual void holdings           () {}
+    virtual void transaction_order  () {}
+    virtual void target_weight      () {}
 
     virtual void data()
     {
@@ -52,11 +55,9 @@ public:
         target_weight();
     }
 
-    const std::vector<std::string>& strategy_names() {  return _strategy_names; }
-
 protected:
-    StrategyLog& log;
-    const std::vector<std::string>& _strategy_names;
+    DataAnalyzer& da;
+    Backtester& bt;
 };
 
 }

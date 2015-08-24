@@ -5,13 +5,6 @@
 #include "StrategyLog/StrategyLog.h"
 #include "visitor.h"
 
-#include <algorithm>
-#include <fstream>
-
-template<typename T>
-const T& _min(const T& x, const T& y)    {   return ((x > y) ? (x) : (y));   }
-
-
 #define CLASS_GLOBAL(fname, name, row, col) MatrixMap& fname() \
                      {  \
                         static MatrixMap _CLASS_name(&df[name][0], row, col);\
@@ -19,6 +12,9 @@ const T& _min(const T& x, const T& y)    {   return ((x > y) ? (x) : (y));   }
                      }
 
 namespace strat3{
+
+template<typename T>
+const T& _min(const T& x, const T& y)    {   return ((x > y) ? (x) : (y));   }
 
 //  ColWise Sort (must be colwise) make a copy
 // Complexity ((nm)(log(n))) with m number of col
@@ -66,7 +62,6 @@ public:
     CLASS_GLOBAL(vol_stdev, "vol_stdev",  1, n_strat)
 
     CLASS_GLOBAL(return_distri, "return_distri", (uint) sqrt(returns().rows()), n_strat + 2)
-
 
     void dump();
 
