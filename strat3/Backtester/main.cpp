@@ -80,9 +80,11 @@ int main()
     da.compute_statistics();
     da.dump();
 
-    Latex ltx("../Report.tex", da, bt);
+    Latex ltx(da, bt);
 
-    ltx.body();
+//    ltx.body();
+
+    ltx.generate();
 
     return 0;
 }

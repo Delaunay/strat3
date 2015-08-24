@@ -77,6 +77,8 @@ void DataAnalyzer::dump()
     Eigen::IOFormat fmt(Eigen::StreamPrecision, Eigen::DontAlignCols);
     std::string header;
     std::string sec_header;
+    Matrix temp, data = assets(), time;
+    int offset = 1;
 
     for (auto& i:strategy_names())
         header += i + " ";
@@ -84,39 +86,69 @@ void DataAnalyzer::dump()
     for (auto& i:security_names())
         sec_header += i + " ";
 
+    // Generate Time matrix
+    time = Matrix::Zero(data.rows(), 1);
+    for(int i = 0; i < data.rows(); ++i)
+        time(i, 0)= i;
+    // end
+
     // Dump Assets
     // ===============
 
+    temp = Matrix::Zero(data.rows(), data.cols() + offset);
+    temp.leftCols(offset) = time;
+    temp.rightCols(data.cols()) = data;
+
     file.open("../assets.txt", std::ios::out);
-    file << "#" << header << "\n" << assets().format(fmt);
-    file.close();
-
-    // Dump Returns
-    // ===============
-
-    file.open("../returns.txt", std::ios::out);
-    file << "#" << header << "\n" << returns().format(fmt);
+    file << "#time " << header << "\n" << temp.format(fmt);
     file.close();
 
     // Dump Hpr
     // ===============
 
+    data = hpr();
+    temp = Matrix::Zero(data.rows(), data.cols() + offset);
+    temp.leftCols(offset) = time;
+    temp.rightCols(data.cols()) = data;
+
     file.open("../hpr.txt", std::ios::out);
-    file << "#" << header << "\n" << hpr().format(fmt);
+    file << "#time " << header << "\n" <<  temp.format(fmt);
     file.close();
 
     // Dump Drawdown
     // ===============
 
+    data = drawdown();
+    temp = Matrix::Zero(data.rows(), data.cols() + offset);
+    temp.leftCols(offset) = time;
+    temp.rightCols(data.cols()) = data;
+
     file.open("../drawdown.txt", std::ios::out);
-    file << "#" << header << "\n" << hpr().format(fmt);
+    file << "#time " << header << "\n" << temp.format(fmt);
+    file.close();
+
+    // Dump Returns
+    // ===============
+
+    data = returns();
+    temp = Matrix::Zero(data.rows(), data.cols() + offset);
+    temp.leftCols(offset) = time.bottomRows(data.rows());
+    temp.rightCols(data.cols()) = data;
+
+    file.open("../returns.txt", std::ios::out);
+    file << "#time " << header << "\n" << temp.format(fmt);
     file.close();
 
     // Dump Mov Stdev
     // ===============
 
+    data = mov_stdev();
+    temp = Matrix::Zero(data.rows(), data.cols() + offset);
+    temp.leftCols(offset) = time.bottomRows(data.rows());
+    temp.rightCols(data.cols()) = data;
+
     file.open("../mov_stdev.txt", std::ios::out);
-    file << "#" << header << "\n" << mov_stdev().format(fmt);
+    file << "#time " << header << "\n" << temp.format(fmt);
     file.close();
 
     // Dump ret distri
@@ -197,6 +229,8 @@ void DataAnalyzer::compute_hpr(MatrixMap& daily_returns, uint window)
 
     hpr().row(0).fill(0);
     drawdown().row(0).fill(0);
+
+    Array max_row = hpr().row(0);
     uint j = 0;
 
     for(int i = 1; i < days; ++i){
@@ -204,8 +238,10 @@ void DataAnalyzer::compute_hpr(MatrixMap& daily_returns, uint window)
         // HPR
         hpr().row(i) = hpr().row(j) + daily_returns.row(j);
 
+        max_row = hpr().array().row(i).max(max_row);
+
         // Drawdown
-        drawdown().row(i) = drawdown().array().row(i).max(hpr().array().row(i));
+        drawdown().row(i) = hpr().array().row(i) - max_row;
 
         // Moving Standard Deviation
         data.row(j % window) = daily_returns.row(j);

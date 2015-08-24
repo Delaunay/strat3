@@ -1,29 +1,29 @@
 IF(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
 
-ELSE(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
+ELSE()
 
-# Qt Setup
-#--------------
+    # Qt Setup
+    #--------------
 
-SET(CMAKE_AUTOMOC ON)
+    SET(CMAKE_AUTOMOC ON)
 
-# Find the QtWidgets library
-FIND_PACKAGE(Qt5Widgets)
+    # Find the QtWidgets library
+    FIND_PACKAGE(Qt5Widgets)
 
-include_directories(${Qt5Widgets_INCLUDE_DIRS})
-
-
-# Source
-#--------------
-
-aux_source_directory(. GUI_SRC)
+    include_directories(${Qt5Widgets_INCLUDE_DIRS})
 
 
-# Compiling
-#--------------
+    # Source
+    #--------------
 
-LINK_DIRECTORIES(${PROJECT_BINARY_DIR})
-ADD_EXECUTABLE(strat3-gui ${GUI_SRC})
-target_link_libraries(strat3-gui Qt5::Widgets backtest_library )
+    aux_source_directory(. GUI_SRC)
 
-ENDIF(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
+
+    # Compiling
+    #--------------
+
+    LINK_DIRECTORIES(${PROJECT_BINARY_DIR})
+    #ADD_EXECUTABLE(strat3-gui ${GUI_SRC})
+    #target_link_libraries(strat3-gui Qt5::Widgets backtest_library )
+
+ENDIF()

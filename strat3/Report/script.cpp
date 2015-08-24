@@ -100,7 +100,7 @@ void generate_gp_script(const std::vector<std::string>& strat,
 
     for (int i = 0; i < len_strat; i++)
     {
-        file << "using (percent($1)):(percent($" << i + 2 << ")) ";
+        file << "using (percent($1)):(percent($" << i + 2 + 1 << ")) ";
 
         STRAT_LEGEND(legend);
     }
@@ -268,9 +268,9 @@ void generate_gp_script(const std::vector<std::string>& strat,
         file <<
         "\nset output \""<< output_folder << strat[i] << "_values."<< ext <<"\" \n"
         "plot \""<< data_folder << strat[i] << values << "\" using 1:"
-             << offset <<" title \"Liabilities\", '' using 1:"
-             << offset + 1<<" title \"Equity\", '' using 1:"
-             << offset + 2<<" title \"Asset\" \n";
+             << offset     << " title \"Liabilities\", '' using 1:"
+             << offset + 1 << " title \"Equity\", '' using 1:"
+             << offset + 2 << " title \"Asset\" \n";
     }
 
     // Periodict Ret
@@ -293,14 +293,9 @@ void generate_gp_script(const std::vector<std::string>& strat,
     for (int i = 0; i < len_strat; i++)
     {
         if (i < len_strat - 1)
-            file << "using (percent($" << i << ")) title \"" << strat[i] << "\", '' ";
+            file << "using 1:(percent($" << i + offset << ")) title \"" << strat[i] << "\", '' ";
         else
-            file << "using (percent($" << i << ")) title \"" << strat[i] << "\" \n";
-
-//        if (i < len_strat - 1)
-//            file << "using 1:(percent($" << i + offset << ")) title \"" << strat[i] << "\", '' ";
-//        else
-//            file << "using 1:(percent($" << i + offset << ")) title \"" << strat[i] << "\" \n";
+            file << "using 1:(percent($" << i + offset << ")) title \"" << strat[i] << "\" \n";
     }
 
     //Holding period Return
@@ -322,14 +317,9 @@ void generate_gp_script(const std::vector<std::string>& strat,
     for (int i = 0; i < len_strat; i++)
     {
         if (i < len_strat - 1)
-            file << "using (percent($" << i << ")) title \"" << strat[i] << "\", '' ";
+            file << "using 1:(percent($" << i + offset << ")) title \"" << strat[i] << "\", '' ";
         else
-            file << "using (percent($" << i << ")) title \"" << strat[i] << "\" \n";
-
-//        if (i < len_strat - 1)
-//            file << "using 1:(percent($" << i + offset << ")) title \"" << strat[i] << "\", '' ";
-//        else
-//            file << "using 1:(percent($" << i + offset << ")) title \"" << strat[i] << "\" \n";
+            file << "using 1:(percent($" << i + offset << ")) title \"" << strat[i] << "\" \n";
     }
 
     // Drawdown
@@ -350,14 +340,9 @@ void generate_gp_script(const std::vector<std::string>& strat,
     for (int i = 0; i < len_strat; i++)
     {
         if (i < len_strat - 1)
-            file << "using (percent($" << i << ")) title \"" << strat[i] << "\", '' ";
+            file << "using 1:(percent($" << i + offset << ")) title \"" << strat[i] << "\", '' ";
         else
-            file << "using (percent($" << i << ")) title \"" << strat[i] << "\" \n";
-
-//        if (i < len_strat - 1)
-//            file << "using 1:(percent($" << i + offset << ")) title \"" << strat[i] << "\", '' ";
-//        else
-//            file << "using 1:(percent($" << i + offset << ")) title \"" << strat[i] << "\" \n";
+            file << "using 1:(percent($" << i + offset << ")) title \"" << strat[i] << "\" \n";
     }
 
     // Volatility
@@ -377,15 +362,10 @@ void generate_gp_script(const std::vector<std::string>& strat,
 
     for (int i = 0; i < len_strat; i++)
     {
-//        if (i < len_strat - 1)
-//            file << "using 1:(percent($" << i + offset << ")) title \"" << strat[i] << "\", '' ";
-//        else
-//            file << "using 1:(percent($" << i + offset << ")) title \"" << strat[i] << "\" \n";
-
         if (i < len_strat - 1)
-            file << "using (percent($" << i << ")) title \"" << strat[i] << "\", '' ";
+            file << "using 1:(percent($" << i + offset << ")) title \"" << strat[i] << "\", '' ";
         else
-            file << "using (percent($" << i << ")) title \"" << strat[i] << "\" \n";
+            file << "using 1:(percent($" << i + offset << ")) title \"" << strat[i] << "\" \n";
     }
 
     file.close();

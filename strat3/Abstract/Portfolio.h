@@ -6,7 +6,7 @@
 #include "../Struct/TransactionWeight.h"
 #include "../enum.h"
 
-class PLUGIN_EXPORT StrategyLog;
+//class PLUGIN_EXPORT StrategyLog;
 class PLUGIN_EXPORT TransactionAnswer;
 
 //

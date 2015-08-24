@@ -259,7 +259,7 @@ void Latex::data()
             // =================================
             "\\section{Portfolio Values}\n";
 
-        for (int i = 0; i < _Data->size(); i++)
+        for (int i = 0; i < da.strategy_names().size(); i++)
         {
             os << "\\subsection{"<< da.strategy_names()[i] <<"}\n";
 
@@ -269,7 +269,7 @@ void Latex::data()
         // =================================
         os <<"\\section{Holdings}\n";
 
-        for (int i = 0; i < _Data->size(); i++)
+        for (int i = 0; i < da.strategy_names().size(); i++)
         {
             os << "\\subsection{"<<  da.strategy_names()[i] <<"}\n";
 
@@ -296,13 +296,13 @@ void Latex::data()
                               "\\hline\n";
                  }
 
-                 os <<  da.security_names()[i]    << " & " <<
-                          format_double(_Data->_HoldStat[k](DataAnalyser::Mean, i), 4)         << " & " <<
-                          format_double(_Data->_HoldStat[k](DataAnalyser::MeanPositive, i), 2) << " & " <<
-                          format_double(_Data->_HoldStat[k](DataAnalyser::MeanNegative, i), 2) << " & " <<
-                          format_double(_Data->_HoldStat[k](DataAnalyser::SD, i), 2)           << " & " <<
-                          format_double(_Data->_HoldStat[k](DataAnalyser::Positive, i) * 100.0/ m, 2) << " & " <<
-                          format_double(_Data->_HoldStat[k](DataAnalyser::Negative, i) * 100.0/ m, 2) << " \\\\ \n";
+                 os <<  da.security_names()[i]                    << " & " <<
+                        format_double(da.to_mean(k)    (0, i), 4) << " & " <<
+                        format_double(da.to_pos_mean(k)(0, i), 2) << " & " <<
+                        format_double(da.to_neg_mean(k)(0, i), 2) << " & " <<
+                        format_double(da.to_stdev(k)   (0, i), 2) << " & " <<
+                        format_double(da.to_pos_count(k)(0, i) * 100.0/ da.to_count(k)(0, i), 2) << " & " <<
+                        format_double(da.to_neg_count(k)(0, i) * 100.0/ da.to_count(k)(0, i), 2) << " \\\\ \n";
 
                  j++;
 
@@ -322,11 +322,10 @@ void Latex::data()
         // =================================
         os <<"\\section{Target Weight}\n";
 
-        for (int i = 0; i < _Data->size(); i++)
+        for (int i = 0; i < da.strategy_names().size(); i++)
         {
-            os << "\\subsection{"<< _Data->strategyName(i) <<"}\n";
-                     //"\\input{../gen/graph/"<< _Data->strategyName(i) <<"_weight_target.tex}\n";
-                     addFigure("../gen/graph/" + _Data->strategyName(i) + "_weight_target.tex", _Data->strategyName(i) + " Target Weight");
+            os << "\\subsection{"<< da.strategy_names()[i] <<"}\n";
+                     add_figure(output_folder + da.strategy_names()[i] + "_weight_target.tex", da.strategy_names()[i] + " Target Weight");
         }
 }
 

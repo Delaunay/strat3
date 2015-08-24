@@ -8,7 +8,7 @@
 #endif
 
 #ifdef __linux__
-#   define PLUGIN_EXPORT __attribute__ ((visibility ("default")))
+#   define BT_EXPORT __attribute__ ((visibility ("default")))
 #else
 #   define BT_EXPORT __declspec(dllexport)
 #endif
@@ -21,6 +21,7 @@ typedef Eigen::VectorXd     Column;
 typedef Eigen::RowVectorXd  Row;
 typedef unsigned int        Index;
 typedef Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> MatrixRowMajor;
+typedef Eigen::Array<double, Eigen::Dynamic, Eigen::Dynamic> Array;
 typedef Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> MatrixRM;
 typedef Eigen::Map<Matrix> MatrixMap;
 typedef Eigen::Map<MatrixRM> MatrixRMMap;

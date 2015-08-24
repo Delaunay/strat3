@@ -282,11 +282,11 @@ class StrategyLog
                     ADD_TRACE("SAVE PORTFOLIOVALUES");
 
                     // Portfolio Values
-                    pv << "#time invested cash liability\n"
+                    pv << "#time liability equity asset\n"
                        << build_matrix({{sn[i], "pv_time"},
-                                        {sn[i], "pv_invested"},
-                                        {sn[i], "pv_cash"},
-                                        {sn[i], "pv_liability"}}).format(fmt);
+                                        {sn[i], "pv_liability"},
+                                        {sn[i], "pv_equity"},
+                                        {sn[i], "pv_asset"}}).format(fmt);
 
                     // Portfolio State
                     ps << get_holdings<MatrixRowMajor>(sn[i]).format(fmt);

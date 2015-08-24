@@ -19,13 +19,16 @@ namespace strat3{
 class Latex : public Report
 {
 public:
-    Latex(const std::string& file_name, DataAnalyzer& da_, Backtester& bt_):
-        Report(da_, bt_)
+    Latex(DataAnalyzer& da_, Backtester& bt_):
+        Report(da_, bt_), latex_out("strat3_report.pdf"), file_name("strat3_report")
     {
-        os.open(file_name.c_str(), std::ios::out);
+        os.open((file_name + ".tex").c_str(), std::ios::out);
 
         generate_gp_script(da.strategy_names(), da.security_names(), true, false);
     }
+
+    std::string latex_out;
+    std::string file_name;
 
     ~Latex()    {   os.close(); }
 
@@ -62,21 +65,21 @@ public:
         os.close();
 
         // the DVI will be in the binary folder
-        int a = system("latex -interaction=batchmode ../gen/strat3_report.tex ");
+        int a = system(std::string("latex -interaction=batchmode " + file_name + ".tex").c_str());
 
         if (a == - 1)
             fprintf(stderr, "error compiling latex \n");
         else
         {
-            a = system("latex -interaction=batchmode ../gen/strat3_report.tex ");
+            a = system(std::string("latex -interaction=batchmode " + file_name + ".tex").c_str());
 
             // compile into PS
-            a = system("dvips -q strat3_report.dvi");
+            a = system(std::string("dvips -q " + file_name  + ".dvi").c_str());
 
             // compile into pdf
             if (a != -1)
             {
-                a = system("ps2pdf strat3_report.ps ../gen/strat3_report.pdf");
+                a = system(std::string("ps2pdf " + file_name + ".ps " + latex_out).c_str());
                 if (a == -1)
                     fprintf(stderr, "error converting ps to pdf \n");
             }

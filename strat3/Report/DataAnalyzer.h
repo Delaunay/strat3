@@ -73,6 +73,23 @@ public:
     void compute_volatility_stats();
     void compute_transaction_order_statistics();
 
+    // Shortcuts
+    MatrixMap to_mean(uint k)   {   return log.get_matrix<Matrix>(strategy_names()[k], "to_mean", 1, n_sec); }
+    MatrixMap to_count(uint k)   {   return log.get_matrix<Matrix>(strategy_names()[k], "to_count", 1, n_sec); }
+    MatrixMap to_stdev(uint k)   {   return log.get_matrix<Matrix>(strategy_names()[k], "to_stdev", 1, n_sec); }
+    MatrixMap to_pos_mean(uint k)   {   return log.get_matrix<Matrix>(strategy_names()[k], "to_pos_mean", 1, n_sec); }
+    MatrixMap to_neg_mean(uint k)   {   return log.get_matrix<Matrix>(strategy_names()[k], "to_neg_mean", 1, n_sec); }
+    MatrixMap to_pos_count(uint k)   {   return log.get_matrix<Matrix>(strategy_names()[k], "to_pos_count", 1, n_sec); }
+    MatrixMap to_neg_count(uint k)   {   return log.get_matrix<Matrix>(strategy_names()[k], "to_neg_count", 1, n_sec); }
+
+    MatrixMap to_mean(std::string k)   {   return log.get_matrix<Matrix>(k, "to_mean", 1, n_sec); }
+    MatrixMap to_count(std::string k)   {   return log.get_matrix<Matrix>(k, "to_count", 1, n_sec); }
+    MatrixMap to_stdev(std::string k)   {   return log.get_matrix<Matrix>(k, "to_stdev", 1, n_sec); }
+    MatrixMap to_pos_mean(std::string k)   {   return log.get_matrix<Matrix>(k, "to_pos_mean", 1, n_sec); }
+    MatrixMap to_neg_mean(std::string k)   {   return log.get_matrix<Matrix>(k, "to_neg_mean", 1, n_sec); }
+    MatrixMap to_pos_count(std::string k)   {   return log.get_matrix<Matrix>(k, "to_pos_count", 1, n_sec); }
+    MatrixMap to_neg_count(std::string k)   {   return log.get_matrix<Matrix>(k, "to_neg_count", 1, n_sec); }
+
     void compute_statistics();
 
     const std::vector<std::string>& strategy_names() {  return _strategy_names; }

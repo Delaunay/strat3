@@ -13,7 +13,7 @@ set key on
 set key top
 # set format x "%.2f"
 set output "../../gen/graph/distri_ret.tex"
-plot "../ret_distri.txt" using (percent($1)):(percent($2)) title "EqualWeighted"
+plot "../ret_distri.txt" using (percent($1)):(percent($3)) title "EqualWeighted"
 # ======================
 # Holding Evolution     
 # ======================
@@ -61,7 +61,7 @@ set key right
 set key on
  set key bottom
 set output "../../gen/graph/daily_ret.tex"
-plot "../returns.txt" using (percent($0)) title "EqualWeighted" 
+plot "../returns.txt" using 1:(percent($2)) title "EqualWeighted" 
 
 
 # ======================
@@ -71,7 +71,7 @@ plot "../returns.txt" using (percent($0)) title "EqualWeighted"
 set key on
  set key bottom
 set output "../../gen/graph/holding_ret.tex" 
-plot "../hpr.txt" using (percent($0)) title "EqualWeighted" 
+plot "../hpr.txt" using 1:(percent($2)) title "EqualWeighted" 
 # ======================
 # Drawdown              
 # ======================
@@ -79,7 +79,7 @@ plot "../hpr.txt" using (percent($0)) title "EqualWeighted"
 set key on
  set key bottom
 set output "../../gen/graph/drawdown_ret.tex" 
-plot "../drawdown.txt" using (percent($0)) title "EqualWeighted" 
+plot "../drawdown.txt" using 1:(percent($2)) title "EqualWeighted" 
 # ======================
 # Volatility            
 # ======================
@@ -87,4 +87,4 @@ plot "../drawdown.txt" using (percent($0)) title "EqualWeighted"
 set key on
  set key top
 set output "../../gen/graph/volatility_ret.tex" 
-plot "../mov_stdev.txt" using (percent($0)) title "EqualWeighted" 
+plot "../mov_stdev.txt" using 1:(percent($2)) title "EqualWeighted" 

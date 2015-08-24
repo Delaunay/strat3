@@ -31,6 +31,6 @@ add_library(backtest_library
 
 add_executable(backtester main.cpp)
 
-target_link_libraries(backtester backtest_library structs datamanager log)
+target_link_libraries(backtester backtest_library structs datamanager log -ldl)
 
 

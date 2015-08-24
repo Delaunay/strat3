@@ -32,6 +32,14 @@ void generate_gp_script(const std::vector<std::string>& strat,
 // format a double to a nice string which look nice on a document
 std::string format_double(double x, int pre = 4, int nb = 8);
 
+inline std::string get_bool_as_string(bool b)
+{
+    if (b)
+        return "true";
+    else
+        return "false";
+}
+
 #endif
 
 
