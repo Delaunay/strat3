@@ -273,8 +273,9 @@ void Latex::data()
         {
             os << "\\subsection{"<<  da.strategy_names()[i] <<"}\n";
 
-            add_figure(output_folder +  da.strategy_names()[i] + "_holding_evol.tex",  da.strategy_names()[i] + " Holdings percentage variation");
-        }
+            add_figure(output_folder +  da.strategy_names()[i] + "_holding_var.tex",  da.strategy_names()[i] + " Holdings percentage variation");
+        }                                                       // _holding_var.tex
+                                                                // _holding_evol.tex
 
         // =================================
         os <<"\\section{Transaction Order}\n"

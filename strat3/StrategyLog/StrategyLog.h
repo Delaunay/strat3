@@ -75,7 +75,19 @@ void vwrite(std::ostream& os, T1& m1, T2& m2)
 
     for(int i = 0, n = std::min(m1.rows(), m2.rows()); i < n; ++i)
     {
-        os << m1.row(i).format(fmt) << "    " << m2.row(i).format(fmt) << "\n";
+        os << m1.row(i).format(fmt) << " " << m2.row(i).format(fmt) << "\n";
+    }
+}
+
+template<typename T1, typename T2>
+void vwrite_temp(std::ostream& os, T1& m1, T2 m2)
+{
+    Eigen::IOFormat fmt(Eigen::StreamPrecision, Eigen::DontAlignCols);
+    fmt.rowSeparator = " ";
+
+    for(int i = 0, n = std::min(m1.rows(), m2.rows()); i < n; ++i)
+    {
+        os << m1.row(i).format(fmt) << " " << m2.row(i).format(fmt) << "\n";
     }
 }
 
@@ -309,11 +321,10 @@ class StrategyLog
 
                     // Portfolio Values
                     if (ptr){
-                    pv << "#" << "Year Month Day " << header << " liability equity asset\n";
+                    pv << "#" << "Year Month Day liability equity asset\n";
 
-                    vwrite(pv, *ptr,
-                          build_matrix({{sn[i], "pv_time"},
-                                        {sn[i], "pv_liability"},
+                    vwrite_temp(pv, *ptr,
+                          build_matrix({{sn[i], "pv_liability"},
                                         {sn[i], "pv_equity"},
                                         {sn[i], "pv_asset"}}));
                     }
@@ -329,7 +340,7 @@ class StrategyLog
                     if (ptr){
                         auto m = get_holdings<MatrixRowMajor>(sn[i]);
                         ps << "#"  << "Year Month Day " << header << "\n";
-                        vwrite(ps, *ptr, m.rightCols(m.cols() - 1));
+                        vwrite_temp(ps, *ptr, m.rightCols(m.cols() - 1));
                     }
                     else{
                         ps << get_holdings<MatrixRowMajor>(sn[i]).format(fmt);
@@ -339,7 +350,7 @@ class StrategyLog
                     if (ptr){
                         auto m = get_weights<MatrixRowMajor>(sn[i]);
                         tw << "#" << "Year Month Day " << "Type " << header << "\n";
-                        vwrite(tw, *ptr, m.rightCols(m.cols() - 1));
+                        vwrite_temp(tw, *ptr, m.rightCols(m.cols() - 1));
                     }
                     else{
                         tw << get_weights<MatrixRowMajor>(sn[i]).format(fmt);
@@ -349,7 +360,7 @@ class StrategyLog
                     if (ptr){
                         auto m = get_share<MatrixRowMajor>(sn[i]);
                         to << "#" << "Year Month Day " << header << "\n";
-                        vwrite(to, *ptr, m.rightCols(m.cols() - 1));
+                        vwrite_temp(to, *ptr, m.rightCols(m.cols() - 1));
                     }
                     else{
                         to << get_share<MatrixRowMajor>(sn[i]).format(fmt);

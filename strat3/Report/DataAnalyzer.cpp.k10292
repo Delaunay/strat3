@@ -208,18 +208,14 @@ void DataAnalyzer::dump()
                  << ar;
         }
         else{
-            // auto share = log.get_share<ArrayRM>(i);
+            auto share = log.get_share<ArrayRM>(i);
             auto state = log.get_holdings<ArrayRM>(i);
-            int n = state.rows();
-
-            Array ar = Array::Zero(n - 1, state.cols());
-
-            for(int i = 0; i < n - 1; ++i)
-                ar.row(i) = state.row(i + 1) / state.row(0);
+            int n = share.rows();
+            Array ar = share.bottomRows(n - 1) / (Array::Ones(n - 1, 1) * state.row(0)); // share / state;
 
             file << "#" << "Year Month Day " << log.header_string() << "\n";
             vwrite_temp(file, dates().bottomRows(dates().rows() - 1),
-                              ar.rightCols(ar.cols() - 1) - 1);
+                              ar.rightCols(ar.cols() - 1));
         }
         file.close();
     }

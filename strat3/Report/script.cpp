@@ -27,7 +27,7 @@ string volatility            = "mov_stdev.txt";     // "volatility_ret.dat";
 
 string holding_evolution     = "_ps.txt";
 string weight                = "_tw.txt";
-string holding_variation     = "_to.txt";
+string holding_variation     = "_toNormalized.txt";
 string values                = "_pv.txt";
 string separator             = " ";
 
@@ -165,7 +165,7 @@ void generate_gp_script(const std::vector<std::string>& strat,
     {
         file <<
             "set xdata time\n"
-            "set timefmt \"%Y,%m,%d\"\n"
+            "set timefmt \"%Y %m %d\"\n"
             "set format x \"%Y\"\n";
 
         offset = 4;

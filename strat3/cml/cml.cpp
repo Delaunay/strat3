@@ -9,7 +9,7 @@ int main(int argc, char* argv[])
     if (argc < 2)
     {
         std::cout << "Wrong Number of arguments\n"
-                     "Usage: cml_strat3 my_config_file\n";
+                     "Usage: ./cml_strat3 my_config_file\n";
         return -1;
 
     }

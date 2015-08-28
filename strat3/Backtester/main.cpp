@@ -67,7 +67,7 @@ int main()
     strat.portfolio()->initialize(1000, data.cols());
     strat.strategy()->initialize(data.cols());
 
-    bt.set_strat_window(251);
+    bt.set_strat_window(1);
     bt.initialize();
 
     // Run simulation

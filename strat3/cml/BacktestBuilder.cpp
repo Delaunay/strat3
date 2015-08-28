@@ -5,6 +5,8 @@ namespace strat3{
 void BacktestBuilder::extract_report()
 {
     const Settings& rs = report_settings();
+
+
 }
 
 void BacktestBuilder::extract_strategies()

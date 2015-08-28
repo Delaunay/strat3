@@ -16,15 +16,20 @@
 typedef unsigned int        uint;
 typedef std::string         Key;
 typedef std::string         FileName;
-typedef Eigen::Matrix<double, -1, -1>     Matrix;
+typedef Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic>     Matrix;
 typedef Eigen::VectorXd     Column;
 typedef Eigen::RowVectorXd  Row;
 typedef unsigned int        Index;
 typedef Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> MatrixRowMajor;
-typedef Eigen::Array<double, Eigen::Dynamic, Eigen::Dynamic> Array;
+typedef Eigen::Array <double, Eigen::Dynamic, Eigen::Dynamic> Array;
 typedef Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> MatrixRM;
+typedef Eigen::Array <double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> ArrayRM;
+typedef Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::ColMajor> MatrixCM;
+typedef Eigen::Array <double, Eigen::Dynamic, Eigen::Dynamic, Eigen::ColMajor> ArrayCM;
 typedef Eigen::Map<Matrix> MatrixMap;
 typedef Eigen::Map<MatrixRM> MatrixRMMap;
+typedef Eigen::Map<Array> ArrayMap;
+typedef Eigen::Map<ArrayRM> ArrayRMMap;
 typedef Eigen::Map<const Matrix> ConstMatrixMap;
 
 #endif
