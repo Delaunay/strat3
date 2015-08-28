@@ -67,6 +67,18 @@ inline void matrix_to_vector(Matrix& m, std::vector<double>& v)
     std::copy(ptr, ptr + n, std::back_inserter(v));
 }
 
+template<typename T1, typename T2>
+void vwrite(std::ostream& os, T1& m1, T2& m2)
+{
+    Eigen::IOFormat fmt(Eigen::StreamPrecision, Eigen::DontAlignCols);
+    fmt.rowSeparator = " ";
+
+    for(int i = 0, n = std::min(m1.rows(), m2.rows()); i < n; ++i)
+    {
+        os << m1.row(i).format(fmt) << "    " << m2.row(i).format(fmt) << "\n";
+    }
+}
+
 class StrategyLog
 {
     public:
@@ -87,7 +99,8 @@ class StrategyLog
         // not exact
         inline luint used_memory() const NOEXCEPT {   return _vsize * (3 * _nsecurity + 9);   }
 
-        void initialize(const std::vector<StrategyName>& v, uint nsec, uint v_size = 1000)
+        void initialize(const std::vector<StrategyName>& v, uint nsec, uint v_size = 1000,
+                        const Matrix* dates = nullptr, const std::vector<StrategyName>* sec=nullptr)
         {
             _nsecurity = nsec;
             _vsize = v_size;
@@ -97,6 +110,17 @@ class StrategyLog
             }
 
             _strategy_names = &v;
+            _dates = dates;
+            _security_name = sec;
+        }
+
+        std::string header_string()
+        {
+            std::string s;
+            if (_security_name)
+                for(auto& el:*_security_name)
+                    s += el + " ";
+            return s;
         }
 
         inline const std::vector<double>& time_serie(const Identifier& i)  {   return _data[i.first][i.second];   }
@@ -113,13 +137,6 @@ class StrategyLog
 //            return Eigen::Map<T>(t[sec_index], t.size() / (nsec + 1), 1, Eigen::Stride(0, _nsecurity));
 //        }
 
-        template<typename T>
-        Eigen::Map<T> get_matrix(const std::string& dfname, const std::string& matrix_name,
-                     uint rows, uint cols)
-        {
-            return Eigen::Map<T>(&time_serie_mod(dfname, matrix_name)[0], rows, cols);
-        }
-
 //        template<typename T>
 //        const T get_matrix(const std::string& dfname, const std::string& matrix_name,
 //                     uint rows, uint cols)
@@ -127,6 +144,20 @@ class StrategyLog
 //            return Eigen::Map<T>(_data[dfname][matrix_name], rows, cols);
 //            //return Eigen::Map<const T>(&time_serie(dfname, matrix_name)[0], rows, cols);
 //        }
+
+//        template<typename T>
+//        T get_share(const StrategyName& s)
+//        {
+//            std::vector<double>& t = time_serie_mod(s, "to_share");
+//            return Eigen::Map<T>(&t[0], t.size() / (_nsecurity + 1), _nsecurity + 1);
+//        }
+
+        template<typename T>
+        Eigen::Map<T> get_matrix(const std::string& dfname, const std::string& matrix_name,
+                     uint rows, uint cols)
+        {
+            return Eigen::Map<T>(&time_serie_mod(dfname, matrix_name)[0], rows, cols);
+        }
 
         template<typename T>
         Eigen::Map<T> get_holdings(const StrategyName& s)
@@ -141,13 +172,6 @@ class StrategyLog
             std::vector<double>& t = time_serie_mod(s, "st_weights");
             return Eigen::Map<T>(&t[0], t.size() / (_nsecurity + 2), _nsecurity + 2);
         }
-
-//        template<typename T>
-//        T get_share(const StrategyName& s)
-//        {
-//            std::vector<double>& t = time_serie_mod(s, "to_share");
-//            return Eigen::Map<T>(&t[0], t.size() / (_nsecurity + 1), _nsecurity + 1);
-//        }
 
         template<typename T>
         Eigen::Map<T> get_share(const StrategyName& s)
@@ -184,8 +208,8 @@ class StrategyLog
             return Eigen::Map<Matrix>(&v[0], v_size, fields.size());
         }
 
-        StrategyLog():
-            _strategy_names(nullptr)
+        StrategyLog(const std::vector<StrategyName>* strategy_name = 0, const Matrix* dates = 0):
+             _dates(dates), _strategy_names(strategy_name)
         {}
 
         ~StrategyLog()
@@ -262,6 +286,8 @@ class StrategyLog
 
         void dump()
         {
+            const Matrix* ptr = _dates;
+            std::string header = header_string();
             // Open files
             if (_strategy_names)
             {
@@ -282,20 +308,52 @@ class StrategyLog
                     ADD_TRACE("SAVE PORTFOLIOVALUES");
 
                     // Portfolio Values
-                    pv << "#time liability equity asset\n"
-                       << build_matrix({{sn[i], "pv_time"},
+                    if (ptr){
+                    pv << "#" << "Year Month Day " << header << " liability equity asset\n";
+
+                    vwrite(pv, *ptr,
+                          build_matrix({{sn[i], "pv_time"},
                                         {sn[i], "pv_liability"},
                                         {sn[i], "pv_equity"},
-                                        {sn[i], "pv_asset"}}).format(fmt);
+                                        {sn[i], "pv_asset"}}));
+                    }
+                    else{
+                        pv << "#time liability equity asset\n"
+                           << build_matrix({{sn[i], "pv_time"},
+                                            {sn[i], "pv_liability"},
+                                            {sn[i], "pv_equity"},
+                                            {sn[i], "pv_asset"}});
+                    }
 
                     // Portfolio State
-                    ps << get_holdings<MatrixRowMajor>(sn[i]).format(fmt);
+                    if (ptr){
+                        auto m = get_holdings<MatrixRowMajor>(sn[i]);
+                        ps << "#"  << "Year Month Day " << header << "\n";
+                        vwrite(ps, *ptr, m.rightCols(m.cols() - 1));
+                    }
+                    else{
+                        ps << get_holdings<MatrixRowMajor>(sn[i]).format(fmt);
+                    }
 
                     // Transaction weight
-                    tw << get_weights<MatrixRowMajor>(sn[i]).format(fmt);
+                    if (ptr){
+                        auto m = get_weights<MatrixRowMajor>(sn[i]);
+                        tw << "#" << "Year Month Day " << "Type " << header << "\n";
+                        vwrite(tw, *ptr, m.rightCols(m.cols() - 1));
+                    }
+                    else{
+                        tw << get_weights<MatrixRowMajor>(sn[i]).format(fmt);
+                    }
 
                     // Transaction Order
-                    to << get_share<MatrixRowMajor>(sn[i]).format(fmt);
+                    if (ptr){
+                        auto m = get_share<MatrixRowMajor>(sn[i]);
+                        to << "#" << "Year Month Day " << header << "\n";
+                        vwrite(to, *ptr, m.rightCols(m.cols() - 1));
+                    }
+                    else{
+                        to << get_share<MatrixRowMajor>(sn[i]).format(fmt);
+                    }
 
                     // close files
                     pv.close(); ps.close(); tw.close(); to.close();
@@ -323,7 +381,11 @@ class StrategyLog
 
         DataFrame& df(const std::string& name) {   return _data[name]; }
 
-        const std::vector<StrategyName>& strategy_names()    {   return *_strategy_names; }
+        const std::vector<StrategyName>& strategy_names()   {   return *_strategy_names;}
+        const std::vector<StrategyName>& security_names()   {   return *_security_name; }
+        const Matrix&                    dates()            {   return *_dates;         }
+
+        bool has_dates()    {   return _dates;  }
 
 private:
         // non const function are private
@@ -334,8 +396,10 @@ private:
     protected:
         uint _nsecurity;
         uint _vsize;
+        const Matrix* _dates{nullptr};
         std::unordered_map<StrategyName, DataFrame> _data;
-        const std::vector<StrategyName>* _strategy_names;
+        const std::vector<StrategyName>* _strategy_names{nullptr};
+        const std::vector<std::string>*  _security_name{nullptr};
 
 public:
 

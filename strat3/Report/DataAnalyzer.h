@@ -65,6 +65,9 @@ public:
 
     void dump();
 
+    bool has_dates()        {   return log.has_dates();     }
+    const Matrix& dates()   {   return log.dates();         }
+
     void compute_assets();
     void compute_returns(MatrixMap& assets);
     void compute_hpr(MatrixMap& daily_returns, uint window=20);

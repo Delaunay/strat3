@@ -57,6 +57,26 @@ public:
         return Eigen::Map<T>(&v[0], _row, _max_col + 1);
     }
 
+    std::vector<std::string> get_header(int i=0)
+    {
+        std::vector<std::string> header;
+        int v = get_token(),
+            k = 0;
+
+        while(v != tok_newline && v != tok_eof){
+
+            if (v == tok_value){
+                if (k < i)
+                    k++;
+                else
+                    header.push_back(value());
+            }
+            v = get_token();
+        }
+
+        return header;
+    }
+
     std::vector<double> get_vector(bool header = true)
     {
         if (header)
@@ -80,33 +100,63 @@ public:
         return vec;
     }
 
+//    std::vector<double> get_vector(int row, int left, int right)
+//    {
+//        for(int i = 0; i < row; ++i)
+//            skip_row();
+
+//        std::vector<double> vec;
+
+//        int v = get_token();
+
+//        while(true)
+//        {
+//            if (v == tok_eof)
+//                return vec;
+
+//            if (v == tok_value)
+//                vec.push_back(strtod(_value.c_str(), 0));
+
+//            v = get_token();
+//        }
+
+//        return vec;
+//    }
+
     int get_token()
     {
         static char c = ' ';
+        static bool empty_line = true;
 
-        if (c == EOF)
+        if (c == EOF){
+            if (empty_line)
+                _row--;
             return tok_eof;
+        }
 
         if (c == '\n'){
             _row++;
+            empty_line = true;
             _max_col = _max_col > _col ? _max_col : _col; // std::max(_max_col, _col);
             _col = 0;
             c = nextc();
             return tok_newline;
         }
 
-        while(isspace(c) && c != '\n')
-            c = nextc();
-
-        _value = "";
-        while(!isspace(c) && c != separator()[0])
-        {
-            _value += c;
+        while(isspace(c) && c != '\n'){
             c = nextc();
         }
 
-        if (c == separator()[0])
+        _value = "";
+        while(!isspace(c) && c != separator()[0] && c != '-'){
+            _value += c;
+            c = nextc();
+            empty_line = false;
+        }
+
+        if (c == separator()[0] || c == '-'){
             _col++;
+        }
 
         if (c != '\n')
             c = nextc();
@@ -114,7 +164,8 @@ public:
         return tok_value;
     }
 
-    const std::string& separator() const {   return _separator;  }
+    const std::string& value    () const {  return _value;      }
+    const std::string& separator() const {  return _separator;  }
 
 public:
 
@@ -122,11 +173,11 @@ public:
     CSVReader& operator= (const CSVReader&) = delete;
 
 private:
-    size_type _row{0};
-    size_type _col{0};
-    size_type _max_col{0};
+    FILE*       _file   {0};
+    size_type   _row    {0};
+    size_type   _col    {0};
+    size_type   _max_col{0};
 
-    FILE*       _file{0};
     std::string _separator;
     std::string _value;
 };

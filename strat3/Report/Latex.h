@@ -24,7 +24,7 @@ public:
     {
         os.open((file_name + ".tex").c_str(), std::ios::out);
 
-        generate_gp_script(da.strategy_names(), da.security_names(), true, false);
+        generate_gp_script(da.strategy_names(), da.security_names(), true, da.has_dates());
     }
 
     std::string latex_out;

@@ -42,21 +42,30 @@ int main()
     cout << "File Reading\n";
 
     // load data
-    CSVReader csv_dat("../../data/data.csv");
+    CSVReader csv_dat("../../data/date_test.csv");
 
-    Matrix m = csv_dat.get_eigen3<MatrixRowMajor>();
+    std::vector<std::string> sec_name = csv_dat.get_header(1);
+    Matrix m = csv_dat.get_eigen3<MatrixRowMajor>(false);
+
+    Matrix date = m.leftCols(3);
+    Matrix data = m.rightCols(m.cols() - 3);
 
     MatrixManager mm;
-    mm.add_matrix("price", std::move(m));
+    mm.add_matrix("price", data);
 
     Eigen::IOFormat fmt;
-    cout << m.topRows(5).format(fmt) << "\n";
+    for(auto& el:sec_name)
+        std::cout << el << "\t";
+
+    cout << "\n" << data.topRows(5).format(fmt) << "\n";
 
     // set Data
     bt.set_data_manager(&mm, "price");
+    bt.dates() = date;
+    bt.set_security_name(sec_name);
 
-    strat.portfolio()->initialize(1000, m.cols());
-    strat.strategy()->initialize(m.cols());
+    strat.portfolio()->initialize(1000, data.cols());
+    strat.strategy()->initialize(data.cols());
 
     bt.set_strat_window(251);
     bt.initialize();
@@ -69,22 +78,23 @@ int main()
 
     uint n_sec = bt.strategy_log().security_number();
 
-    std::vector<std::string> security_names;
-    for(int i = 0; i < n_sec; ++i)
-        security_names.push_back("Sec" + std::to_string(i));
+//    std::vector<std::string> security_names;
+//    for(int i = 0; i < n_sec; ++i)
+//        security_names.push_back("Sec" + std::to_string(i));
 
     bt.strategy_log().dump();
 
-    DataAnalyzer da(bt.strategy_name(), security_names, bt.strategy_log());
+    DataAnalyzer da(bt.strategy_name(), sec_name, bt.strategy_log());
 
     da.compute_statistics();
     da.dump();
 
+#if __linux__
     Latex ltx(da, bt);
 
 //    ltx.body();
 
     ltx.generate();
-
+#endif
     return 0;
 }

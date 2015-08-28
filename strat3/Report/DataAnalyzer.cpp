@@ -99,9 +99,17 @@ void DataAnalyzer::dump()
     temp.leftCols(offset) = time;
     temp.rightCols(data.cols()) = data;
 
-    file.open("../assets.txt", std::ios::out);
-    file << "#time " << header << "\n" << temp.format(fmt);
-    file.close();
+    if (!has_dates()){
+        file.open("../assets.txt", std::ios::out);
+        file << "#time " << header << "\n" << temp.format(fmt);
+        file.close();
+    }
+    else{
+        file.open("../assets.txt", std::ios::out);
+        file << "#Year Month Day " << header << "\n";
+        vwrite(file, dates(), temp);
+        file.close();
+    }
 
     // Dump Hpr
     // ===============
@@ -111,9 +119,17 @@ void DataAnalyzer::dump()
     temp.leftCols(offset) = time;
     temp.rightCols(data.cols()) = data;
 
-    file.open("../hpr.txt", std::ios::out);
-    file << "#time " << header << "\n" <<  temp.format(fmt);
-    file.close();
+    if (!has_dates()){
+        file.open("../hpr.txt", std::ios::out);
+        file << "#time " << header << "\n" <<  temp.format(fmt);
+        file.close();
+    }
+    else{
+        file.open("../hpr.txt", std::ios::out);
+        file << "#Year Month Day " << header << "\n";
+        vwrite(file, dates(), temp);
+        file.close();
+    }
 
     // Dump Drawdown
     // ===============
@@ -123,9 +139,17 @@ void DataAnalyzer::dump()
     temp.leftCols(offset) = time;
     temp.rightCols(data.cols()) = data;
 
-    file.open("../drawdown.txt", std::ios::out);
-    file << "#time " << header << "\n" << temp.format(fmt);
-    file.close();
+    if (!has_dates()){
+        file.open("../drawdown.txt", std::ios::out);
+        file << "#time " << header << "\n" << temp.format(fmt);
+        file.close();
+    }
+    else{
+        file.open("../drawdown.txt", std::ios::out);
+        file << "#Year Month Day " << header << "\n";
+        vwrite(file, dates(), temp);
+        file.close();
+    }
 
     // Dump Returns
     // ===============
@@ -135,9 +159,18 @@ void DataAnalyzer::dump()
     temp.leftCols(offset) = time.bottomRows(data.rows());
     temp.rightCols(data.cols()) = data;
 
-    file.open("../returns.txt", std::ios::out);
-    file << "#time " << header << "\n" << temp.format(fmt);
-    file.close();
+    if (!has_dates()){
+        file.open("../returns.txt", std::ios::out);
+        file << "#time " << header << "\n" << temp.format(fmt);
+        file.close();
+    }
+    else{
+        file.open("../returns.txt", std::ios::out);
+        file << "#Year Month Day " << header << "\n";
+        vwrite(file, dates().bottomRows(dates().rows() - 1), temp);
+        file.close();
+    }
+
 
     // Dump Mov Stdev
     // ===============
@@ -147,9 +180,17 @@ void DataAnalyzer::dump()
     temp.leftCols(offset) = time.bottomRows(data.rows());
     temp.rightCols(data.cols()) = data;
 
-    file.open("../mov_stdev.txt", std::ios::out);
-    file << "#time " << header << "\n" << temp.format(fmt);
-    file.close();
+    if (!has_dates()){
+        file.open("../mov_stdev.txt", std::ios::out);
+        file << "#time " << header << "\n" << temp.format(fmt);
+        file.close();
+    }
+    else{
+        file.open("../mov_stdev.txt", std::ios::out);
+        file << "#Year Month Day " << header << "\n";
+        vwrite(file, dates().bottomRows(dates().rows() - 1), temp);
+        file.close();
+    }
 
     // Dump ret distri
     // ===============

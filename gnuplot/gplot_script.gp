@@ -23,7 +23,7 @@ set key on
  set key right
 
 set output "../../gen/graph/EqualWeighted_holding_evol.tex" 
-plot "../EqualWeighted_ps.txt" using 1:2 title "Sec0", '' using 1:3 title "Sec1", '' using 1:4 title "Sec2", '' using 1:5 title "Sec3", '' using 1:6 title "Sec4" 
+plot "../EqualWeighted_ps.txt" using 1:2 title "Sec0", '' using 1:3 title "Sec1" 
 # ======================
 # Weight Target         
 # ======================
@@ -32,7 +32,7 @@ set key on
  set key right
 
 set output "../../gen/graph/EqualWeighted_weight_target.tex" 
-plot "../EqualWeighted_tw.txt" using 1:(percent($2)) title "Sec0", '' using 1:(percent($3)) title "Sec1", '' using 1:(percent($4)) title "Sec2", '' using 1:(percent($5)) title "Sec3", '' using 1:(percent($6)) title "Sec4" 
+plot "../EqualWeighted_tw.txt" using 1:(percent($2)) title "Sec0", '' using 1:(percent($3)) title "Sec1" 
 # ======================
 # Holding var           
 # ======================
@@ -41,7 +41,7 @@ set key on
  set key right
 
 set output "../../gen/graph/EqualWeighted_holding_var.tex" 
-plot "../EqualWeighted_to.txt" using 1:2 title "Sec0", '' using 1:3 title "Sec1", '' using 1:4 title "Sec2", '' using 1:5 title "Sec3", '' using 1:6 title "Sec4" 
+plot "../EqualWeighted_to.txt" using 1:2 title "Sec0", '' using 1:3 title "Sec1" 
 # ======================
 # Portfolio Values      
 # ======================

@@ -81,7 +81,7 @@ class Backtester
                 _strat_name.push_back(title(i));
             }
 
-            _slog.initialize(_strat_name, security_number(), max_period());
+            _slog.initialize(_strat_name, security_number(), max_period(), &_dates, &_sec_name);
 
             for(auto& i:_strategies)
             {
@@ -89,7 +89,6 @@ class Backtester
             }
         }
 
-        const std::vector<std::string>& strategy_name() {  return _strat_name; }
         void        run_one_step   ();
         MatrixQuery make_query     ();
         uint        period_running () const;
@@ -157,6 +156,19 @@ class Backtester
             out << "Not Implemented";
         }
 
+        const std::vector<std::string>& security_name()
+        {
+            return _sec_name;
+        }
+
+        const std::vector<std::string>& strategy_name() {  return _strat_name; }
+
+        void set_security_name(const std::vector<std::string>& sec)
+        {
+            _sec_name = sec;
+        }
+
+
     protected:
 
         // Dates
@@ -173,6 +185,7 @@ class Backtester
         //DataManager* _data;
         std::vector<NodeTuple*> _strategies;//  Strategies
         std::vector<std::string> _strat_name;
+        std::vector<std::string> _sec_name;
 };
 }
 #endif
