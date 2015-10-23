@@ -17,18 +17,31 @@ SET(STRAT3_VERSION_PATCH 0)
 SET(STRAT3_VERSION
     ${STRAT3_VERSION_MAJOR}.${STRAT3_VERSION_MINOR}.${STRAT3_VERSION_PATCH})
 
-# windows stuff
-INCLUDE_DIRECTORIES(C:/Users/pastafarian/Dropbox/libraries/include)
-SET(SFML_ROOT C:/Users/pastafarian/Dropbox/project/SFML-master)    
+# INCLUDE_DIRECTORIES(C:/Users/pastafarian/Dropbox/libraries/include)
 
+# Dependencies lookup
+SET(SFML_ROOT ../../dependencies/)
+SET(EIGEN_ROOT ../../dependencies/)
+SET(GTEST_ROOT ../../dependencies/)
+
+# Eigen
+find_package(Eigen3) # no Library
+
+# SFML
+FIND_PACKAGE(SFML) #
+
+# Gtest
+# find_package(gtest)
+
+# Misc
 FIND_PACKAGE(OpenGL REQUIRED)
 INCLUDE_DIRECTORIES(${OPENGL_INCLUDE_DIR})
+INCLUDE_DIRECTORIES(${EIGEN_INCLUDE_DIR})
+INCLUDE_DIRECTORIES(${SFML_INCLUDE_DIR})
 
-FIND_PACKAGE(SFML)
-
-IF(${SFML_FOUND})
-    INCLUDE_DIRECTORIES(${SFML_INCLUDE_DIR})
-ENDIF()
+#IF(${SFML_FOUND})
+#    INCLUDE_DIRECTORIES(${SFML_INCLUDE_DIR})
+#ENDIF()
 
 #INCLUDE_DIRECTORIES(C:/Users/pastafarian/Dropbox/libraries/include)
 INCLUDE_DIRECTORIES(.)
@@ -60,7 +73,9 @@ SET(STRUCT_SRC
     Struct/TransactionWeight.cpp
 )
 
-if (WINDOWS)
+SET(WINDOWS WIN32 || MSVC)
+
+IF(WINDOWS)
     SET(SYSTEM_LIB )
 ELSE()
     SET(SYSTEM_LIB -ldl)

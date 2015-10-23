@@ -31,7 +31,6 @@
 #define STRINGIFY(x) STRINGIFY2(x)
 #define S(str) STRINGIFY(str)
 
-
 #define JS_SCRIPT(js)  "<script>" js "</script>"
 #define CSS_SCRIPT(css)"<style>" css "</style>"
 #define JS_FILE(name)  "<script src=" name "></script>"
