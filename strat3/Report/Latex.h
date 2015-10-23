@@ -24,6 +24,12 @@ public:
     {
         os.open((file_name + ".tex").c_str(), std::ios::out);
 
+        std::cout << "Dump Data for Gnuplot" << std::endl;
+        da.get_log().dump(format_space());
+
+        da.dump(format_space());
+
+        std::cout << "Generate Gnuplot Script" << std::endl;
         generate_gp_script(da.strategy_names(), da.security_names(), true, da.has_dates());
     }
 

@@ -4,7 +4,6 @@
 #include "DataManager/Buffer.h"
 #include "Report/DataAnalyzer.h"
 #include "Report/Latex.h"
-#include "Report/HTML.h"
 
 #include <iostream>
 
@@ -26,22 +25,27 @@ using std::cout;
 
 int main(int argc, char* argv[])
 {
+    std::string strategy_name = std::string(argv[1]);
+
     Backtester bt;
 
     // Create New Strategy
     cout << "DLL loading\n";
 
-    ADD_TRACE("Load Portfolio DLL");
     NodeTuple strat;
     strat.load_portfolio(name_fix("StandardPortfolio"));
+    //strat.load_strategy(name_fix("StandardStrategy"));
 
+    strat.load_strategy(name_fix(strategy_name));
 
-    ADD_TRACE("Load Strategy DLL");
-    strat.load_strategy(name_fix("StandardStrategy"));
+//    strat.load_strategy(name_fix("MovingAverageStrategy"));
+
     bt.add_strategy(&strat);
 
+    cout << "DLL loaded\n";
+    cout << "File Reading\n";
 
-    ADD_TRACE("Load Data");
+    // load data
     CSVReader csv_dat("../../data/date_test.csv");
 
     std::vector<std::string> sec_name = csv_dat.get_header(1);
@@ -53,19 +57,17 @@ int main(int argc, char* argv[])
     MatrixManager mm;
     mm.add_matrix("price", data);
 
-    // little data preview
     Eigen::IOFormat fmt;
     for(auto& el:sec_name)
         std::cout << el << "\t";
 
     cout << "\n" << data.topRows(5).format(fmt) << "\n";
 
-    // set data
+    // set Data
     bt.set_data_manager(&mm, "price");
     bt.dates() = date;
     bt.set_security_name(sec_name);
 
-    // initialize Simulation
     strat.portfolio()->initialize(1000, data.cols());
     strat.strategy()->initialize(data.cols());
 
@@ -74,18 +76,32 @@ int main(int argc, char* argv[])
 
     // Run simulation
 
-    ADD_TRACE("Simulation Starting");
+    ADD_TRACE("Simulation Ready");
     for(int i = 0, n = bt.max_period(); i < n; ++i)
         bt.run_one_step();
 
-    ADD_TRACE("Analyse Data");
+    ADD_TRACE("Simulation Finished");
+
+    uint n_sec = bt.strategy_log().security_number();
+
+//    std::vector<std::string> security_names;
+//    for(int i = 0; i < n_sec; ++i)
+//        security_names.push_back("Sec" + std::to_string(i));
+
+
     DataAnalyzer da(bt.strategy_name(), sec_name, bt.strategy_log());
+
     da.compute_statistics();
 
+//    bt.strategy_log().dump();
+//    da.dump();
 
-    ADD_TRACE("Generate Report");
-    HTML ltx(da, bt);
+//#if __linux__
+    Latex ltx(da, bt);
+
+//    ltx.body();
+
     ltx.generate();
-
+//#endif
     return 0;
 }

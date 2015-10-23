@@ -70,7 +70,8 @@ Matrix frequency(const Matrix& x, uint bucket, bool percentage)
     return freq;
 }
 
-void DataAnalyzer::dump()
+
+void DataAnalyzer::dump(Eigen::IOFormat& date_fmt, bool js)
 {
     ADD_TRACE("Dumping Statistics");
     std::fstream file;
@@ -92,6 +93,31 @@ void DataAnalyzer::dump()
         time(i, 0)= i;
     // end
 
+    std::string ext = ".txt";
+    std::string js_head = "";
+
+    if (js)
+    {
+        ext = ".js";
+        js_head = "//";
+
+        file << "var strategy_names = [";
+
+        for (auto& i:strategy_names())
+            file << i + ", ";
+
+        file << "];\n";
+
+
+        file << "var security_names = [";
+
+        for (auto& i:security_names())
+            file << i + ", ";
+
+        file << "];\n";
+    }
+
+
     // Dump Assets
     // ===============
 
@@ -100,14 +126,14 @@ void DataAnalyzer::dump()
     temp.rightCols(data.cols()) = data;
 
     if (!has_dates()){
-        file.open("../assets.txt", std::ios::out);
+        file.open("../assets" + ext, std::ios::out);
         file << "#time " << header << "\n" << temp.format(fmt);
         file.close();
     }
     else{
-        file.open("../assets.txt", std::ios::out);
+        file.open("../assets" + ext, std::ios::out);
         file << "#Year Month Day " << header << "\n";
-        vwrite_temp(file, dates(), temp.rightCols(temp.cols() - 1));
+        vwrite_temp(file, dates(), temp.rightCols(temp.cols() - 1), date_fmt);
         file.close();
     }
 
@@ -120,14 +146,14 @@ void DataAnalyzer::dump()
     temp.rightCols(data.cols()) = data;
 
     if (!has_dates()){
-        file.open("../hpr.txt", std::ios::out);
+        file.open("../hpr" + ext, std::ios::out);
         file << "#time " << header << "\n" <<  temp.format(fmt);
         file.close();
     }
     else{
-        file.open("../hpr.txt", std::ios::out);
+        file.open("../hpr" + ext, std::ios::out);
         file << "#Year Month Day " << header << "\n";
-        vwrite_temp(file, dates(), temp.rightCols(temp.cols() - 1));
+        vwrite_temp(file, dates(), temp.rightCols(temp.cols() - 1), date_fmt);
         file.close();
     }
 
@@ -140,14 +166,14 @@ void DataAnalyzer::dump()
     temp.rightCols(data.cols()) = data;
 
     if (!has_dates()){
-        file.open("../drawdown.txt", std::ios::out);
+        file.open("../drawdown" + ext, std::ios::out);
         file << "#time " << header << "\n" << temp.format(fmt);
         file.close();
     }
     else{
-        file.open("../drawdown.txt", std::ios::out);
+        file.open("../drawdown" + ext, std::ios::out);
         file << "#Year Month Day " << header << "\n";
-        vwrite_temp(file, dates(), temp.rightCols(temp.cols() - 1));
+        vwrite_temp(file, dates(), temp.rightCols(temp.cols() - 1), date_fmt);
         file.close();
     }
 
@@ -160,14 +186,14 @@ void DataAnalyzer::dump()
     temp.rightCols(data.cols()) = data;
 
     if (!has_dates()){
-        file.open("../returns.txt", std::ios::out);
+        file.open("../returns" + ext, std::ios::out);
         file << "#time " << header << "\n" << temp.format(fmt);
         file.close();
     }
     else{
-        file.open("../returns.txt", std::ios::out);
+        file.open("../returns" + ext, std::ios::out);
         file << "#Year Month Day " << header << "\n";
-        vwrite_temp(file, dates().bottomRows(dates().rows() - 1), temp.rightCols(temp.cols() - 1));
+        vwrite_temp(file, dates().bottomRows(dates().rows() - 1), temp.rightCols(temp.cols() - 1), date_fmt);
         file.close();
     }
 
@@ -181,14 +207,14 @@ void DataAnalyzer::dump()
     temp.rightCols(data.cols()) = data;
 
     if (!has_dates()){
-        file.open("../mov_stdev.txt", std::ios::out);
+        file.open("../mov_stdev" + ext, std::ios::out);
         file << "#time " << header << "\n" << temp.format(fmt);
         file.close();
     }
     else{
-        file.open("../mov_stdev.txt", std::ios::out);
+        file.open("../mov_stdev" + ext, std::ios::out);
         file << "#Year Month Day " << header << "\n";
-        vwrite_temp(file, dates().bottomRows(dates().rows() - 1), temp.rightCols(temp.cols() - 1));
+        vwrite_temp(file, dates().bottomRows(dates().rows() - 1), temp.rightCols(temp.cols() - 1), date_fmt);
         file.close();
     }
 
@@ -196,7 +222,7 @@ void DataAnalyzer::dump()
     // =================================
     for (auto& i:strategy_names())
     {
-        file.open("../" + i + "_toNormalized.txt", std::ios::out);
+        file.open("../" + i + "_toNormalized" + ext, std::ios::out);
 
         if (!has_dates()){
             auto share = log.get_share<ArrayRM>(i);
@@ -219,7 +245,7 @@ void DataAnalyzer::dump()
 
             file << "#" << "Year Month Day " << log.header_string() << "\n";
             vwrite_temp(file, dates().bottomRows(dates().rows() - 1),
-                              ar.rightCols(ar.cols() - 1) - 1);
+                              ar.rightCols(ar.cols() - 1) - 1, date_fmt);
         }
         file.close();
     }
@@ -227,14 +253,14 @@ void DataAnalyzer::dump()
     // Dump ret distri
     // ===============
 
-    file.open("../ret_distri.txt", std::ios::out);
+    file.open("../ret_distri" + ext, std::ios::out);
     file << "#min   max  " << header << "\n" << return_distri().format(fmt);
     file.close();
 
     // Dump Statistc Points
     // ====================
 
-    file.open("../statistics.txt", std::ios::out);
+    file.open("../statistics" + ext, std::ios::out);
 
     file << "#name     "  << header       << "\n"
             "means     "  << means()      << "\n"

@@ -7,7 +7,7 @@
 
 typedef unsigned int uint;
 
-struct PLUGIN_EXPORT TransactionWeight;
+struct TransactionWeight;
 
 class PLUGIN_EXPORT MAStrategy : public Strategy
 {

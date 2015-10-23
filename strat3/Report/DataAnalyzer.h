@@ -63,7 +63,7 @@ public:
 
     CLASS_GLOBAL(return_distri, "return_distri", (uint) sqrt(returns().rows()), n_strat + 2)
 
-    void dump();
+    void dump(Eigen::IOFormat &date_fmt = format_date(), bool js = false);
 
     bool has_dates()        {   return log.has_dates();     }
     const Matrix& dates()   {   return log.dates();         }
@@ -97,6 +97,9 @@ public:
 
     const std::vector<std::string>& strategy_names() {  return _strategy_names; }
     const std::vector<std::string>& security_names() {  return _sec_names; }
+
+
+    StrategyLog& get_log()  {   return log; }
 
 private:
     StrategyLog& log;

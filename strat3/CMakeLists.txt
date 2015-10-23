@@ -9,13 +9,28 @@ SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 
+LIST(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/../cmake")
+
 SET(STRAT3_VERSION_MAJOR 0)
 SET(STRAT3_VERSION_MINOR 0)
 SET(STRAT3_VERSION_PATCH 0)
 SET(STRAT3_VERSION
     ${STRAT3_VERSION_MAJOR}.${STRAT3_VERSION_MINOR}.${STRAT3_VERSION_PATCH})
 
+# windows stuff
 INCLUDE_DIRECTORIES(C:/Users/pastafarian/Dropbox/libraries/include)
+SET(SFML_ROOT C:/Users/pastafarian/Dropbox/project/SFML-master)    
+
+FIND_PACKAGE(OpenGL REQUIRED)
+INCLUDE_DIRECTORIES(${OPENGL_INCLUDE_DIR})
+
+FIND_PACKAGE(SFML)
+
+IF(${SFML_FOUND})
+    INCLUDE_DIRECTORIES(${SFML_INCLUDE_DIR})
+ENDIF()
+
+#INCLUDE_DIRECTORIES(C:/Users/pastafarian/Dropbox/libraries/include)
 INCLUDE_DIRECTORIES(.)
 
 add_subdirectory(Abstract)
@@ -32,7 +47,7 @@ add_subdirectory(Report)
 add_subdirectory(network)
 
 # does not work
-#SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
+#
 
 # add sqlite source
 
@@ -45,11 +60,17 @@ SET(STRUCT_SRC
     Struct/TransactionWeight.cpp
 )
 
-SET(SQLITE_SRC C:/sqlite/sqlite3.c)
-INCLUDE_DIRECTORIES(C:/sqlite/)
+if (WINDOWS)
+    SET(SYSTEM_LIB )
+ELSE()
+    SET(SYSTEM_LIB -ldl)
+ENDIF()
 
-SET(BOOST_ROOT C:/Boost/)
-SET(BOOST_LIBRARYDIR C:/Boost/lib64-msvc-12.0)
+#SET(SQLITE_SRC C:/sqlite/sqlite3.c)
+#INCLUDE_DIRECTORIES(C:/sqlite/)
+
+#SET(BOOST_ROOT C:/Boost/)
+#SET(BOOST_LIBRARYDIR C:/Boost/lib64-msvc-12.0)
 
 FIND_PACKAGE(Boost)
 
