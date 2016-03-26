@@ -23,9 +23,6 @@ Makefile*
 *.*ebug
 *.*lease
 
-/strat3-build/
-/strat3-linux/
-/strat3-doc/
 /gen/
 /old*/
 /*build*/

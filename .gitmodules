@@ -1,0 +1,15 @@
+[submodule "dependencies/gtest"]
+	path = dependencies/gtest
+	url = https://github.com/google/googletest.git
+[submodule "dependencies/hayai"]
+	path = dependencies/hayai
+	url = git@github.com:nickbruun/hayai
+[submodule "dependencies/nonius"]
+	path = dependencies/nonius
+	url = git@github.com:rmartinho/nonius
+[submodule "dependencies/cpm"]
+	path = dependencies/cpm
+	url = git@github.com:wichtounet/cpm
+[submodule "dependencies/gperftools"]
+	path = dependencies/gperftools
+	url = git@github.com:gperftools/gperftools.git
