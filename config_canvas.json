@@ -1,10 +1,10 @@
 {
-    # define DataManager format
+    // define DataManager format
     Data:{
         config:{
-            source:bloomberg,
+            file: data.csv
         },
-    
+
         price:{
             ticker:{
                 SPY,
@@ -13,17 +13,17 @@
                 GIS,
                 FLO
             },
-            
+
             config:{
                 field: PX_LAST,
             }
         },
-        
+
         starting_date: 1980-01-01,
         ending_date: 2014-01-01,
         grain: daily,
     },
-    
+
     Backtest:{
         cash:10000,
         min_window:20,
@@ -32,7 +32,7 @@
     Predictors:{
         HistoricalCovariance:{
             file: predictor/covariance,
-            
+
             config:{
                 window: 20
                 global:false
@@ -43,7 +43,7 @@
     Strategies:{
         EqualWeight:{
             file: strategy/equalweight,
-            
+
             config:{
                 predictor: None,
                 market: default,
@@ -51,10 +51,10 @@
                 portfolio: default
             }
         },
-        
+
         VarianceMin:{
             file: strategy/varmin.cpp,
-            
+
             config:{
                 predictor: HistoricalCovariance,
                 market: default,

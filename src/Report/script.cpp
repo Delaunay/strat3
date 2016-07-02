@@ -15,6 +15,7 @@
 
 using namespace std;
 
+
 string gp_file               = "../../gnuplot/gplot_script.gp";
 string output_folder         = "../../gen/graph/";
 string data_folder           = "../";               // "../gen/data/";

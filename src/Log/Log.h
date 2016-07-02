@@ -6,7 +6,7 @@
 #include <iostream>
 
 //
-//  Debuging log
+//  Debugging log
 //
 #define ADD_TRACE(msg) (Trace::instance()).add(__FILE__, __FUNCTION__, __LINE__, msg)
 
